@@ -190,5 +190,8 @@
 	<button id="btn-cancel">Cancel</button>
 </div>
 
-<%= link_to '1st Inning' ,  {:controller=>"scorecards", :action=>"match_scorecard_one", :id=>@match.id} %>
+
+<div class="scorecard"><%= link_to '1nd Inning' , {:controller=>"scorecards", :action=>"match_scorecard_one", :id=>@match.id} %>
+<%= link_to 'Current Match Status' , {:controller=>"matches", :action=>"match_status", :id=>@match.id} %>
+</div>
      
