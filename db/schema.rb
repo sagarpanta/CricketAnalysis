@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121209065150) do
+ActiveRecord::Schema.define(:version => 20121209071049) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
