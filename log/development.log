@@ -32,3 +32,214 @@ Served asset /application.js - 304 Not Modified (1ms)
 Served asset /background3.png - 304 Not Modified (0ms)
 Served asset /cricketball.png - 304 Not Modified (0ms)
 Served asset /analysis.png - 304 Not Modified (0ms)
+Connecting to database specified by database.yml
+  [1m[36mSQL (0.0ms)[0m  [1mUSE [CricketAnalysis][0m
+Connecting to database specified by database.yml
+  [1m[36mSQL (0.0ms)[0m  [1mUSE [CricketAnalysis][0m
+  [1m[35m (0.0ms)[0m  SELECT [schema_migrations].[version] FROM [schema_migrations]
+Migrating to CreateTeams (20120928145147)
+Migrating to CreateVenues (20120928150532)
+Migrating to CreateFormats (20120928150917)
+Migrating to CreateTournaments (20120928151027)
+Migrating to CreatePlayerTypes (20120928151612)
+Migrating to CreateBattings (20120928152437)
+Migrating to CreateBowlings (20120928153005)
+Migrating to CreateBowlingStyles (20120928161759)
+Migrating to CreatePlayerStats (20120928164028)
+Migrating to CreateFieldings (20120928194639)
+Migrating to CreateRightLefts (20120928224416)
+Migrating to CreatePlayers (20120930014037)
+Migrating to CreateManagers (20120930055130)
+Migrating to AddFormatToTeams (20121001163727)
+Migrating to CreateCountries (20121001163948)
+Migrating to AddCountryToPlayers (20121001164048)
+Migrating to AddTypesToFormats (20121001210509)
+Migrating to AddCountryToTeams (20121001221651)
+Migrating to CreateTeamTypes (20121002175501)
+Migrating to AddTypesToTeamType (20121002175609)
+Migrating to CreateMatchTypes (20121004174145)
+Migrating to AddTypesToMatchtypes (20121004174220)
+Migrating to CreateMatches (20121005170523)
+Migrating to CreateDismissals (20121007210516)
+Migrating to AddTypesToDismissals (20121007210827)
+Migrating to CreateScorecards (20121008021307)
+Migrating to AddPlayeridToTeam (20121019194941)
+Migrating to AddPlayeridToScorecard (20121019195058)
+Migrating to AddTosswonToMatches (20121021152542)
+Migrating to CreateClients (20121109204648)
+Migrating to AddSaltToClients (20121110174202)
+Migrating to AddEmailToClients (20121110202109)
+Migrating to AddClientToCountry (20121111032836)
+Migrating to AddClientToFielding (20121111032901)
+Migrating to AddClientToManager (20121111032920)
+Migrating to AddClientToMatch (20121111032936)
+Migrating to AddClientToPlayerstats (20121111033032)
+Migrating to AddClientToTournament (20121111033159)
+Migrating to AddClientToVenue (20121111033220)
+Migrating to CreateCoaches (20121111044243)
+Migrating to CreateClientconfigs (20121112235331)
+Migrating to ChangeDatatypeDobPlayers (20121113231027)
+Migrating to AddTempPasswordToClients (20121118154717)
+Migrating to AddNameToClients (20121119185441)
+Migrating to AddMatchoversToMatches (20121126003609)
+Migrating to AddAdminToClients (20121201165521)
+Migrating to AddMatchdateToMatches (20121204164803)
+Migrating to CreateLines (20121205173042)
+Migrating to AddLinesToLine (20121205173123)
+Migrating to CreateLengths (20121205211131)
+Migrating to CreateShottypes (20121205211301)
+Migrating to AddLengthsToLength (20121205211616)
+Migrating to AddShottypesToShottype (20121205211750)
+Migrating to AddElectedtoToMatches (20121206155654)
+Migrating to AddExpiryToClients (20121209065150)
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN TRANSACTION[0m
+  [1m[35mSQL (1.0ms)[0m  IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION
+Connecting to database specified by database.yml
+  [1m[36mSQL (0.0ms)[0m  [1mUSE [CricketAnalysis][0m
+  [1m[35m (0.0ms)[0m  SELECT [schema_migrations].[version] FROM [schema_migrations]
+Migrating to CreateTeams (20120928145147)
+Migrating to CreateVenues (20120928150532)
+Migrating to CreateFormats (20120928150917)
+Migrating to CreateTournaments (20120928151027)
+Migrating to CreatePlayerTypes (20120928151612)
+Migrating to CreateBattings (20120928152437)
+Migrating to CreateBowlings (20120928153005)
+Migrating to CreateBowlingStyles (20120928161759)
+Migrating to CreatePlayerStats (20120928164028)
+Migrating to CreateFieldings (20120928194639)
+Migrating to CreateRightLefts (20120928224416)
+Migrating to CreatePlayers (20120930014037)
+Migrating to CreateManagers (20120930055130)
+Migrating to AddFormatToTeams (20121001163727)
+Migrating to CreateCountries (20121001163948)
+Migrating to AddCountryToPlayers (20121001164048)
+Migrating to AddTypesToFormats (20121001210509)
+Migrating to AddCountryToTeams (20121001221651)
+Migrating to CreateTeamTypes (20121002175501)
+Migrating to AddTypesToTeamType (20121002175609)
+Migrating to CreateMatchTypes (20121004174145)
+Migrating to AddTypesToMatchtypes (20121004174220)
+Migrating to CreateMatches (20121005170523)
+Migrating to CreateDismissals (20121007210516)
+Migrating to AddTypesToDismissals (20121007210827)
+Migrating to CreateScorecards (20121008021307)
+Migrating to AddPlayeridToTeam (20121019194941)
+Migrating to AddPlayeridToScorecard (20121019195058)
+Migrating to AddTosswonToMatches (20121021152542)
+Migrating to CreateClients (20121109204648)
+Migrating to AddSaltToClients (20121110174202)
+Migrating to AddEmailToClients (20121110202109)
+Migrating to AddClientToCountry (20121111032836)
+Migrating to AddClientToFielding (20121111032901)
+Migrating to AddClientToManager (20121111032920)
+Migrating to AddClientToMatch (20121111032936)
+Migrating to AddClientToPlayerstats (20121111033032)
+Migrating to AddClientToTournament (20121111033159)
+Migrating to AddClientToVenue (20121111033220)
+Migrating to CreateCoaches (20121111044243)
+Migrating to CreateClientconfigs (20121112235331)
+Migrating to ChangeDatatypeDobPlayers (20121113231027)
+Migrating to AddTempPasswordToClients (20121118154717)
+Migrating to AddNameToClients (20121119185441)
+Migrating to AddMatchoversToMatches (20121126003609)
+Migrating to AddAdminToClients (20121201165521)
+Migrating to AddMatchdateToMatches (20121204164803)
+Migrating to CreateLines (20121205173042)
+Migrating to AddLinesToLine (20121205173123)
+Migrating to CreateLengths (20121205211131)
+Migrating to CreateShottypes (20121205211301)
+Migrating to AddLengthsToLength (20121205211616)
+Migrating to AddShottypesToShottype (20121205211750)
+Migrating to AddElectedtoToMatches (20121206155654)
+Migrating to AddExpiryToClients (20121209065150)
+  [1m[36mSQL (1.0ms)[0m  [1mBEGIN TRANSACTION[0m
+  [1m[35mSQL (0.0ms)[0m  IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION
+Connecting to database specified by database.yml
+  [1m[36mSQL (0.0ms)[0m  [1mUSE [CricketAnalysis][0m
+  [1m[35m (0.0ms)[0m  SELECT [schema_migrations].[version] FROM [schema_migrations]
+Migrating to CreateTeams (20120928145147)
+Migrating to CreateVenues (20120928150532)
+Migrating to CreateFormats (20120928150917)
+Migrating to CreateTournaments (20120928151027)
+Migrating to CreatePlayerTypes (20120928151612)
+Migrating to CreateBattings (20120928152437)
+Migrating to CreateBowlings (20120928153005)
+Migrating to CreateBowlingStyles (20120928161759)
+Migrating to CreatePlayerStats (20120928164028)
+Migrating to CreateFieldings (20120928194639)
+Migrating to CreateRightLefts (20120928224416)
+Migrating to CreatePlayers (20120930014037)
+Migrating to CreateManagers (20120930055130)
+Migrating to AddFormatToTeams (20121001163727)
+Migrating to CreateCountries (20121001163948)
+Migrating to AddCountryToPlayers (20121001164048)
+Migrating to AddTypesToFormats (20121001210509)
+Migrating to AddCountryToTeams (20121001221651)
+Migrating to CreateTeamTypes (20121002175501)
+Migrating to AddTypesToTeamType (20121002175609)
+Migrating to CreateMatchTypes (20121004174145)
+Migrating to AddTypesToMatchtypes (20121004174220)
+Migrating to CreateMatches (20121005170523)
+Migrating to CreateDismissals (20121007210516)
+Migrating to AddTypesToDismissals (20121007210827)
+Migrating to CreateScorecards (20121008021307)
+Migrating to AddPlayeridToTeam (20121019194941)
+Migrating to AddPlayeridToScorecard (20121019195058)
+Migrating to AddTosswonToMatches (20121021152542)
+Migrating to CreateClients (20121109204648)
+Migrating to AddSaltToClients (20121110174202)
+Migrating to AddEmailToClients (20121110202109)
+Migrating to AddClientToCountry (20121111032836)
+Migrating to AddClientToFielding (20121111032901)
+Migrating to AddClientToManager (20121111032920)
+Migrating to AddClientToMatch (20121111032936)
+Migrating to AddClientToPlayerstats (20121111033032)
+Migrating to AddClientToTournament (20121111033159)
+Migrating to AddClientToVenue (20121111033220)
+Migrating to CreateCoaches (20121111044243)
+Migrating to CreateClientconfigs (20121112235331)
+Migrating to ChangeDatatypeDobPlayers (20121113231027)
+Migrating to AddTempPasswordToClients (20121118154717)
+Migrating to AddNameToClients (20121119185441)
+Migrating to AddMatchoversToMatches (20121126003609)
+Migrating to AddAdminToClients (20121201165521)
+Migrating to AddMatchdateToMatches (20121204164803)
+Migrating to CreateLines (20121205173042)
+Migrating to AddLinesToLine (20121205173123)
+Migrating to CreateLengths (20121205211131)
+Migrating to CreateShottypes (20121205211301)
+Migrating to AddLengthsToLength (20121205211616)
+Migrating to AddShottypesToShottype (20121205211750)
+Migrating to AddElectedtoToMatches (20121206155654)
+Migrating to AddExpiryToClients (20121209065150)
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN TRANSACTION[0m
+  [1m[35m (2.0ms)[0m  ALTER TABLE [clients] ADD [expiry] date
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'INSERT INTO [schema_migrations] ([version]) VALUES (N''20121209065150''); SELECT CAST(SCOPE_IDENTITY() AS bigint) AS Ident'[0m
+  [1m[35m (0.0ms)[0m  EXEC sp_executesql N'SELECT CAST(SCOPE_IDENTITY() AS bigint) AS Ident'
+  [1m[36mSQL (1.0ms)[0m  [1mCOMMIT TRANSACTION[0m
+  [1m[35m (1.0ms)[0m  SELECT [schema_migrations].[version] FROM [schema_migrations]
+  [1m[36m (0.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''battings'''[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''bowling_styles'''
+  [1m[36m (0.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''bowlings'''[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''clientconfigs'''
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''clients'''[0m
+  [1m[35m (0.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''coaches'''
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''countries'''[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''dismissals'''
+  [1m[36m (0.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''fieldings'''[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''formats'''
+  [1m[36m (0.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''lengths'''[0m
+  [1m[35m (0.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''lines'''
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''managers'''[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''match_types'''
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''matches'''[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''player_stats'''
+  [1m[36m (2.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''player_types'''[0m
+  [1m[35m (19.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''players'''
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''right_lefts'''[0m
+  [1m[35m (3.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''scorecards'''
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''shottypes'''[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''team_types'''
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''teams'''[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'EXEC sp_helpindex N''tournaments'''
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'EXEC sp_helpindex N''venues'''[0m

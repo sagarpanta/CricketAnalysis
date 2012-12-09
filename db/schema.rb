@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121206155654) do
+ActiveRecord::Schema.define(:version => 20121209065150) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(:version => 20121206155654) do
     t.string   "email"
     t.string   "temppass"
     t.string   "name"
+    t.date     "expiry"
   end
 
   create_table "coaches", :force => true do |t|
