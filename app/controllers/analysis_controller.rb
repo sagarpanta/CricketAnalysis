@@ -3,7 +3,7 @@ class AnalysisController < ApplicationController
 	begin
 		if signed_in?
 			if current_user.username == 'admin'
-				@current_client = current_user.name
+				@current_client = current_user.username
 				@countries = Country.all
 
 				@players = Player.all
