@@ -1,0 +1,65 @@
+<h2>
+	<ul id="navigations">
+		<li data-link='countries' class="<%= @countryorder %>"><span class="pretty" title="Country"><%= image_tag('/assets/country.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='tournaments' class="<%= @tournamentorder %>"><span class="pretty" title="Tournament"><%=  image_tag('/assets/tournament.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='players' class="<%= @playerorder %>"><span class="pretty" title="Player"><%=  image_tag('/assets/player.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='managers' class="<%= @managerorder %>"><span class="pretty" title="Manager"><%=  image_tag('/assets/manager.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='coaches' class="<%= @coachorder %>"><span class="pretty" title="Coach"><%= image_tag('/assets/coach.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='teams' class="<%= @teamorder %>"><span class="pretty" title="Team"><%=  image_tag('/assets/team.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='venues' class="<%= @venueorder %>"><span class="pretty" title="Venue"><%=  image_tag('/assets/venue.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='matches' class="<%= @matchorder %>"><span class="pretty" title="Match"><%=  image_tag('/assets/match.png') %></span></li>
+	</ul>
+</h2>
+<table id="players" cellspacing="0" cellpadding="0" >
+  <tr>
+	<th width="80px" class="<%= @client_header %>"><%= link_to "Client", players_path(:sort=>'client') %></th>
+	<th width="80px" class="<%= @age_header %>"><%= link_to "Age", players_path(:sort=>'age') %></th>
+	<th width="80px" class="<%= @batstyle_header %>"><%= link_to "Bat Style", players_path(:sort=>'batstyle') %></th>
+	<th width="80px" class="<%= @bowlstyle_header %>"><%= link_to "Bowl Style", players_path(:sort=>'bowlstyle') %></th>
+	<th width="80px" class="<%= @bowltype_header %>"><%= link_to "Bowl Type", players_path(:sort=>'bowltype') %></th>
+	<th width="80px" class="<%= @dob_header %>"><%= link_to "DOB", players_path(:sort=>'dob') %></th>
+	<th width="80px" class="<%= @fname_header %>"><%= link_to "FName", players_path(:sort=>'fname') %></th>
+	<th width="80px" class="<%= @lname_header %>"><%= link_to "LName", players_path(:sort=>'lname') %></th>
+	<th width="80px" class="<%= @format_header %>"><%= link_to "Format", players_path(:sort=>'format') %></th>
+	<th width="80px" class="<%= @fullname_header %>"><%= link_to "Full Name", players_path(:sort=>'fullname') %></th>
+	<th width="80px" class="<%= @playertype_header %>"><%= link_to "Player Type", players_path(:sort=>'playertype') %></th>
+	<th width="80px" class="<%= @playerid_header %>"><%= link_to "Player ID", players_path(:sort=>'playerid') %></th>
+	<th width="80px" class="<%= @country_header %>"><%= link_to "Country", players_path(:sort=>'country') %></th>
+	<th width="80px"></th>
+	<th width="80px"></th>
+	<th width="80px"></th>
+  </tr>
+
+<% @players.each do |player| %>
+  <tr>
+	<td width="80px"><%= player.clientkey %></td>
+	<td width="80px"><%= player.age %></td>
+	<td width="80px"><%= player.battingstyle %></td>
+	<td width="80px"><%= player.bowlingstyle %></td>
+	<td width="80px"><%= player.bowlingtype %></td>
+	<td width="80px"><%= player.dob.to_date %></td>
+	<td width="80px"><%= player.fname %></td>
+	<td width="80px"><%= player.lname %></td>
+	<td width="80px"><%= player.format %></td>
+	<td width="80px"><%= player.fullname %></td>
+	<td width="80px"><%= player.playertype %></td>
+	<td width="80px"><%= player.playerid %></td>
+	<td width="80px"><%= player.getCountry(player.id) %></td>
+	<td width="80px"><%= link_to 'Show', player %></td>
+	<td width="80px"><%= link_to 'Edit', edit_player_path(player) %></td>
+	<td width="80px"><%= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+
+<br />
+
+<div id="newplayer"><%= link_to 'New Player', new_player_path %></div>

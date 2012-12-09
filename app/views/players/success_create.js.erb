@@ -1,0 +1,8 @@
+$('#success_message').html('Player successfully created').css('text-align', 'center');
+$('.fields').children('input').val('');
+var maxid = parseInt($('#maxid').html());
+maxid = maxid+1;
+$('#maxid').html(maxid);
+$('#maxplayerid').html('Enter '+maxid+' or more');
+
+

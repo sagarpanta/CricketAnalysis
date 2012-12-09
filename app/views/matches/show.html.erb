@@ -1,0 +1,62 @@
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Matchtypekey:</b>
+  <%= @match.matchtypekey %>
+</p>
+
+<p>
+  <b>Teamidone:</b>
+  <%= @match.teamidone %>
+</p>
+
+<p>
+  <b>Teamidtwo:</b>
+  <%= @match.teamidtwo %>
+</p>
+
+<p>
+  <b>Tournamentkey:</b>
+  <%= @match.tournamentkey %>
+</p>
+<p>
+  <b>Formatkey:</b>
+  <%= @match.formatkey %>
+</p>
+
+<p>
+  <b>Venuekey:</b>
+  <%= @match.venuekey %>
+</p>
+
+<p>
+  <b>Matchwon:</b>
+  <%= @match.matchwon %>
+</p>
+
+<p>
+  <b>Matchtied:</b>
+  <%= @match.matchtied %>
+</p>
+
+<p>
+  <b>Matchwonortied:</b>
+  <%= @match.matchwonortied %>
+</p>
+
+<p>
+  <b>Winnerkey:</b>
+  <%= @match.winnerkey %>
+</p>
+
+<p>
+  <b>Details:</b>
+  <%= @match.details %>
+</p>
+
+
+<%= link_to 'Edit', edit_match_path(@match) %> |
+<%= link_to 'Back', matches_path %>
+
+<%= link_to 'Score Card', scorecard_first_inning_path(:id => @match.id) %>

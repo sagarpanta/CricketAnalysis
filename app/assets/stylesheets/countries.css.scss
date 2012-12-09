@@ -1,0 +1,111 @@
+// Place all the styles related to the Countries controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+h2{
+	color:white;
+	margin-top:130px;
+	text-align:center
+}
+
+
+
+table#countries{
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+
+table#countries tr th{	
+	color:white;
+}
+
+#countries tr th{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.9;
+	font-size:11px;
+	font-family:"verdana";
+	font-weight:bold;
+	text-align:center;
+}
+
+
+#countries tr td{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+}
+
+#countries tr td a{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+}
+
+
+#newcountry{
+	text-align:center;
+}
+
+#newcountry a{
+	color:white;
+}
+
+#editcountry{
+	text-align:center;
+}
+
+#editcountry a{
+	color:white;
+}
+
+#new_country{
+	background-color:black;
+	opacity:0.6;
+	width:400px;
+	margin-left:auto;
+	margin-right:auto;
+	min-height:200px;
+}
+
+#new_country table, #new_country .actions,#new_country #success_message{
+position:relative;
+top:60px
+}
+
+
+
+.edit_country{
+	background-color:black;
+	opacity:0.6;
+	width:400px;
+	margin-left:auto;
+	margin-right:auto;
+	min-height:200px;
+}
+
+.edit_country table, .edit_country .actions,.edit_country #success_message{
+position:relative;
+top:60px
+}
+
+
+
+
+
+

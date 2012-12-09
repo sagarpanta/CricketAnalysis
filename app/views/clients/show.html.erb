@@ -1,0 +1,26 @@
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Username:</b>
+  <%= @client.username %>
+</p>
+
+<p>
+  <b>Encrypted password:</b>
+  <%= @client.encrypted_password %>
+</p>
+
+<p>
+  <b>Encrypted password confirmation:</b>
+  <%= @client.encrypted_password_confirmation %>
+</p>
+
+<p>
+  <b>Remember token:</b>
+  <%= @client.remember_token %>
+</p>
+
+
+<%= link_to 'Edit', edit_client_path(@client) %> |
+<%= link_to 'Back', clients_path %>

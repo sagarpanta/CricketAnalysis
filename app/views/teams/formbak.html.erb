@@ -1,0 +1,127 @@
+<%= form_for(@team) do |f| %>
+  <% if @team.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@team.errors.count, "error") %> prohibited this team from being saved:</h2>
+
+      <ul>
+      <% @team.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :playerkey %><br />
+    <%= f.number_field :playerkey %>
+  </div>
+  <div class="field">
+    <%= f.label :playertypekey %><br />
+    <%= f.number_field :playertypekey %>
+  </div>
+  <div class="field">
+    <%= f.label :teamname %><br />
+    <%= f.text_field :teamname %>
+  </div>
+  <div class="field">
+    <%= f.label :coachkey %><br />
+    <%= f.number_field :coachkey %>
+  </div>
+  <div class="field">
+    <%= f.label :managerkey %><br />
+    <%= f.number_field :managerkey %>
+  </div>
+  <div class="field">
+    <%= f.label :winloss %><br />
+    <%= f.number_field :winloss %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%= form_for(@team) do |f| %>
+  <% if @team.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@team.errors.count, "error") %> prohibited this team from being saved:</h2>
+
+      <ul>
+      <% @team.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <table>
+	<tr>
+		<td>
+		  <div class="selection_window">
+			<table>
+				<% @players.each do |p| %>
+					<tr id="player">
+						<td id="playerid"><%= p.id %></td>
+						<td id="playername" data-id="<%= p.id %>"><%= p.fullname %></td>
+					</tr>
+				<% end %>
+			</table>
+		  </div>
+		</td>
+		<td>
+			<div class="drag_over">
+				<img alt="in_the_team" src="/assets/greater_than.png" /><br/>
+				<img alt="out_of_the_team" src="/assets/less_than.png" />
+			</div>
+		</td>
+		<td>
+		  <div class="selected_window">
+			<table id="removable_players_table"></table>
+		  </div>
+		</td>
+	</tr>
+  </table>
+  
+
+  <div class="field">
+    Coach<br />
+	<%= f.select :coachkey, Coach.all.collect {|t| [ t.name, t.id]} %>
+  </div>
+  
+  
+  <div class="field">
+    Manager<br />
+	<%= f.select :managerkey, Manager.all.collect {|t| [ t.name,t.id]} %>
+  </div>
+  
+   <div class="field" id="teamname">
+    Team Name<br />
+    <%= f.text_field :teamname %>
+  </div>
+  
+  <div id="draft_team">
+	  <%= image_tag('/assets/draft.png') %>
+  </div>
+<% end %>
+

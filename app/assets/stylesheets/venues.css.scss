@@ -1,0 +1,85 @@
+// Place all the styles related to the Venues controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+
+table#venues{
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+
+table#venues tr th{	
+	color:white;
+}
+
+#venues tr th{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.9;
+	font-size:11px;
+	font-family:"verdana";
+	font-weight:bold;
+	text-align:center;
+}
+
+
+#venues tr td{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+	width:100px;
+}
+
+#venues tr td a{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+	width:100px;
+}
+
+
+#newvenue{
+	text-align:center;
+}
+
+#newvenue a{
+	color:white;
+}
+
+#editvenue{
+	text-align:center;
+}
+
+#editvenue a{
+	color:white;
+}
+
+
+
+#new_venue table, #new_venue .actions,  #new_venue #success_message{
+position:relative;
+top:30px
+}
+
+.edit_venue table, .edit_venue .actions, .edit_venue #success_message{
+position:relative;
+top:30px
+}
+
+
+

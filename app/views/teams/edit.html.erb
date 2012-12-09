@@ -1,0 +1,73 @@
+<div id='team_form'>  
+
+  <h1>New Team</h1>
+  
+  <div class="field" id="country">
+    Country<br />
+	<%= select('countrykey' ,'team' ,@countries ,{}, {:id =>'country_select'}) %>
+  </div>  
+  
+  <div class="field">
+    Format<br />
+	<%= select('team', 'formatkey', @formats, {},{:id =>'format_select'}) %>
+  </div>  
+  
+  <table>
+	<tr>
+		<td>
+		  <div class="selection_window">
+			<table>
+				<% @players.each do |p| %>
+					<tr class="player">
+						<td class="playerid"><%= p.playerid %></td>
+						<td class="playername" data-id="<%= p.playerid %>" data-country="<%= p.countrykey %>" data-format="<%= p.formatkey %>"><%= p.fullname %></td>
+					</tr>
+				<% end %>
+			</table>
+		  </div>
+		</td>
+		<td>
+			<div class="drag_over">
+				<img alt="in_the_team" src="/assets/greater_than.png" /><br/>
+				<img alt="out_of_the_team" src="/assets/less_than.png" />
+			</div>
+		</td>
+		<td>
+		  <div class="selected_window">
+			<table id="removable_players_table"></table>
+		  </div>
+		</td>
+	</tr>
+  </table>
+  
+
+  <div class="field">
+    Coach<br />
+	<%= select 'team', 'coachkey', Coach.all.collect {|t| [ t.name, t.id]}%>
+  </div>
+  
+  
+  <div class="field">
+    Manager<br />
+	<%= select 'team', 'managerkey', Manager.all.collect {|t| [ t.name,t.id]} %>
+  </div>
+  
+   <div class="field" id="teamname">
+    Team Name<br />
+    <%= text_field 'team', 'teamname' %>
+  </div>
+  
+  <div id="draft_team">
+	  <%= image_tag('/assets/draft.png') %>
+  </div>
+</div>
+
+
+<div id="team_lineup" style="display:none">
+	<h2></h2>
+	<h3></h3>
+	<table id="team_table">
+	</table>
+</div>
+
+

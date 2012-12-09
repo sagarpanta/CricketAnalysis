@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Venuename:</b>
+  <%= @venue.venuename %>
+</p>
+
+<p>
+  <b>Endonekey:</b>
+  <%= @venue.endonekey %>
+</p>
+
+<p>
+  <b>Endtwokey:</b>
+  <%= @venue.endtwokey %>
+</p>
+
+<p>
+  <b>Endone:</b>
+  <%= @venue.endone %>
+</p>
+
+<p>
+  <b>Endtwo:</b>
+  <%= @venue.endtwo %>
+</p>
+
+
+<%= link_to 'Edit', edit_venue_path(@venue) %> |
+<%= link_to 'Back', venues_path %>

@@ -1,0 +1,80 @@
+// Place all the styles related to the Coaches controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+
+
+table#coaches{
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+
+table#coaches tr th{	
+	color:white;
+}
+
+#coaches tr th{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.9;
+	font-size:11px;
+	font-family:"verdana";
+	font-weight:bold;
+	text-align:center;
+}
+
+
+#coaches tr td{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+	width:150px;
+}
+
+#coaches tr td a{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+}
+
+
+#newcoach{
+	text-align:center;
+}
+
+#newcoach a{
+	color:white;
+}
+
+#editcoach{
+	text-align:center;
+}
+
+#editcoach a{
+	color:white;
+}
+
+#new_coach table, #new_coach .actions, #new_coach #success_message{
+position:relative;
+top:60px
+}
+
+.edit_coach table, .edit_coach .actions, .edit_coach #success_message{
+position:relative;
+top:60px
+}

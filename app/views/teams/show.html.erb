@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Playerkey:</b>
+  <%= @team.playerkey %>
+</p>
+
+<p>
+  <b>Playertypekey:</b>
+  <%= @team.playertypekey %>
+</p>
+
+<p>
+  <b>Teamname:</b>
+  <%= @team.teamname %>
+</p>
+
+<p>
+  <b>Coachkey:</b>
+  <%= @team.coachkey %>
+</p>
+
+<p>
+  <b>Managerkey:</b>
+  <%= @team.managerkey %>
+</p>
+
+<p>
+  <b>Winloss:</b>
+  <%= @team.winloss %>
+</p>
+
+
+<%= link_to 'Edit', edit_team_path(@team) %> |
+<%= link_to 'Back', teams_path %>

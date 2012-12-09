@@ -1,0 +1,172 @@
+// Place all the styles related to the Scorecards controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#pdf_page{
+	background-color:white
+	
+}
+
+#tournament{
+	position:relative;
+	margin-top:50px;
+	text-align:center;
+	color:white;
+	font-weight:bold;
+	font-size:300%;
+	font-family:"wide latin"
+}
+
+#team{
+	position:relative;
+	margin-top:15px;
+	text-align:center;
+	color:white;
+	font-weight:bold;
+	font-size:150%;
+	font-family:"wide latin"
+}
+
+#venue{
+	position:relative;
+	margin-top:10px;
+	text-align:center;
+	color:white;
+	font-weight:bold;
+	font-size:150%;
+	font-family:"wide latin"
+}
+
+#inning{
+	position:relative;
+	margin-top:10px;
+	text-align:center;
+	color:white;
+	font-weight:bold;
+	font-size:150%;
+	font-family:"wide latin"
+}
+
+#scores{
+	position:fixed;
+	left:5px;
+	top:70px;
+	height:45px;
+	width:90px;
+	background-color:lightyellow;
+	text-align:center;
+	color:steelblue;
+	font-weight:bold;
+}
+#target{
+	position:fixed;
+	left:5px;
+	top:115px;
+	height:20px;
+	width:90px;
+	background-color:lightyellow;
+	text-align:center;
+	color:steelblue;
+	font-weight:bold;
+}
+
+#scorecard{
+	margin:50px;
+	background-color:black;
+	opacity:0.7;
+	width:1200px;
+	margin-left:auto;
+	margin-right:auto;
+	color:white;
+}
+
+.scoring_numbers{
+	width:50px;
+	height:50px;
+	text-align:center;
+	background-color:white;
+	color:black;
+	font-weight:bold;
+}
+
+.scores_to_be_added_to {
+	width:80px;
+	text-align:right
+}
+
+.Batting_summary, td{
+	width:65px;
+	height:25px;
+}
+
+.Bowling_summary, td{
+	width:65px;
+}
+
+.hilite {
+	background-color:white;
+	color:black;
+}
+
+.hilite-nonstriker {
+	background-color:#989898;
+	color:black
+}
+
+.side{
+	opacity:0.6
+}
+
+
+td{
+	text-align:center;
+}
+
+.Batsman{
+	width:200px;
+	text-align:left;
+}
+
+.Bowler{
+	width:200px;
+	text-align:left;
+}
+
+.bowling_side ul{
+	margin: 0; 
+	padding-top:1px;
+	padding-bottom:1px;
+}
+
+.bowling_side ul li{
+	display:block;
+	background-color:#3C8626;
+}
+
+.bowling_side ul li:hover{
+	box-shadow:inset 1px 1px 1px 1px #BFD1CF;
+}
+
+
+.scoring_number_clicked{
+	opacity:0.9;
+}
+
+
+.dialog_td1{
+	width:120px;
+	font-size:10px;
+	background-color:lightgrey
+}
+
+.dialog_td2{
+	width:120px;
+	font-size:10px;
+	background-color:lightgrey
+}
+
+
+
+
+
+

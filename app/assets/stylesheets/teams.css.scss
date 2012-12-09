@@ -1,0 +1,203 @@
+// Place all the styles related to the teams controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+
+table#teams{
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+
+table#teams tr th{	
+	color:white;
+}
+
+#teams tr th{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.9;
+	font-size:11px;
+	font-family:"verdana";
+	font-weight:bold;
+	text-align:center;
+}
+
+
+#teams tr td{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+	width:100px;
+}
+
+#teams tr td a{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+}
+
+.selection {
+width:400px;
+height:400px;
+overflow: auto;
+}
+
+.selection_window {
+min-width:399px;
+min-height:400px;
+border:2px solid;
+border-width:1x;
+background-color:darkgrey;
+}
+
+.selected {
+width:400px;
+height:400px;
+overflow: auto;
+}
+
+.selected_window {
+width:399px;
+min-height:400px;
+border:2px solid;
+border-width:1x;
+background-color:darkgrey;
+
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+	background-color:gray;
+    -webkit-box-shadow: inset 0 0 6px rgba(200,200,200,0.5); 
+}
+
+::-webkit-scrollbar-track-piece {
+    border-radius: 10px;
+	background-color:lightgrey;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+
+.selection_window .ui-selecting {
+	background: silver;
+}
+.selection_window .ui-selected {
+	background: gray;
+}
+
+.selected_window .ui-selecting {
+	background: silver;
+}
+.selected_window .ui-selected {
+	background: gray;
+}
+
+
+#team_form{
+	background-color:black;
+	opacity:0.8;
+	color:white;
+	width:1000px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#modify_team_form{
+	background-color:black;
+	opacity:0.8;
+	color:white;
+	width:1000px;
+	margin-left:auto;
+	margin-right:auto;
+}
+.playername{
+	width:200px;
+	text-align:left
+}
+.removable_playername{
+	width:200px;
+	text-align:left
+}
+
+
+
+
+
+#newteam{
+	position:relative;
+	text-align:center;
+}
+
+#newteam a{
+	color:white;
+}
+
+#modifyteam{
+	text-align:center;
+}
+
+#modifyteam a{
+	color:white;
+}
+
+
+
+#team_form .actions{
+	position:relative;
+	text-align:left;
+}
+
+
+#team_form .caption{
+	width:100px;
+	text-align:left;
+	color:white;
+	font-weight:bold
+}
+
+#team_form .fields{
+	text-align:left;
+	width:400px;
+}
+
+#modify_team_form .actions{
+	position:relative;
+	text-align:left;
+}
+
+
+#modify_team_form .caption1{
+	width:100px;
+	text-align:left;
+	color:white;
+	font-weight:bold
+}
+
+#modify_team_form .fields1{
+	text-align:left;
+	width:400px;
+}

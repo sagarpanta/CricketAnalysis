@@ -1,0 +1,237 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ */
+
+
+
+body{
+	background: url('/assets/background3.png') no-repeat center center fixed;
+	background-size:cover;
+}
+
+
+
+h5{
+	position:absolute;
+	top:0;
+	margin-top:-1px;
+	margin-left:-10px;
+	margin-right:-10px;
+	background: -webkit-gradient(linear, left top, left bottom, from(#BCED91), to(#3A6629));
+	width:100%
+}
+
+.tab{
+	float:left;
+}
+
+
+.tab_item {
+	width:100px;
+}
+
+
+.tab_item:hover{
+	box-shadow: 1px 1px 1px black;
+}
+
+	
+	
+.tab_item a {
+	display:block;
+	width:100%;
+	height:100%;
+	text-decoration:none;
+}
+
+
+.tab_item a:visited {
+	color:black
+}
+
+
+
+	
+.tab_item a:hover{
+	color:white;
+	background-color:transparent;
+	text-decoration:none;
+}
+
+
+
+.user{
+float:right;
+width:500px;
+}
+
+.user_item{
+	width:130px;
+}
+
+.user_item:hover{
+	box-shadow: 1px 1px 1px black;
+}
+
+td.user_item a:visited{
+	color:black;
+}
+
+td.user_item a{
+	text-decoration:none;
+	background-color:transparent;
+	display:block;
+	width:100%;
+	height:100%;
+}
+
+
+
+td.user_item a:hover{
+	color:white
+}
+
+
+
+
+
+h2{
+	color:white;
+	margin-top:130px;
+	text-align:center;
+}
+
+
+
+
+  #nav{
+	position:relative;
+	margin-top:-30px;
+	margin-left: 5%
+ }
+ 
+ #nav li{
+	float:left;
+	display:block;
+}
+
+.transparent{
+	opacity:0.0;
+	font-size:8px
+}
+
+ 
+
+ 
+
+ 
+  
+  #invisible{
+	opacity:0;
+  }
+ 
+ 
+
+ 
+#setup{
+	position:relative;
+	margin:200px;
+	color:white;
+}
+
+
+ul#order_of_setup{
+position:relative;
+margin-left:-40px;
+}
+
+
+#order_of_setup li{
+	display:inline;
+}
+
+
+
+
+form{
+	background-color:black;
+	opacity:0.6;
+	width:500px;
+	margin-left:auto;
+	margin-right:auto;
+	min-height:200px;
+	border-radius: 15px;
+}
+
+
+
+
+.caption{
+	width:100px;
+	text-align:right;
+	color:white;
+	font-weight:bold
+}
+
+.fields{
+	text-align:center;
+}
+
+
+
+.actions{
+position:relative;
+text-align:center;
+font-family: "Verdana";
+font-size:12px;
+}
+
+#success_message{
+	color:gold;
+}
+
+
+ul#navigations{
+position:relative;
+text-align:center;
+margin-left:-35px;
+}
+
+#navigations li{
+	display:inline;
+}
+
+#navigations li a:hover{
+	background-color:transparent
+}
+
+
+.dialog_td{
+	width:200px;
+	text-align:left;
+	border:1px solid lightgrey;
+}
+
+.dialog_td:hover{
+	box-shadow: 1px 1px 1px #888;
+}
+
+
+
+
+
+ 
+ 
+ 
+
+

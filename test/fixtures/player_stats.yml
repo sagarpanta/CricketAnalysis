@@ -1,0 +1,61 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  playerid: 1
+  playerkey: 1
+  battingstylekey: 1
+  totalruns: 1
+  battingaverage: 1.5
+  notouts: 1
+  highestscore: 1
+  ballsfaced: 1
+  matchesplayed: 1
+  totalinnings: 1
+  maxdissmissedaskey: 1
+  positionwbestbattingavg: 1
+  battingstrikerate: 1.5
+  positionwbestbattingstrikerate: 1
+  bowlingstylekey: 1
+  bowlingtypekey: 1
+  totalballsdelivered: 1
+  totalwickets: 1
+  highestwickets: 1
+  bowlingaverage: 1.5
+  totalcatches: 1
+  stumpings: 1
+  maxdismissedbatsmanaskey: 1
+  maidens: MyString
+  playertypekey: 1
+  bowlingstrikerate: 1.5
+  winloss: 1
+  formatkey: 1
+
+two:
+  playerid: 1
+  playerkey: 1
+  battingstylekey: 1
+  totalruns: 1
+  battingaverage: 1.5
+  notouts: 1
+  highestscore: 1
+  ballsfaced: 1
+  matchesplayed: 1
+  totalinnings: 1
+  maxdissmissedaskey: 1
+  positionwbestbattingavg: 1
+  battingstrikerate: 1.5
+  positionwbestbattingstrikerate: 1
+  bowlingstylekey: 1
+  bowlingtypekey: 1
+  totalballsdelivered: 1
+  totalwickets: 1
+  highestwickets: 1
+  bowlingaverage: 1.5
+  totalcatches: 1
+  stumpings: 1
+  maxdismissedbatsmanaskey: 1
+  maidens: MyString
+  playertypekey: 1
+  bowlingstrikerate: 1.5
+  winloss: 1
+  formatkey: 1

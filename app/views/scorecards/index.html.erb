@@ -1,0 +1,106 @@
+<h1>Listing scorecards</h1>
+<div class="user">Signed In As: <%= @current_client %> | <%= link_to 'Sign Out', signout_path %></div>
+
+<table>
+  <tr>
+    <th>Scorecard ID</th>
+    <th>Ballsbeforeboundary</th>
+    <th>Ballsbeforerun</th>
+    <th>Ballsdelivered</th>
+    <th>Ballsfaced</th>
+    <th>Batsmankey</th>
+    <th>Battingendkey</th>
+    <th>Battingposition</th>
+    <th>Bowlerkey</th>
+    <th>Bowlingendkey</th>
+    <th>Bowlingposition</th>
+    <th>Byes</th>
+    <th>CurrentBowlerkey</th>	
+    <th>Currentstrikerkey</th>
+    <th>Currentnonstrikerkey</th>
+    <th>Eights</th>
+    <th>Fielderkey</th>
+    <th>Fives</th>
+    <th>Formatkey</th>
+    <th>Fours</th>
+    <th>Inning</th>
+    <th>Legbyes</th>
+    <th>Maiden</th>
+    <th>Matchkey</th>
+    <th>Noballs</th>
+    <th>Ones</th>
+    <th>Others</th>
+    <th>Outtypekey</th>
+    <th>Outbywk</th>
+    <th>Runs</th>
+    <th>Sevens</th>
+    <th>Sixes</th>
+    <th>Teamidone</th>
+    <th>Teamtwoid</th>
+    <th>Threes</th>
+    <th>Tournamentkey</th>
+    <th>Twos</th>
+    <th>Venuekey</th>
+    <th>Wicket</th>
+    <th>Wides</th>
+    <th>Zeros</th>
+    <th>Dismissedbatsmankey</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @scorecards.each do |scorecard| %>
+  <tr>
+    <td><%= scorecard.id %></td>
+    <td><%= scorecard.ballsbeforeboundary %></td>
+    <td><%= scorecard.ballsbeforerun %></td>
+    <td><%= scorecard.ballsdelivered %></td>
+    <td><%= scorecard.ballsfaced %></td>
+    <td><%= scorecard.batsmankey %></td>
+    <td><%= scorecard.battingendkey %></td>
+    <td><%= scorecard.battingposition %></td>
+    <td><%= scorecard.bowlerkey %></td>
+    <td><%= scorecard.bowlingendkey %></td>
+    <td><%= scorecard.bowlingposition %></td>
+    <td><%= scorecard.byes %></td>
+    <td><%= scorecard.currentbowlerkey %></td>
+    <td><%= scorecard.currentstrikerkey %></td>
+    <td><%= scorecard.currentnonstrikerkey %></td>
+    <td><%= scorecard.eights %></td>
+    <td><%= scorecard.fielderkey %></td>
+    <td><%= scorecard.fives %></td>
+    <td><%= scorecard.formatkey %></td>
+    <td><%= scorecard.fours %></td>
+    <td><%= scorecard.inning %></td>
+    <td><%= scorecard.legbyes %></td>
+    <td><%= scorecard.maiden %></td>
+    <td><%= scorecard.matchkey %></td>
+    <td><%= scorecard.noballs %></td>
+    <td><%= scorecard.ones %></td>
+    <td><%= scorecard.others %></td>
+    <td><%= scorecard.outtypekey %></td>
+    <td><%= scorecard.outbywk %></td>
+    <td><%= scorecard.runs %></td>
+    <td><%= scorecard.sevens %></td>
+    <td><%= scorecard.sixes %></td>
+    <td><%= scorecard.teamidone %></td>
+    <td><%= scorecard.teamtwoid %></td>
+    <td><%= scorecard.threes %></td>
+    <td><%= scorecard.tournamentkey %></td>
+    <td><%= scorecard.twos %></td>
+    <td><%= scorecard.venuekey %></td>
+    <td><%= scorecard.wicket %></td>
+    <td><%= scorecard.wides %></td>
+    <td><%= scorecard.zeros %></td>
+    <td><%= scorecard.dismissedbatsmankey %></td>
+    <td><%= link_to 'Show', scorecard %></td>
+    <td><%= link_to 'Edit', edit_scorecard_path(scorecard) %></td>
+    <td><%= link_to 'Destroy', scorecard, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Scorecard', new_scorecard_path %>

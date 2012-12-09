@@ -1,0 +1,92 @@
+// Place all the styles related to the Analysis controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#analysis{
+	margin-top:150px;
+	width:99%;
+}
+
+td.metric, td.groups{
+font-family:"verdana";
+color:darkgrey;
+text-align:center;
+font-weight:bold;
+background-color:#383838
+}
+
+td.enable, td.groups {
+font-family:"verdana";
+color:white;
+text-align:center;
+font-weight:bold;
+background-color:#383838
+}
+
+
+
+td.identifier{
+	color:white;
+	font-weight:bold;
+	text-align:left;
+	width:10%
+}
+
+td.identifier1{
+	color:white;
+	font-weight:bold;
+	text-align:left;
+	width:10%px;
+}
+
+
+td.middle{
+	width:40%
+}
+
+
+#pos{
+color:white
+}
+
+
+
+
+h1 {
+	height:70px;
+}
+
+td.metric{
+	width:102px
+}
+
+td.groups{
+width:102px;
+}
+
+
+.head{
+	opacity:0
+}
+
+#chart{
+	position:relative;
+	margin-top:30px;
+	
+}
+
+.charttype{
+font-family:"verdana";
+color:white;
+text-align:center;
+font-weight:bold;
+background-color:#19197D
+}
+
+#last{
+font-family:"verdana";
+color:white;
+text-align:center;
+font-weight:bold;
+background-color:#19197D
+}

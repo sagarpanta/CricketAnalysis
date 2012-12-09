@@ -1,0 +1,29 @@
+<%= form_for(@country, :remote=>true) do |f| %>
+  <% if @country.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@country.errors.count, "error") %> prohibited this country from being saved:</h2>
+
+      <ul>
+      <% @country.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.text_field :clientkey, :value=> current_user.id, :hidden=>true %>
+  </div>
+ 
+  <table align="center">
+	<tr>
+		<td class="caption">Country</td>
+		<td class="fields"><%= f.text_field :country, :size=>"20" %></td>
+	</tr>
+  </table>
+  <div id="success_message"></div>
+  <div class="actions">
+    <%= f.submit "", :class=>'submit', :type => :image, :src => @img, :data=>@dImg  %>
+  </div>
+<% end %>
+
+

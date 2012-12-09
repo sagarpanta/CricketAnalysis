@@ -1,0 +1,42 @@
+<h2>Match Status</h2>
+
+<div id="matchid"><%= @matchid %></div>
+<div id="innings"><%= @arrRunsPerOver[0].length-1 %></div>
+<div id="runsperover" style="display:none"><%= @dataRPO %></div>
+<div id="cumrunsperover" style="display:none"><%= @dataCRPO %></div>
+<div id="container1"></div>
+<div id="container2"></div>
+
+
+<table>
+	<tr>
+		<td class="rr">Current Run Rate: <%= number_with_precision(@current[0].runrate, :precision => 2) %></td>
+		<td class="rr">Last Five Overs: <%= number_with_precision(@lastfiveRR[0].runrate, :precision => 2) %></td>
+	</tr>
+	<tr>
+		<td class="rr">Projection</td>
+	</tr>
+	<tr>
+		<td class="rr">Current: <%= @projectedwithCurrRR %></td>
+		<td class="rr">6: <%= @projectedwithsix %></td>
+		<td class="rr">8: <%= @projectedwitheight %></td>
+	</tr>
+	<tr>
+		<td class="rr"><%= text_field_tag :runrate,nil, :placeholder=>'Enter Run Rate' %></td>
+		<td class="rr"><%= button_tag 'Project' %></td>
+		<td class="rr" id="projected"></td>
+	</tr>
+</table>
+
+
+<div id="currScore" style="display:none"><%= @current[0].score %></div>
+<div id="oversRemaining" style="display:none"><%= @oversremaining %></div>
+<div id="matchOvers" style="display:none"><%= @match.matchovers %></div>
+<div id="currBall" style="display:none"><%= @current[0].currball %></div>
+<div id="currOver" style="display:none"><%= @current[0].currentover %></div>
+<div id="currRR" style="display:none"><%= @current[0].runrate %></div>
+<div id="currOverInDec" style="display:none"><%= @currentoverindecimal %></div>
+				
+					
+							
+				

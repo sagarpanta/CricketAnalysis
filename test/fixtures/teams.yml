@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  playerkey: 1
+  playertypekey: 1
+  teamname: MyString
+  coachkey: 1
+  managerkey: 1
+  winloss: 1
+
+two:
+  playerkey: 1
+  playertypekey: 1
+  teamname: MyString
+  coachkey: 1
+  managerkey: 1
+  winloss: 1

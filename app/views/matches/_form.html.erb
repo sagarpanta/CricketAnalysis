@@ -1,0 +1,83 @@
+<%= form_for(@match, :remote=>true) do |f| %>
+  <% if @match.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@match.errors.count, "error") %> prohibited this match from being saved:</h2>
+
+      <ul>
+      <% @match.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.number_field :clientkey, :value=> current_user.id, :hidden=>true %>
+  </div>
+  <table align="center">
+	<tr>
+		<td class="caption">Tournament</td>
+		<td class="fields"><%= f.select :tournamentkey, @tournaments %></td>
+	</tr>
+	<tr>
+		<td class="caption">Format</td>
+		<td class="fields"><%= f.select :formatkey, @formats %></td>
+	</tr>
+	<tr>
+		<td class="caption">Venue</td>
+		<td class="fields"><%= f.select :venuekey, @venues %></td>
+	</tr>
+	<tr>
+		<td class="caption">Match Type</td>
+		<td class="fields"><%= f.select :matchtypekey, @matchtypes %></td>
+	</tr>
+	<tr>
+		<td class="caption">Your Team</td>
+		<td class="fields"><%= f.select :teamidone, @teams %></td>
+	</tr>
+	<tr>
+		<td class="caption">Playing Against</td>
+		<td class="fields"><%= f.select :teamidtwo, @teams %></td>
+	</tr>
+	<tr>
+		<td class="caption">Toss Won By</td>
+		<td class="fields"><%= f.select :tosswon, @teams %></td>
+	</tr>
+	<tr>
+		<td class="caption">Elected To</td>
+		<td class="fields"><%= f.select :electedto, @electedto %></td>
+	</tr>
+	<tr>
+		<td class="caption">Match Overs</td>
+		<td class="fields"><%= f.text_field :matchovers %></td>
+	</tr>	
+	<tr>
+		<td class="caption">Match Date</td>
+		<td class="fields"><%= f.text_field :matchdate , {:size=>"20", :id=>"datepicker"}%></td>
+	</tr>
+	<tr>
+		<td class="caption">Day or D/N?</td>
+		<td class="fields"><%= f.select :dayandnite, [['', -2], ['Day', 1], ['D/N',0]] %></td>
+	</tr>	
+	<tr>
+		<td class="caption">Match Won or Tied</td>
+		<td class="fields"><%= f.select :matchwonortied, [['', -2], ['Won', 1], ['Tied',0]] %></td>
+	</tr>
+	<tr>
+		<td class="caption">Winner</td>
+		<td class="fields"><%= f.select :winnerkey, @teams %></td>
+	</tr>
+	<tr>
+		<td class="caption">Details</td>
+		<td class="fields"><%= f.text_field :details %></td>
+	</tr>	
+  </table>
+
+  <div id="success_message"></div>
+  <div class="actions">
+    <%= f.submit "", :class=>'submit', :type => :image, :src => @img, :data=>@dImg  %>
+  </div>
+<% end %>
+
+
+

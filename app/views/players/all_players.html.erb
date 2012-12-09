@@ -1,0 +1,46 @@
+<h1>Listing players</h1>
+<div class="user">Signed In As: <%= @current_client %> | <%= link_to 'Sign Out', signout_path %></div>
+
+<table>
+  <tr>
+    <th>Age</th>
+    <th>Battingstyle</th>
+    <th>Bowlingstyle</th>
+    <th>Bowlingtype</th>
+    <th>Dob</th>
+    <th>Fname</th>
+    <th>Lname</th>
+    <th>Format</th>
+    <th>Formatkey</th>
+    <th>Fullname</th>
+    <th>Playerid</th>
+    <th>Wh current</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @players.each do |player| %>
+  <tr>
+    <td><%= player.age %></td>
+    <td><%= player.battingstyle %></td>
+    <td><%= player.bowlingstyle %></td>
+    <td><%= player.bowlingtype %></td>
+    <td><%= player.dob %></td>
+    <td><%= player.fname %></td>
+    <td><%= player.lname %></td>
+    <td><%= player.format %></td>
+    <td><%= player.formatkey %></td>
+    <td><%= player.fullname %></td>
+    <td><%= player.playerid %></td>
+    <td><%= player.wh_current %></td>
+    <td><%= link_to 'Show', player %></td>
+    <td><%= link_to 'Edit', edit_player_path(player) %></td>
+    <td><%= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Player', new_player_path %>

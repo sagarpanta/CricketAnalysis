@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  datestart: 2012-09-28 10:11:51
+  dateend: 2012-09-28 10:11:51
+  formatkey: 1
+
+two:
+  name: MyString
+  datestart: 2012-09-28 10:11:51
+  dateend: 2012-09-28 10:11:51
+  formatkey: 1

@@ -1,0 +1,51 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  clientkey: 1
+  runs: 1
+  avg: 1
+  sr: 1
+  dsmsl: 1
+  bbh: 1
+  bbb: 1
+  mtchwon: 1
+  mtchlost: 1
+  inns: 1
+  zero: 1
+  one: 1
+  two: 1
+  three: 1
+  four: 1
+  five: 1
+  six: 1
+  wides: 1
+  noballs: 1
+  byes: 1
+  legbyes: 1
+  extras: 1
+  covrsnratio: 1
+
+two:
+  clientkey: 1
+  runs: 1
+  avg: 1
+  sr: 1
+  dsmsl: 1
+  bbh: 1
+  bbb: 1
+  mtchwon: 1
+  mtchlost: 1
+  inns: 1
+  zero: 1
+  one: 1
+  two: 1
+  three: 1
+  four: 1
+  five: 1
+  six: 1
+  wides: 1
+  noballs: 1
+  byes: 1
+  legbyes: 1
+  extras: 1
+  covrsnratio: 1

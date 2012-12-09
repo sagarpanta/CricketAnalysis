@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  teamkey: 1
+  tournamentkey: 1
+  matchkey: 1
+  venuekey: 1
+  playerkey: 1
+  runssaved: 1
+  catchtaken: 1
+
+two:
+  teamkey: 1
+  tournamentkey: 1
+  matchkey: 1
+  venuekey: 1
+  playerkey: 1
+  runssaved: 1
+  catchtaken: 1

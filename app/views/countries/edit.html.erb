@@ -1,0 +1,25 @@
+
+<h2>
+	<ul id="order_of_setup">
+		<li data-link='countries/new' class="links <%= @countryorder %>"><span class="pretty" title="Country"><%= image_tag('/assets/country.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='tournaments/new' class="links <%= @tournamentorder %>"><span class="pretty" title="Tournament"><%=  image_tag('/assets/tournament.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='players/new' class="links <%= @playerorder %>"><span class="pretty" title="Player"><%=  image_tag('/assets/player.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='managers/new' class="links <%= @managerorder %>"><span class="pretty" title="Manager"><%=  image_tag('/assets/manager.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='coaches/new' class="links <%= @coachorder %>"><span class="pretty" title="Coach"><%= image_tag('/assets/coach.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='teams/new' class="links <%= @teamorder %>"><span class="pretty" title="Team"><%=  image_tag('/assets/team.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='venues/new' class="links <%= @venueorder %>"><span class="pretty" title="Venue"><%=  image_tag('/assets/venue.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='matches/new' class="links <%= @matchorder %>"><span class="pretty" title="Match"><%=  image_tag('/assets/match.png') %></span></li>
+	</ul>
+	Editing Country
+</h2>
+
+
+<%= render 'form' %>
+<div id="editcountry"><%= link_to 'Countries', countries_path %> | <%= link_to 'Next (New Tournament)', new_tournament_path %></div>

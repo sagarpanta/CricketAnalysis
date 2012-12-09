@@ -1,0 +1,249 @@
+
+<div id="userkey" style="display:none"><%= current_user.id %></div>
+
+
+
+<div id="analysis_img" style="position:absolute;"><%= image_tag('/assets/_analysis4.png', :height=>350, :width=>350) %></div>
+<table id="analysis">
+	<tr>
+		<td class="head">Headind 1</td><td class="head">Headind 1</td><td><%= select 'analysis', 'analysiskey', ['Batting','Bowling'], {}, {:class=>'chzn-select', 'data-placeholder'=>'Analysis of ...', 'single style'=>'width:250px' , :tabindex=>"4"} %></td><td class="head">Headind 1</td><td class="head">Headind 1</td><td class="head">Headind 1</td>
+	</tr>
+	<tr>
+		<td class="identifier">Country:</td>	
+		<td class="slct"><%= select 'country' , 'countrykey', @countries.collect {|c| [c.country, c.id ]}, {}, {:class=>'chzn-select', 'data-placeholder'=>'Select Country/ies', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Country:</td>	
+		<td class="slct1"><%= select 'country' , 'countrykey1', @countries.collect {|c| [c.country, c.id ]}, {}, {:class=>'chzn-select', 'data-placeholder'=>'Select Country/ies', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
+	<tr>
+		<td class="identifier">Format:</td>		
+		<td class="slct"><%= select 'matchformat' , 'matchformatkey', @formats.collect {|c| [c.name, c.id ]},{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Format/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Format:</td>		
+		<td class="slct1"><%= select 'matchformat' , 'matchformatkey1', @formats.collect {|c| [c.name, c.id ]},{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Format/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
+	<tr>
+		<td class="identifier">Tournament:</td>	 	
+		<td class="slct"><%= select 'tournament' , 'tournamentkey', @tournaments.collect {|c| [c.name, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Tournament/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Tournament:</td>	 	
+		<td class="slct1"><%= select 'tournament' , 'tournamentkey1', @tournaments.collect {|c| [c.name, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Tournament/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
+	<tr>	
+		<td class="identifier">Venue:</td>	 	
+		<td class="slct"><%= select 'venue' , 'venuekey', @venues.collect {|c| [c.venuename, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Venue/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Venue:</td>	 	
+		<td class="slct1"><%= select 'venue' , 'venuekey1', @venues.collect {|c| [c.venuename, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Venue/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
+	
+	<tr>
+		<td class="identifier">Team Type:</td>	 	
+		<td class="slct"><%= select 'teamtype' , 'teamtypekey', @teamtypes.collect {|c| [c.teamtype, c.id ]},{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Team Types', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td> 		
+		<td class="identifier1">Team Type:</td>	 	
+		<td class="slct1"><%= select 'teamtype' , 'teamtypekey1', @teamtypes.collect {|c| [c.teamtype, c.id ]},{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Team Types', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
+	<tr>
+		<td class="identifier">Team:</td>	 
+		<td class="slct"><%= select 'team' , 'teamkey', @teams.collect {|c| [c.teamname, c.teamid ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Team/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>	
+		<td class="identifier1">Team:</td>	 
+		<td class="slct1"><%= select 'team' , 'teamkey1', @teams.collect {|c| [c.teamname, c.teamid ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Team/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>
+		<td class="identifier">Match Type:</td>	 
+		<td class="slct"><%= select 'matchtype' , 'matchtypekey', @matchtypes.collect {|c| [c.matchtype, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Match Type/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td> 		
+		<td class="identifier1">Match Type:</td>	 
+		<td class="slct1"><%= select 'matchtype' , 'matchtypekey1', @matchtypes.collect {|c| [c.matchtype, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Match Type/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>
+		<td class="identifier">Inning:</td>	 
+		<td class="slct"><%= select 'inning' , 'inningkey', @innings ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Match Type/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Inning:</td>	 
+		<td class="slct1"><%= select 'inning' , 'inningkey1', @innings ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Match Type/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+
+	</tr>
+	<tr>
+
+		<td class="identifier">Coach:</td>	 	
+		<td class="slct"><%= select 'coach' , 'coachkey', @coaches.collect {|c| [c.name, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Coach/es', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td> 		
+		<td class="identifier1">Coach:</td>	 	
+		<td class="slct1"><%= select 'coach' , 'coachkey1', @coaches.collect {|c| [c.name, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Coach/es', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>		
+		<td class="identifier">Manager:</td>	 	
+		<td class="slct"><%= select 'manager' , 'managerkey', @managers.collect {|c| [c.name, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Manager/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>	
+		<td class="identifier1">Manager:</td>	 	
+		<td class="slct1"><%= select 'manager' , 'managerkey1', @managers.collect {|c| [c.name, c.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Manager/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>
+		<td class="identifier">Player Type:</td>	 	
+		<td class="slct"><%= select 'playertype' , 'playertypekey', @playertypes.collect {|c| [c.playertype, c.playertype ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Player Type/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td> 		
+		<td class="identifier1">Player Type:</td>	 	
+		<td class="slct1"><%= select 'playertype' , 'playertypekey1', @playertypes.collect {|c| [c.playertype, c.playertype ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Player Type/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>		
+		<td class="identifier">End:</td>	 	
+		<td class="slct"><%= select 'end' , 'endkey', @ends.collect {|c| [c[1], c[0] ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select End/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>	
+		<td class="identifier1">End:</td>	 	
+		<td class="slct1"><%= select 'end' , 'endkey1', @ends.collect {|c| [c[1], c[0] ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select End/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>
+		<td class="identifier">Batting Position:</td>	 	
+		<td class="slct"><%= select 'battingposition', 'battingpositionkey', @battingpositions ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batting Style/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Bowling Position:</td>	 	
+		<td class="slct1"><%= select 'bowlingposition', 'bowlingpositionkey1' , @bowlingpositions ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batting Style/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>
+		<td class="identifier">Batting Style:</td>	 	
+		<td class="slct"><%= select 'battingstyle' , 'battingstylekey', @battingstyles.collect {|c| [c.battingstyle, c.battingstyle ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batting Style/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Bowling Type:</td>	 	
+		<td class="slct1"><%= select 'bowlingtype' , 'bowlingtypekey1', @bowlingtypes.collect {|c| [c.bowlingtype, c.bowlingtype ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Type/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>
+		<td class="identifier">Batsman:</td>	 	
+		<td class="slct"><%= select 'batsman' , 'batsmankey', @players.collect {|c| [c.playerid.to_s+' '+c.fullname, c.id, {'data-countrykey'=>c.countrykey,'data-format'=>c.formatkey, 'data-playertype'=>c.playertype, 'data-battingstyle'=>c.battingstyle, 'data-bowlingstyle'=>c.bowlingstyle, 'data-bowlingtype'=>c.bowlingtype, 'data-wh_current'=>c.wh_current}] },{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batsman/en', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Bowler:</td>	 	
+		<td class="slct1"><%= select 'bowler' , 'bowlerkey1', @players.collect {|c| [c.playerid.to_s+' '+c.fullname, c.id, {'data-countrykey'=>c.countrykey,'data-format'=>c.formatkey, 'data-playertype'=>c.playertype, 'data-battingstyle'=>c.battingstyle, 'data-bowlingstyle'=>c.bowlingstyle,'data-bowlingtype'=>c.bowlingtype, 'data-wh_current'=>c.wh_current}] },{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowler/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		
+	</tr>
+	<tr>
+		<td class="identifier">Shot Type</td>
+		<td class="slct"><%= select 'st' , 'stkey', @shottypes.collect {|s| [s.shottype, s.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Shot Type', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Bowling Style:</td>	 	
+		<td class="slct1"><%= select 'bowlingstyle' , 'bowlingstylekey1', @bowlingstyles.collect {|c| [c.bowlingstyle, c.bowlingstyle ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Style/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
+	<tr>
+		<td class="identifier"></td>
+		<td class="slct"></td>
+		<td class="middle"></td>
+		<td class="identifier1">Line:</td>	
+		<td class="slct1"><%= select 'line' , 'linekey1', @lines.collect {|l| [l.line, l.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Line/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
+	
+	<tr>
+		<td class="identifier"></td>
+		<td class="slct"></td>
+		<td class="middle"></td>
+		<td class="identifier1">Length:</td>
+		<td class="slct1"><%= select 'length' , 'lengthkey1', @lengths.collect {|l| [l.length, l.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Length/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	 	
+	</tr>
+	<tr>
+		<td class="identifier"></td>
+		<td class="slct"></td>
+		<td class="middle"></td>
+		<td class="identifier1">Bowling Side:</td>
+		<td class="slct1"><%= select 'side' , 'sidekey1', @sides.collect {|s| [s['side'], s['val']]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Side/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	 	
+	</tr>	
+
+
+</table>
+
+<table id="chart">
+	<tr><td></td>
+		<td class="charttype">Column</td>
+		<td class="charttype">Line</td>
+		<td class="charttype">Pie</td>
+
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td id="last">Last</td>
+		<td><%= text_field_tag 'lastXmatches' %></td>
+		
+	</tr>
+	<tr>
+		<td></td>
+		<td class="metric" data-metric="runs" >Runs</td>
+		<td class="metric" data-metric="avg" >Avg</td>
+		<td class="metric" data-metric="sr">SR</td>
+		<td class="metric" data-metric="dbx" >BBX</td>
+		<td class="metric" data-metric="bbh" >BBH</td>
+		<td class="metric" data-metric="bbb" >BBB</td>
+		<td class="metric" data-metric="mtchwon" >Mtch Won</td>
+		<td class="metric" data-metric="mtchlost" >Mtch Lost</td>
+		<td class="metric" data-metric="inns" >Inns</td>
+		<td class="metric" data-metric="zero" >0's</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td class="metric" data-metric="one" >1's</td>
+		<td class="metric" data-metric="two" >2's</td>
+		<td class="metric" data-metric="three" >3's</td>
+		<td class="metric" data-metric="four" >4's</td>
+		<td class="metric" data-metric="six" >6's</td>
+		<td class="metric" data-metric="wides" >Wides</td>
+		<td class="metric" data-metric="noballs" >No Balls</td>
+		<td class="metric" data-metric="byes" >Byes</td>
+		<td class="metric" data-metric="legbyes" >Leg Byes</td>
+		<td class="metric" data-metric="extras" >Extras</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="metric" data-metric="noofdels" >#deliveries</td>
+		<td class="metric" data-metric="noofshots" >#shots</td>
+		<td class="metric" data-metric="econ" >Econ</td>
+		<td class="metric" data-metric="bavg" >Bowl Avg</td>
+		<td class="metric" data-metric="fifties" >50s</td>
+		<td class="metric" data-metric="hundreds" >100s</td>
+		<td class="metric" data-metric="dsmsl" >Dsmsl</td>
+	</tr>
+
+	<tr><td class="groups" id="groupbybattingstyle" data-group="bts">Bat Style</td><td rowspan="14" colspan="16" id="container" style="width: 400px; max-height: 200px; margin: 0 auto" ></td>
+		<td class="groups" id="groupbybowlingtype" data-group="bls">Bowl Style</td></tr>
+	<tr><td class="groups" id="groupbyteam" data-group="team">Team</td>
+		<td class="groups" id="groupbyteamagainst" data-group="teamagainst">Team Against</td></tr>
+	<tr><td class="groups" id="groupbybattingposition" data-group="battingposition">Bat Position</td>
+		<td class="groups" id="groupbybowlingposition" data-group="bowlingposition">Bowl Position</td></tr>
+	<tr><td class="groups" id="groupbyteamtype" data-group="teamtype">Team Type</td>
+		<td class="groups" id="groupbymatchtype" data-group="matchtype">Match Type</td></tr>
+	<tr><td class="groups" id="groupbyformat" data-group="format">Format</td>
+		<td class="groups" id="groupbycountry" data-group="country">Country</td></tr>
+	<tr><td class="groups" id="groupbybowlingtype" data-group="bowlingtype">Bowl Type</td>
+		<td class="groups" id="groupbybatsman" data-group="batsman">Batsman</td></tr>
+	<tr><td class="groups" id="groupbydismissal" data-group="dismissal">Dismissal</td></td>
+		<td class="groups" id="groupbytournament" data-group="tournament">Tournament</td></tr>
+	<tr><td class="groups" id="groupbymanager" data-group="manager">Manager</td>
+		<td class="groups" id="groupbycoach" data-group="coach">Coach</td></tr>
+	<tr><td class="groups" id="groupbyvenue" data-group="venue">Venue</td>
+		<td class="groups" id="groupbyinning" data-group="inning">Inning</td></tr>
+	<tr><td class="groups" id="groupbyyear" data-group="year">year</td>
+		<td class="groups" id="groupbycountryagainst" data-group="countryagainst">Country Against</td></tr>
+	<tr><td class="groups" id="groupbybowler" data-group="bowler">Bowler</td>
+		<td class="groups" id="groupbypship" data-group="pship">Partnership</td></tr>
+	<tr><td class="groups" id="groupbycr" data-group="cr">CR</td>
+		<td class="groups" id="groupbymatch" data-group="match">Match</td></tr>
+	<tr><td class="groups" id="groupbyshottype" data-group="shottype">Shot Type</td>
+		<td class="groups" id="groupbyline" data-group="line">Line</td></tr>
+	<tr><td class="groups" id="groupbyside" data-group="side">Bowling Side</td>
+		<td class="groups" id="groupbylength" data-group="length">Length</td></tr>
+</table>
+
+
+
+		

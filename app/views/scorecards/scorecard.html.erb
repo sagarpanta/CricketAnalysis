@@ -1,0 +1,132 @@
+<div id="pdf_page">
+		<div><%= @tournament.name %></div>
+		<div><%= @teamone.teamname %> vs <%= @teamtwo.teamname %></div>
+		<div><%= @formatarr[0] %> @ <%= @venue[0].venuename %></div>
+		<div>Score:<%= @runs %>/<%= @wickets %><br/>Overs:<%= @overs %></div>
+
+
+		<div id="inning_one">
+
+				<div>
+					<table>
+						<th>Batsman</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th>Runs</th>
+						<th>Balls Faced</th>
+						<th>Strike Rate</th>
+						<th>4's</th>
+						<th>6's</th>
+						<% @batsmen.each do |b| %>
+							<tr>
+								<td><%= b[:name] %></td>
+								<td><%= @dismissals[b[:outtypekey]] %></td>
+								<td><%= @fielders[b[:fielderkey]] %></td>
+								<td><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
+								<td><%= b[:runs] %></td>	
+								<td><%= b[:ballsfaced] %></td>
+								<td><%= number_with_precision(b[:strikerate], :precision => 1) %></td>
+								<td><%= b[:fours] %></td>
+								<td><%= b[:sixes] %></td>
+							</tr>
+						<% end %>
+					</table>
+				</div>
+
+
+				<div>
+					<table>
+						<th>Bowlers</th>
+						<th>Overs</th>
+						<th>Runs</th>
+						<th>Maidens</th>
+						<th>Wickets</th>
+						<th>Economy</th>
+						<th>4's</th>
+						<th>6's</th>
+
+						
+						<% @bowlers.each do |b| %>
+							<% if b[:name] != '' %>
+								<tr>
+									<td><%= b[:name] %></td>
+									<td><%= b[:overs] %></td>
+									<td><%= b[:runs] %></td>
+									<td><%= b[:maidens] %></td>
+									<td><%= b[:wickets] %></td>
+									<td><%= number_with_precision(b[:economy], :precision => 1) %></td>
+									<td><%= b[:fours] %></td>
+									<td><%= b[:sixes] %></td>
+								</tr>
+							<% end %>
+						<% end %>
+					</table>
+				</div>
+		</div>
+
+		<br/>
+		<br/>
+		<div>Score:<%= @runs1 %>/<%= @wickets1 %><br/>Overs:<%= @overs1 %></div>
+
+		<div id="inning_two">
+				<div>
+					<table>
+						<th>Batsman</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th>Runs</th>
+						<th>Balls Faced</th>
+						<th>Strike Rate</th>
+						<th>4's</th>
+						<th>6's</th>
+
+						
+						<% @batsmen1.each do |b| %>
+							<tr>
+								<td><%= b[:name] %></td>
+								<td><%= @dismissals[b[:outtypekey]] %></td>
+								<td><%= @fielders[b[:fielderkey]] %></td>
+								<td><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
+								<td><%= b[:runs] %></td>	
+								<td><%= b[:ballsfaced] %></td>
+								<td><%= number_with_precision(b[:strikerate], :precision => 1) %></td>
+								<td><%= b[:fours] %></td>
+								<td><%= b[:sixes] %></td>
+							</tr>
+						<% end %>
+					</table>
+				</div>
+
+
+				<div>
+					<table>
+						<th>Bowlers</th>
+						<th>Overs</th>
+						<th>Runs</th>
+						<th>Maidens</th>
+						<th>Wickets</th>
+						<th>Economy</th>
+						<th>4's</th>
+						<th>6's</th>
+
+						
+						<% @bowlers1.each do |b| %>
+							<% if b[:name] != '' %>
+								<tr>
+									<td><%= b[:name] %></td>
+									<td><%= b[:overs] %></td>
+									<td><%= b[:runs] %></td>
+									<td><%= b[:maidens] %></td>
+									<td><%= b[:wickets] %></td>
+									<td><%= number_with_precision(b[:economy], :precision => 1) %></td>
+									<td><%= b[:fours] %></td>
+									<td><%= b[:sixes] %></td>
+								</tr>
+							<% end %>
+						<% end %>
+					</table>
+				</div>
+		</div>
+</div>

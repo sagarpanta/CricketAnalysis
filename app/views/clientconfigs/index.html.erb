@@ -1,0 +1,69 @@
+<h1>Listing clientconfigs</h1>
+
+<table>
+  <tr>
+    <th>Clientkey</th>
+    <th>Runs</th>
+    <th>Avg</th>
+    <th>Sr</th>
+    <th>Dsmsl</th>
+    <th>Bbh</th>
+    <th>Bbb</th>
+    <th>Mtchwon</th>
+    <th>Mtchlost</th>
+    <th>Inns</th>
+    <th>Zero</th>
+    <th>One</th>
+    <th>Two</th>
+    <th>Three</th>
+    <th>Four</th>
+    <th>Five</th>
+    <th>Six</th>
+    <th>Wides</th>
+    <th>Noballs</th>
+    <th>Byes</th>
+    <th>Legbyes</th>
+    <th>Extras</th>
+    <th>Covrsnration</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @clientconfigs.each do |clientconfig| %>
+  <tr data-client="<%= clientconfig.clientkey %>">
+    <td><%= clientconfig.clientkey %></td>
+    <td class="runs"><%= clientconfig.runs %></td>
+    <td class="avg"><%= clientconfig.avg %></td>
+    <td class="sr"><%= clientconfig.sr %></td>
+    <td class="dsmsl"><%= clientconfig.dsmsl %></td>
+    <td class="bbh"><%= clientconfig.bbh %></td>
+    <td class="bbb"><%= clientconfig.bbb %></td>
+    <td class="mtchwon"><%= clientconfig.mtchwon %></td>
+    <td class="mtchlost"><%= clientconfig.mtchlost %></td>
+    <td class="inns"><%= clientconfig.inns %></td>
+    <td class="zero"><%= clientconfig.zero %></td>
+    <td class="one"><%= clientconfig.one %></td>
+    <td class="two"><%= clientconfig.two %></td>
+    <td class="three"><%= clientconfig.three %></td>
+    <td class="four"><%= clientconfig.four %></td>
+    <td class="five"><%= clientconfig.five %></td>
+    <td class="six"><%= clientconfig.six %></td>
+    <td class="wides"><%= clientconfig.wides %></td>
+    <td class="noballs"><%= clientconfig.noballs %></td>
+    <td class="byes"><%= clientconfig.byes %></td>
+    <td class="legbyes"><%= clientconfig.legbyes %></td>
+    <td class="extras"><%= clientconfig.extras %></td>
+    <td class="noofdels"><%= clientconfig.noofdels %></td>
+	<td class="noofshots"><%= clientconfig.noofshots %></td>
+	<td class="conversionratio"><%= clientconfig.covrsnratio %></td>
+    <td><%= link_to 'Show', clientconfig %></td>
+    <td><%= link_to 'Edit', edit_clientconfig_path(clientconfig) %></td>
+    <td><%= link_to 'Destroy', clientconfig, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Clientconfig', new_clientconfig_path %>

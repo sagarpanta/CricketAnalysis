@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  matchtypekey: 1
+  teamidone: 1
+  teamidtwo: 1
+  tournamentkey: 1
+  venuekey: 1
+  matchwon: 1
+  matchtied: 1
+  matchwonortied: false
+  winnerkey: 1
+  details: MyString
+  formatkey: 1
+
+two:
+  matchtypekey: 1
+  teamidone: 1
+  teamidtwo: 1
+  tournamentkey: 1
+  venuekey: 1
+  matchwon: 1
+  matchtied: 1
+  matchwonortied: false
+  winnerkey: 1
+  details: MyString
+  formatkey: 1

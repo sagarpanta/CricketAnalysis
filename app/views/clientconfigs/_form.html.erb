@@ -1,0 +1,142 @@
+<%= form_for(@clientconfig) do |f| %>
+  <% if @clientconfig.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@clientconfig.errors.count, "error") %> prohibited this clientconfig from being saved:</h2>
+
+      <ul>
+      <% @clientconfig.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :clientkey %><br />
+    <%= f.select :clientkey, @clients %>
+  </div>
+  <div>
+    select all<br />
+    <%= check_box_tag 'all'  %>
+  </div>  
+  
+  <div class="field">
+    <%= f.label :runs %><br />
+    <%= f.check_box :runs %>
+  </div>
+  <div class="field">
+    <%= f.label :avg %><br />
+    <%= f.check_box :avg %>
+  </div>
+  <div class="field">
+    <%= f.label :sr %><br />
+    <%= f.check_box :sr %>
+  </div>
+  <div class="field">
+    <%= f.label :bavg %><br />
+    <%= f.check_box :bavg %>
+  </div>
+  <div class="field">
+    <%= f.label :econ %><br />
+    <%= f.check_box :econ %>
+  </div>
+  <div class="field">
+    <%= f.label :dsmsl %><br />
+    <%= f.check_box :dsmsl %>
+  </div>
+  <div class="field">
+    <%= f.label :bbh %><br />
+    <%= f.check_box :bbh %>
+  </div>
+  <div class="field">
+    <%= f.label :bbb %><br />
+    <%= f.check_box :bbb %>
+  </div>
+  <div class="field">
+    <%= f.label :dbx %><br />
+    <%= f.check_box :dbx %>
+  </div>
+  <div class="field">
+    <%= f.label :mtchwon %><br />
+    <%= f.check_box :mtchwon %>
+  </div>
+  <div class="field">
+    <%= f.label :mtchlost %><br />
+    <%= f.check_box :mtchlost %>
+  </div>
+  <div class="field">
+    <%= f.label :inns %><br />
+    <%= f.check_box :inns %>
+  </div>
+  <div class="field">
+    <%= f.label :zero %><br />
+    <%= f.check_box :zero %>
+  </div>
+  <div class="field">
+    <%= f.label :one %><br />
+    <%= f.check_box :one %>
+  </div>
+  <div class="field">
+    <%= f.label :two %><br />
+    <%= f.check_box :two %>
+  </div>
+  <div class="field">
+    <%= f.label :three %><br />
+    <%= f.check_box :three %>
+  </div>
+  <div class="field">
+    <%= f.label :four %><br />
+    <%= f.check_box :four %>
+  </div>
+  <div class="field">
+    <%= f.label :five %><br />
+    <%= f.check_box :five %>
+  </div>
+  <div class="field">
+    <%= f.label :six %><br />
+    <%= f.check_box :six %>
+  </div>
+  <div class="field">
+    <%= f.label :wides %><br />
+    <%= f.check_box :wides %>
+  </div>
+  <div class="field">
+    <%= f.label :noballs %><br />
+    <%= f.check_box :noballs %>
+  </div>
+  <div class="field">
+    <%= f.label :byes %><br />
+    <%= f.check_box :byes %>
+  </div>
+  <div class="field">
+    <%= f.label :legbyes %><br />
+    <%= f.check_box :legbyes %>
+  </div>
+  <div class="field">
+    <%= f.label :extras %><br />
+    <%= f.check_box :extras %>
+  </div>
+  <div class="field">
+    <%= f.label :covrsnratio %><br />
+    <%= f.check_box :covrsnratio %>
+  </div>
+  <div class="field">
+    <%= f.label :fifties %><br />
+    <%= f.check_box :fifties %>
+  </div>
+  <div class="field">
+    <%= f.label :hundreds %><br />
+    <%= f.check_box :hundreds %>
+  </div>
+  <div class="field">
+    <%= f.label :noofdels %><br />
+    <%= f.check_box :noofdels %>
+  </div>
+  <div class="field">
+    <%= f.label :noofshots %><br />
+    <%= f.check_box :noofshots %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

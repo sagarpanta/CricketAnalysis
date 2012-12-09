@@ -1,0 +1,74 @@
+<%= form_for(@player, :remote=>true)  do |f| %>
+  <% if @player.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@player.errors.count, "error") %> prohibited this player from being saved:</h2>
+
+      <ul>
+      <% @player.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+	<%= f.text_field :clientkey, :value=>current_user.id, :hidden=>true %>
+  </div>
+
+  <div id="maxid" style="display:none"><%= Player.maxplayerid %></div>
+  <table align="center">
+	<tr>
+		<td class="caption"></td>
+		<td id="maxplayerid"><%= @maxidtext %><br /></td>
+	</tr>
+	<tr>
+		<td class="caption">Player ID</td>
+		<td class="fields"><%= f.number_field :playerid, :size=>"20", :disabled=>@disabled %></td>
+	</tr>
+	<tr>
+		<td class="caption">First Name</td>
+		<td class="fields"><%= f.text_field :fname, :size=>"20" %></td>
+	</tr>
+	<tr>
+		<td class="caption">Last Name</td>
+		<td class="fields"><%= f.text_field :lname,:size=>"20" %></td>
+	</tr>
+	<tr>
+		<td class="caption">DOB</td>
+		<td class="fields"><%= f.text_field :dob , {:size=>"20", :id=>"datepicker"}%></td>
+	</tr>
+	<tr>
+		<td class="caption">Player Type</td>
+		<td class="fields"><%= f.select :playertype, [['Batsman', 'Batsman'], ['Batsman WK', 'Batsman WK'], ['Bowler', 'Bowler'], ['All Rounder', 'All Rounder'], ['Wicket Keeper', 'Wicket Keeper']] %></td>
+	</tr>
+	<tr>
+		<td class="caption">Batting Style</td>
+		<td class="fields"><%= f.select :battingstyle, [['Right Handed', 'Right Handed'], ['Left Handed', 'Left Handed']] %></td>
+	</tr>
+	<tr>
+		<td class="caption">Bowling Style</td>
+		<td class="fields"><%= f.select :bowlingstyle, [['None' , 'None'],['Right Handed', 'Right Handed'], ['Left Handed', 'Left Handed']] %></td>
+	</tr>
+	<tr>
+		<td class="caption">Bowling Type</td>
+		<td class="fields"><%= f.select :bowlingtype, [['None', 'None'],['Fast', 'Fast'], ['Medium', 'Medium'], ['Slow','Slow'], ['off Spin','off Spin'], ['Leg Spin','Leg Spin'], ['Orthodox','Orthodox'], ['Unorthodox', 'Unorthodox']] %></td>
+	</tr>
+	<tr>
+		<td class="caption">Format</td>
+		<td class="fields"><%= f.select :formatkey, @formats %></td>
+	</tr>
+	<tr>
+		<td class="caption">Country</td>
+		<td class="fields"><%= f.select :countrykey, @countries %></td>
+	</tr>	
+  </table>
+  <div id="success_message"></div>
+  <div class="actions">
+    <%= f.submit "", :class=>'submit', :type => :image, :src => @img, :data=>@dImg  %>
+  </div>
+<% end %>
+
+<div id="dialog-player-form" title="Warning!">
+    <p>It is not recommended to change Player ID</p>
+	<button id="btn-ok">OK</button>
+</div>
+

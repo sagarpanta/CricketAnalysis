@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  age: 1
+  battingstyle: MyString
+  bowlingstyle: MyString
+  bowlingtype: MyString
+  dob: 2012-09-29 20:40:48
+  fname: MyString
+  lname: MyString
+  format: MyString
+  formatkey: 1
+  fullname: MyString
+  playertype: MyString
+  wh_current: 1
+  playerid: 1
+
+two:
+  age: 1
+  battingstyle: MyString
+  bowlingstyle: MyString
+  bowlingtype: MyString
+  dob: 2012-09-29 20:40:48
+  fname: MyString
+  lname: MyString
+  format: MyString
+  formatkey: 1
+  fullname: MyString
+  playertype: MyString
+  wh_current: 1
+  playerid: 1

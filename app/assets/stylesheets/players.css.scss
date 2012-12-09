@@ -1,0 +1,145 @@
+// Place all the styles related to the Players controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+
+
+table#players{
+	position:relative;
+	margin-left:30px;
+}
+
+
+
+table#players th.lite{
+	background-color:steelblue;
+}
+
+#players tr th{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.9;
+	font-size:11px;
+	font-family:"verdana";
+	font-weight:bold;
+	text-align:center;
+}
+
+table#players tr th a{
+	color:white;
+}
+
+table#players tr th:hover{	
+	color:white;
+	background-color:steelblue;
+}
+
+table#players tr th a:hover{
+	color:white;
+	background-color:steelblue;
+}
+
+#players tr td{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+}
+
+#players tr td a{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+}
+
+
+#newplayer a{
+	color:white;
+	font-weight:bold;
+	opacity:0.8
+
+}
+
+
+#newplayer{
+	text-align:center;
+}
+
+#newplayer a{
+	color:white;
+}
+
+#editplayer{
+	text-align:center;
+}
+
+#editplayer a{
+	color:white;
+}
+
+
+#maxplayerid{
+		text-align:left;
+		color:white;
+		font-weight:bold
+}
+
+
+
+
+#new_player .caption{
+	text-align:right;
+	color:white;
+	font-weight:bold
+}
+
+
+#new_player .fields{
+	text-align:left;
+}
+
+
+#new_player{
+	min-height:220px;
+}
+
+#new_player table, #new_player .actions, #success_message{
+position:relative;
+top:0px
+}
+
+
+.edit_player .fields{
+	text-align:left;
+}
+
+
+.edit_player{
+	min-height:220px;
+}
+
+.edit_player table, .edit_player .actions, #success_message{
+position:relative;
+top:0px
+}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,39 @@
+<%= form_for(@tournament, :remote=>true) do |f| %>
+  <% if @tournament.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@tournament.errors.count, "error") %> prohibited this tournament from being saved:</h2>
+
+      <ul>
+      <% @tournament.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <div class="field">
+   <%= f.number_field :clientkey, :value=>current_user.id, :hidden=>true %>
+  </div>
+  <table>
+	<tr>
+		<td class="caption">Name</td>
+		<td class="fields"><%= f.text_field :name, :size=>"20" %></td>
+	</tr>
+	<tr>
+		<td class="caption">Date Start</td>
+		<td class="fields"><%= f.datetime_select :datestart %></td>
+	</tr>
+	<tr>
+		<td class="caption">Date End</td>
+		<td class="fields"><%= f.datetime_select :dateend %></td>
+	</tr>
+	<tr>
+		<td class="caption">Format</td>
+		<td class="fields"><%= f.select :formatkey, @formats %></td>
+	</tr>
+  </table>
+  <div id="success_message"></div>
+  <div class="actions">
+    <%= f.submit "", :class=>'submit', :type => :image, :src => @img, :data=>@dImg  %>
+  </div>
+<% end %>

@@ -1,0 +1,49 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  teamkey: 1
+  tournamentkey: 1
+  matchkey: 1
+  battingendkey: 1
+  batsmankey: 1
+  bowlerkey: 1
+  runs: 1
+  zeros: 1
+  ones: 1
+  twos: 1
+  threes: 1
+  fours: 1
+  fives: 1
+  sixes: 1
+  other: 1
+  position: 1
+  outtypekey: 1
+  fielderkey: MyString
+  integer: MyString
+  outbywk: false
+  formatkey: 1
+  dotconversionkey: 1
+
+two:
+  teamkey: 1
+  tournamentkey: 1
+  matchkey: 1
+  battingendkey: 1
+  batsmankey: 1
+  bowlerkey: 1
+  runs: 1
+  zeros: 1
+  ones: 1
+  twos: 1
+  threes: 1
+  fours: 1
+  fives: 1
+  sixes: 1
+  other: 1
+  position: 1
+  outtypekey: 1
+  fielderkey: MyString
+  integer: MyString
+  outbywk: false
+  formatkey: 1
+  dotconversionkey: 1

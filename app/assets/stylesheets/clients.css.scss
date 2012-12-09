@@ -1,0 +1,189 @@
+// Place all the styles related to the Clients controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#signin_form{
+	margin-left:-40px;
+	margin-top:-20px;
+}
+
+#signin_form form{
+  border: 2px solid black;
+  padding: 10px;
+  position:absolute;  
+  width:200px;
+  height:100%;
+  margin: 8.25px;
+  color:white;
+  
+}
+
+div#signin_title{
+	position:absolute;
+	left:50%;
+	margin-top:50px;
+	font-size:50px;
+	font-weight:bold;
+	color:white;
+	font-family:"Helvetica, Arial, Sans-serif";
+	
+}
+
+#update_form{
+	position:relative;
+	margin-top:200px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+#clientstable{
+	color:white
+}
+
+
+
+div.sfa{
+	position:absolute;
+	margin-top:150px;
+	left:300px;
+	color:white;
+	font-size:18px;
+	width:500px;
+}
+
+div.sfa{
+line-height:200%;
+}
+
+
+ 
+p.title {
+	font-family:"Helvetica, Arial, Sans-serif";
+	text-align:center;
+	font-size:200%;
+
+ }
+ 
+
+ 
+  p#description {
+	font-family:"Helvetica, Arial, Sans-serif";
+ 	text-align:left;
+	font-size:100%;
+	line-height:120%;
+	text-align:left;
+  }
+
+  
+  
+div.sfh{
+	position:absolute;
+	margin-top:450px;
+	right:50px;
+	color:white;
+	font-size:18px;
+	width:500px;
+}
+
+div.sfh{
+line-height:200%;
+}
+
+div.sfhi{
+	position:absolute;
+	margin-top:450px;
+	left:300px;
+}
+
+
+
+
+
+
+div.sfc{
+	position:absolute;
+	margin-top:600px;
+	left:300px;
+	color:white;
+	font-size:18px;
+	width:500px;
+}
+
+div.sfc{
+line-height:200%;
+}
+
+
+
+
+#home_img{
+	position:relative;
+	text-align:center;
+	margin-top:150px;
+}
+
+#setup_nav{
+position:relative;
+margin-top:20px;
+}
+
+#setup_nav ul{
+	text-align:center;
+	margin-left:-40px
+}
+
+
+
+#setup_nav li{
+	display:inline
+}
+
+#setup_nav li a:hover{
+	background-color:transparent
+}
+
+
+#forgotu{
+	text-align:center;
+}
+
+#forgotp{
+	text-align:center;
+}
+
+#forgotu a, #forgotp a{
+	color:white;
+}
+
+#forgotu a:hover, #forgotp a:hover{
+	opacity:0.5;
+}
+
+
+
+#form_forgotp .fields{
+	color:white
+}
+
+#form_forgotp .fields,#form_forgotp .actions{
+	position:relative;
+	top:40px;
+}
+
+
+#form_forgotu .fields{
+	color:white
+}
+
+#form_forgotu .fields,#form_forgotu .actions{
+	position:relative;
+	top:40px;
+}
+
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+<h2>
+	<ul id="navigations">
+		<li data-link='countries' class="<%= @countryorder %>"><span class="pretty" title="Country"><%= image_tag('/assets/country.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='tournaments' class="<%= @tournamentorder %>"><span class="pretty" title="Tournament"><%=  image_tag('/assets/tournament.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='players' class="<%= @playerorder %>"><span class="pretty" title="Player"><%=  image_tag('/assets/player.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='managers' class="<%= @managerorder %>"><span class="pretty" title="Manager"><%=  image_tag('/assets/manager.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='coaches' class="<%= @coachorder %>"><span class="pretty" title="Coach"><%= image_tag('/assets/coach.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='teams' class="<%= @teamorder %>"><span class="pretty" title="Team"><%=  image_tag('/assets/team.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='venues' class="<%= @venueorder %>"><span class="pretty" title="Venue"><%=  image_tag('/assets/venue.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='matches' class="<%= @matchorder %>"><span class="pretty" title="Match"><%=  image_tag('/assets/match.png') %></span></li>
+	</ul>
+</h2>
+<table id="matches" cellspacing="0" cellpadding="0" >
+  <tr>
+    <th>Match Type</th>
+    <th>Team One</th>
+    <th>Team Two</th>
+    <th>Tournament</th>
+    <th>Venue</th>
+    <th>Match Date</th>
+    <th>Time of Match</th>
+    <th>Match Won</th>
+    <th>Match Tied</th>
+    <th>Winner</th>
+    <th>Details</th>
+    <th>Format</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @matches.each do |match| %>
+  <tr>
+    <td><%= match.getMatchType %></td>
+    <td><%= match.getTeamOne(current_user.id) %></td>
+    <td><%= match.getTeamTwo(current_user.id) %></td>
+    <td><%= match.getTournament %></td>
+    <td><%= match.getVenue %></td>
+    <td><%= match.matchdate %></td>
+    <td><%= match.dayandnite == 1? 'Day' : 'D/N' %></td>
+    <td><%= match.matchwon %></td>
+    <td><%= match.matchtied %></td>
+    <td><%= match.getWinner(current_user.id) %></td>
+    <td><%= match.details %></td>
+    <td><%= match.getFormat %></td>
+	<td><%= link_to 'Scorecard', {:controller=>'scorecards', :action=>'match_scorecard_one' , :id=>match.id} %></td>
+    <td><%= link_to 'Edit', edit_match_path(match) %></td>
+    <td><%= link_to 'Destroy', match, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<div id="newmatch"><%= link_to 'New Match', new_match_path %></div>

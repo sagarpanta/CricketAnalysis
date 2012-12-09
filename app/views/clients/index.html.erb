@@ -1,0 +1,35 @@
+<h2>Listing clients</h2>
+
+<table id="clientstable">
+  <tr>
+    <th>Username</th>
+    <th>Encrypted password</th>
+    <th>Encrypted password confirmation</th>
+    <th>Remember token</th>
+    <th>Name</th>
+    <th>Home Country</th>
+    <th></th>
+    <th></th>
+	<th></th>
+  </tr>
+
+<% @clients.each do |client| %>
+  <tr>
+    <td><%= client.username %></td>
+    <td><%= client.encrypted_password %></td>
+    <td><%= client.encrypted_password_confirmation %></td>
+    <td><%= client.remember_token %></td>
+	<td><%= client.name %></td>
+	<td><%= client.country %></td>
+    <td><%= link_to 'Show', client %></td>
+    <td><%= link_to 'Edit', edit_client_path(client) %></td>
+    <td><%= link_to 'Destroy', client, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	<td id"generate"><%= link_to 'Generate', {:controller=>'clients', :action=>'generatePass' , :id=>client.id }, :remote=>true %></td>
+	<td id="temppass"></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Client', new_client_path %>

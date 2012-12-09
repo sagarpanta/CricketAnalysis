@@ -1,0 +1,23 @@
+<h5>
+	<div class="tab">
+		<table cellspacing="0" cellpadding="2">
+			<tr>
+				<td class="tab_item"></td>
+				<td class="tab_item"><%= link_to 'Sign In', signin_path %></td>
+			</tr>
+		</table>
+	</div>
+	<div style="clear: both;"></div>
+</h5>
+<div class="x">1</div>
+<h2>Forgot Username?</h2>
+	<%= form_tag('/show_username', :method=>'get', :id=>'form_forgotu') do %>
+	  <div class="fields">
+		Email<br/>
+		<%= text_field_tag(:email) %>
+	  </div>
+
+	  <div class="actions" id="submit">
+		<%= submit_tag("Validate") %>
+	  </div>
+	<% end %>

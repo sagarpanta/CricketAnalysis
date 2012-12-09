@@ -1,0 +1,177 @@
+<%= form_for(@scorecard) do |f| %>
+  <% if @scorecard.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@scorecard.errors.count, "error") %> prohibited this scorecard from being saved:</h2>
+
+      <ul>
+      <% @scorecard.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :ballsbeforeboundary %><br />
+    <%= f.number_field :ballsbeforeboundary %>
+  </div>
+  <div class="field">
+    <%= f.label :ballsbeforerun %><br />
+    <%= f.number_field :ballsbeforerun %>
+  </div>
+  <div class="field">
+    <%= f.label :ballsdelivered %><br />
+    <%= f.number_field :ballsdelivered %>
+  </div>
+  <div class="field">
+    <%= f.label :ballsfaced %><br />
+    <%= f.number_field :ballsfaced %>
+  </div>
+  <div class="field">
+    <%= f.label :batsmankey %><br />
+    <%= f.number_field :batsmankey %>
+  </div>
+  <div class="field">
+    <%= f.label :battingendkey %><br />
+    <%= f.number_field :battingendkey %>
+  </div>
+  <div class="field">
+    <%= f.label :battingposition %><br />
+    <%= f.number_field :battingposition %>
+  </div>
+  <div class="field">
+    <%= f.label :bowlerkey %><br />
+    <%= f.number_field :bowlerkey %>
+  </div>
+  <div class="field">
+    <%= f.label :bowlingendkey %><br />
+    <%= f.number_field :bowlingendkey %>
+  </div>
+  <div class="field">
+    <%= f.label :bowlingposition %><br />
+    <%= f.number_field :bowlingposition %>
+  </div>
+  <div class="field">
+    <%= f.label :byes %><br />
+    <%= f.number_field :byes %>
+  </div>
+  <div class="field">
+    <%= f.label :currentstrikerkey %><br />
+    <%= f.number_field :currentstrikerkey %>
+  </div>
+  <div class="field">
+    <%= f.label :currentnonstrikerkey %><br />
+    <%= f.number_field :currentnonstrikerkey %>
+  </div>
+  <div class="field">
+    <%= f.label :eights %><br />
+    <%= f.number_field :eights %>
+  </div>
+  <div class="field">
+    <%= f.label :fielderkey %><br />
+    <%= f.number_field :fielderkey %>
+  </div>
+  <div class="field">
+    <%= f.label :fives %><br />
+    <%= f.number_field :fives %>
+  </div>
+  <div class="field">
+    <%= f.label :formatkey %><br />
+    <%= f.number_field :formatkey %>
+  </div>
+  <div class="field">
+    <%= f.label :fours %><br />
+    <%= f.number_field :fours %>
+  </div>
+  <div class="field">
+    <%= f.label :inning %><br />
+    <%= f.number_field :inning %>
+  </div>
+  <div class="field">
+    <%= f.label :legbyes %><br />
+    <%= f.number_field :legbyes %>
+  </div>
+  <div class="field">
+    <%= f.label :maiden %><br />
+    <%= f.number_field :maiden %>
+  </div>
+  <div class="field">
+    <%= f.label :matchkey %><br />
+    <%= f.number_field :matchkey %>
+  </div>
+  <div class="field">
+    <%= f.label :noballs %><br />
+    <%= f.number_field :noballs %>
+  </div>
+  <div class="field">
+    <%= f.label :ones %><br />
+    <%= f.number_field :ones %>
+  </div>
+  <div class="field">
+    <%= f.label :others %><br />
+    <%= f.number_field :others %>
+  </div>
+  <div class="field">
+    <%= f.label :outtypekey %><br />
+    <%= f.number_field :outtypekey %>
+  </div>
+  <div class="field">
+    <%= f.label :outbywk %><br />
+    <%= f.number_field :outbywk %>
+  </div>
+  <div class="field">
+    <%= f.label :runs %><br />
+    <%= f.number_field :runs %>
+  </div>
+  <div class="field">
+    <%= f.label :sevens %><br />
+    <%= f.number_field :sevens %>
+  </div>
+  <div class="field">
+    <%= f.label :sixes %><br />
+    <%= f.number_field :sixes %>
+  </div>
+  <div class="field">
+    <%= f.label :teamidone %><br />
+    <%= f.number_field :teamidone %>
+  </div>
+  <div class="field">
+    <%= f.label :teamtwoid %><br />
+    <%= f.number_field :teamtwoid %>
+  </div>
+  <div class="field">
+    <%= f.label :threes %><br />
+    <%= f.number_field :threes %>
+  </div>
+  <div class="field">
+    <%= f.label :tournamentkey %><br />
+    <%= f.number_field :tournamentkey %>
+  </div>
+  <div class="field">
+    <%= f.label :twos %><br />
+    <%= f.number_field :twos %>
+  </div>
+  <div class="field">
+    <%= f.label :venuekey %><br />
+    <%= f.number_field :venuekey %>
+  </div>
+  <div class="field">
+    <%= f.label :wicket %><br />
+    <%= f.number_field :wicket %>
+  </div>
+  <div class="field">
+    <%= f.label :wides %><br />
+    <%= f.number_field :wides %>
+  </div>
+  <div class="field">
+    <%= f.label :zeros %><br />
+    <%= f.number_field :zeros %>
+  </div>
+  <div class="field">
+    <%= f.label :dismissedbatsmankey %><br />
+    <%= f.number_field :dismissedbatsmankey %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

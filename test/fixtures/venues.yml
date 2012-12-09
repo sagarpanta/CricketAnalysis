@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  venuename: MyString
+  endonekey: 
+  endtwokey: 1
+  endone: MyString
+  endtwo: MyString
+
+two:
+  venuename: MyString
+  endonekey: 
+  endtwokey: 1
+  endone: MyString
+  endtwo: MyString

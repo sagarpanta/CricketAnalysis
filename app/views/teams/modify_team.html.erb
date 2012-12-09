@@ -1,0 +1,108 @@
+<h2>
+	<ul id="order_of_setup">
+		<li data-link='countries/new' class="links <%= @countryorder %>"><span class="pretty" title="Country"><%= image_tag('/assets/country.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='tournaments/new' class="links <%= @tournamentorder %>"><span class="pretty" title="Tournament"><%=  image_tag('/assets/tournament.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='players/new' class="links <%= @playerorder %>"><span class="pretty" title="Player"><%=  image_tag('/assets/player.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='managers/new' class="links <%= @managerorder %>"><span class="pretty" title="Manager"><%=  image_tag('/assets/manager.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='coaches/new' class="links <%= @coachorder %>"><span class="pretty" title="Coach"><%= image_tag('/assets/coach.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='teams/new' class="links <%= @teamorder %>"><span class="pretty" title="Team"><%=  image_tag('/assets/team.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='venues/new' class="links <%= @venueorder %>"><span class="pretty" title="Venue"><%=  image_tag('/assets/venue.png') %></span></li>
+		<li class="transparent">h</li>
+		<li data-link='matches/new' class="links <%= @matchorder %>"><span class="pretty" title="Match"><%=  image_tag('/assets/match.png') %></span></li>
+	</ul>
+	Editing Team
+</h2>
+
+<div id='modify_team_form' data-role="page"> 
+  
+  <div class="field" id="clientfield">
+	<%= text_field_tag 'clientkey' , value=current_user.id, :hidden=>true %>
+  </div>
+  
+  <table>
+	<tr>
+		<td class="caption1">Country</td>
+		<td class="fields1"><%= select 'countrykey' ,'team' ,@countries , :selected=>@country_selected %></td>
+	</tr>
+	<tr>
+		<td class="caption1">Format</td>
+		<td class="fields1"><%= select 'team', 'formatkey', @formats, :selected=>@format_selected %></td>
+	</tr>
+  </table>  
+  
+  <table style="margin-left:5px">
+	<tr>
+		<td>
+		  <div class="selection">
+			<div class="selection_window">
+				<table>
+					<% @players.each do |p| %>
+						<tr class="player">
+							<td class="playerid"><%= p.playerid %></td>
+							<td class="playername" data-id="<%= p.id %>" data-country="<%= p.countrykey %>" data-format="<%= p.formatkey %>"><%= p.fullname %></td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		  </div>
+		</td>
+		<td>
+			<div class="drag_over">
+				<img alt="in_the_team" src="/assets/greater_than.png" id="intheteam" /><br/>
+				<img alt="out_of_the_team" src="/assets/less_than.png" id="outoftheteam" />
+			</div>
+		</td>
+		<td>
+			<div class="selected">
+			  <div class="selected_window">
+				<table id="removable_players_table"></table>
+			  </div>
+			</div>
+		</td>
+	</tr>
+  </table>
+  
+
+ 
+  <table>
+	<tr>
+		<td class="caption1">Coach</td>
+		<td class="fields1"><%= select 'team', 'coachkey', @coaches, :selected=> @coach_selected %></td>
+	</tr>
+	<tr>
+		<td class="caption1">Manager</td>
+		<td class="fields1"><%= select 'team', 'managerkey', @managers, :selected=>@manager_selected %></td>
+	</tr>
+	
+	<tr>
+		<td class="caption1">Team ID</td>
+		<td class="fields1"><%= text_field 'team', 'teamid', :disabled=>"disabled" %></td>
+	</tr>
+	<tr>
+		<td class="caption1">Team Type</td>
+		<td class="fields1"><%= select  'team', 'teamtypekey', @teamtypes, :selected=>@teamtype %></td>
+	</tr>
+	
+	<tr>
+		<td class="caption1">Team Name</td>
+		<td class="fields1"><%= text_field 'team', 'teamname' , :value=> @teamname %></td>
+	</tr>
+  </table> 
+
+  <div id="success_message"></div>   
+  <div id="update_team" class="actions">
+	  <%= image_tag('/assets/update.png') %>
+  </div>
+ </div>
+ 
+  <div id="modifyteam"><%= link_to 'Teams', teams_path %> | <%= link_to 'Next (New Venue)', new_venue_path %></div>
+
+
+
+
