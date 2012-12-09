@@ -45,14 +45,14 @@ $(document).ready(function(){
 	 $('#position').html("X Axis : " + e.pageX + " Y Axis : " + e.pageY +'  width:'+w+' center: '+w/2+'  vwidth:'+bodywidth+' bcenter: '+bodywidth/2);
 	});
 	
-	$('#centralnav').fadeTo(1,0);
+	$('#centralnav').fadeTo(0,0);
 	
 	$('#centralnav').live('mouseover' , function(){
-		$(this).fadeTo(1,1);
+		$(this).fadeTo(0,1);
 	});
 	
 	$('#centralnav').live('mouseout' , function(){
-		$(this).fadeTo(1,0);
+		$(this).fadeTo(0,0);
 	});
 	
 	
