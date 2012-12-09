@@ -3,7 +3,7 @@
 
 <div id="signin_form">
 	<%= form_for(:client, :url => new_session_path) do |f| %>
-	  <div class="fields">
+	  <div class="fields" id="firstfield">
 		<%= f.label :username , "User Name" %><br/>
 		<%= f.text_field :username, :size=>"15"  %>
 	  </div>
