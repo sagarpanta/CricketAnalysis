@@ -6,7 +6,8 @@ class AddAdminToClients < ActiveRecord::Migration
 
 	def change
 		CLIENTS.each do |c|
-			Client.create!(c)
+			client = Client.create(c)
+			cleint.save
 		end
 	end
 end
