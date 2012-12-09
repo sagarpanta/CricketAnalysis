@@ -9,7 +9,8 @@ class AddLengthsToLength < ActiveRecord::Migration
 	]
 	def change
 		LENGTHS.each do |length|
-			Length.create!(length)
+			l = Length.create(length)
+			l.save
 		end
 	end
 end

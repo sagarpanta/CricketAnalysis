@@ -5,7 +5,8 @@ class AddTypesToTeamType < ActiveRecord::Migration
 	]
 	def change
 		TYPES.each do |type|
-			TeamType.create!(type)
+			tt = TeamType.create(type)
+			tt.save
 		end
 	end
 end

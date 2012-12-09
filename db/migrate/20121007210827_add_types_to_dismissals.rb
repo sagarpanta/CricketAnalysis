@@ -11,7 +11,8 @@ class AddTypesToDismissals < ActiveRecord::Migration
 	]
 	def change
 		TYPES.each do |type|
-			Dismissal.create!(type)
+			d = Dismissal.create(type)
+			d.save
 		end
 	end
 end

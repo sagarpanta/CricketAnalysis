@@ -7,7 +7,8 @@ class AddTypesToFormats < ActiveRecord::Migration
 	]
 	def change
 		FORMATS.each do |f|
-			Format.create!(f)
+			fm = Format.create(f)
+			fm.save
 		end
 	end
 end

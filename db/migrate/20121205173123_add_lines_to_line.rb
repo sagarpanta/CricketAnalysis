@@ -7,7 +7,8 @@ class AddLinesToLine < ActiveRecord::Migration
 	]
 	def change
 		LINES.each do |line|
-			Line.create!(line)
+			l = Line.create(line)
+			l.save
 		end
 	end
 end

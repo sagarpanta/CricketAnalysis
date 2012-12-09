@@ -31,7 +31,8 @@ class AddShottypesToShottype < ActiveRecord::Migration
 	]
 	def change
 		SHOTS.each do |s|
-			Shottype.create!(s)
+			st=Shottype.create(s)
+			st.save
 		end
 	end
 end

@@ -6,7 +6,8 @@ class AddTypesToMatchtypes < ActiveRecord::Migration
 	]
 	def change
 		TYPES.each do |type|
-			MatchType.create!(type)
+			m = MatchType.create(type)
+			m.save
 		end
 	end
 end
