@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121209005924) do
+ActiveRecord::Schema.define(:version => 20121206155654) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -117,13 +117,13 @@ ActiveRecord::Schema.define(:version => 20121209005924) do
     t.string   "encrypted_password"
     t.string   "encrypted_password_confirmation"
     t.string   "remember_token"
+    t.string   "country"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
     t.string   "salt"
     t.string   "email"
     t.string   "temppass"
     t.string   "name"
-    t.string   "country"
   end
 
   create_table "coaches", :force => true do |t|
