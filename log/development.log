@@ -24531,3 +24531,5 @@ Served asset /application.js - 304 Not Modified (2ms)
 			'[0m
   [1m[35mClientconfig Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clientconfigs].* FROM [clientconfigs] WHERE [clientconfigs].[clientkey] = N''2'''
 Served asset /_analysis4.png - 304 Not Modified (0ms)
+Connecting to database specified by database.yml
+  [1m[36mSQL (1.0ms)[0m  [1mUSE [CricketAnalysis][0m
