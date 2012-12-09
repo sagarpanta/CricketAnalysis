@@ -257,11 +257,9 @@ class ScorecardsController < ApplicationController
 			@battingendname = @battingend[@battingendkey]
 			@bowlingendname = @battingend[@bowlingendkey]
 			
-
-
 			#if it is an over and the last runs taken is not one or three or five, 
 			#then swap the striker and non striker, and swap the batting end and bowling end
-			if ballsdelivered%6 == 0 and @runs%2!=1
+			if ballsdelivered%6 == 0 and @lastrun%2!=1
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
@@ -286,23 +284,35 @@ class ScorecardsController < ApplicationController
 				
 				#get the stats of batsman b so far.
 				stats = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).select('sum(runs) as runs, sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(ballsfaced) as ballsfaced, case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate')
+				
+				
 				hilite = ''
-				if @currentstrikerkey == b
+				if @currentstrikerkey == b and @lastrun%2!=1 and ballsdelivered%6 != 0
 					hilite = 'hilite'
-				elsif @currentnonstrikerkey == b
+				elsif @currentstrikerkey == b and ballsdelivered%6 == 0
+					hilite = 'hilite'
+				elsif @currentstrikerkey == b and @lastrun%2==1 and ballsdelivered%6 != 0
 					hilite = 'hilite-nonstriker'
+				elsif @currentnonstrikerkey == b and @lastrun%2!=1 and ballsdelivered%6 != 0
+					hilite = 'hilite-nonstriker'
+				elsif @currentnonstrikerkey == b and ballsdelivered%6 == 0
+					hilite = 'hilite-nonstriker'
+				elsif @currentnonstrikerkey == b and @lastrun%2==1 and ballsdelivered%6 != 0
+					hilite = 'hilite'
 				else
 					hilite = ''
 				end
 				
+			
 					
 				#get the last entry of the batsman b and get his information
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
 				outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
 				wktakingbowlerkey = outtypekey!=1? -2:playerlastentry[:bowlerkey]
 				disabled = outtypekey<=0? false : true
-				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :counter=>counter, 
-							 :battingposition=>playerlastentry.nil? ? counter:playerlastentry[:battingposition], 
+				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, 
+							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
+							 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :outtypekey=> playerlastentry.nil? ? -2:playerlastentry[:outtypekey], 
 							 :fielderkey =>playerlastentry.nil? ? -2:playerlastentry[:fielderkey], 
 							 :bowlerkey=>playerlastentry.nil? ? -2:playerlastentry[:bowlerkey], 
@@ -393,13 +403,14 @@ class ScorecardsController < ApplicationController
 			counter = 1
 			@fieldingside.each do |b|
 				if b[:playertype] == 'Bowler' or b[:playertype] == 'All Rounder'
-					temp = b[:bowlingposition].nil? ? counter:b[:bowlingposition]
+					temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
 					b[:bowlingposition] = temp
 					@bowlers << b
 					@wktakingbowlers << [b[:name],b[:playerkey]]
 					counter= counter + 1
 				end
 			end
+			@bowlers = @bowlers.sort_by{|b| b[:bowlingposition]}
 		else 
 			redirect_to signin_path
 		end	
@@ -535,11 +546,20 @@ class ScorecardsController < ApplicationController
 				
 				#get the stats of batsman b so far.
 				stats = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).select('sum(runs) as runs, sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(ballsfaced) as ballsfaced, case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate')
+				
 				hilite = ''
-				if @currentstrikerkey == b
+				if @currentstrikerkey == b and @lastrun%2!=1 and ballsdelivered%6 != 0
 					hilite = 'hilite'
-				elsif @currentnonstrikerkey == b
+				elsif @currentstrikerkey == b and ballsdelivered%6 == 0
+					hilite = 'hilite'
+				elsif @currentstrikerkey == b and @lastrun%2==1 and ballsdelivered%6 != 0
 					hilite = 'hilite-nonstriker'
+				elsif @currentnonstrikerkey == b and @lastrun%2!=1 and ballsdelivered%6 != 0
+					hilite = 'hilite-nonstriker'
+				elsif @currentnonstrikerkey == b and ballsdelivered%6 == 0
+					hilite = 'hilite-nonstriker'
+				elsif @currentnonstrikerkey == b and @lastrun%2==1 and ballsdelivered%6 != 0
+					hilite = 'hilite'
 				else
 					hilite = ''
 				end
@@ -549,8 +569,9 @@ class ScorecardsController < ApplicationController
 				outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
 				wktakingbowlerkey = outtypekey!=1? -2:playerlastentry[:bowlerkey]
 				disabled = outtypekey<=0? false : true
-				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :counter=>counter, 
-							 :battingposition=>playerlastentry.nil? ? counter:playerlastentry[:battingposition], 
+				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, 
+							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
+							 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :outtypekey=> playerlastentry.nil? ? -2:playerlastentry[:outtypekey], 
 							 :fielderkey =>playerlastentry.nil? ? -2:playerlastentry[:fielderkey], 
 							 :bowlerkey=>playerlastentry.nil? ? -2:playerlastentry[:bowlerkey], 
@@ -638,13 +659,15 @@ class ScorecardsController < ApplicationController
 			counter = 1
 			@fieldingside.each do |b|
 				if b[:playertype] == 'Bowler' or b[:playertype] == 'All Rounder'
-					temp = b[:bowlingposition].nil? ? counter:b[:bowlingposition]
+					temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
 					b[:bowlingposition] = temp
 					@bowlers << b
 					@wktakingbowlers << [b[:name],b[:playerkey]]
 					counter= counter + 1
 				end
 			end
+			
+			@bowlers = @bowlers.sort_by{|b| b[:bowlingposition]}
 		else 
 			redirect_to signin_path
 		end	
@@ -775,6 +798,8 @@ class ScorecardsController < ApplicationController
 				pos+=1
 				
 			end
+			
+			@batsmen = @batsmen.sort_by{|b| b[:battingposition]}
 
 			#types of dismissals. Add -2 to the entry, which is the default value 
 			#i.e. the batsman has not played yet or is still no out.
@@ -832,8 +857,8 @@ class ScorecardsController < ApplicationController
 				end
 			end
 			
+			@bowlers = @bowlers.sort_by{|b| b[:bowlingposition]}
 			
-
 			
 			################################ Second Inning ##########################################3
 			
@@ -907,7 +932,7 @@ class ScorecardsController < ApplicationController
 				pos+=1
 				
 			end
-
+			@batsmen1 = @batsmen1.sort_by{|b| b[:battingposition]}
 
 			#types of dismissals. Add -2 to the entry, which is the default value 
 			#i.e. the batsman has not played yet or is still no out.
@@ -964,6 +989,7 @@ class ScorecardsController < ApplicationController
 					counter= counter + 1
 				end
 			end
+			@bowlers1 = @bowlers1.sort_by{|b| b[:bowlingposition]}
 		else 
 			redirect_to signin_path
 		end	

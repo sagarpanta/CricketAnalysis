@@ -2,7 +2,7 @@ class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
   def index
-	begin
+
 		if signed_in?
 			@current_client = current_user.username
 			if current_user.username == 'admin'
@@ -25,12 +25,7 @@ class MatchesController < ApplicationController
 		else 
 			redirect_to signin_path
 		end
-		rescue => e
-			 @message = e.message
-			 @client = current_user
-			 @caught_at = 'matches#index'
-			 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-		end
+
   end
 
   # GET /matches/1

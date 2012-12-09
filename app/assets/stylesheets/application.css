@@ -31,6 +31,58 @@ h5{
 	width:100%
 }
 
+h3{
+	position:relative;
+	color:white;
+	margin-top:50px;
+	text-align:center
+}
+
+
+#centralnav{
+	position:absolute;
+	top:50px;
+	margin-left:-10px;
+	width:100%;
+	z-index:999
+}
+
+.ctabl{
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+.cnav{
+	width:100px;
+	height:50px;
+	text-align:center;
+	background-color:white;
+	color:black;
+	font-weight:bold;
+	opacity:0.6;
+	border:1px solid black;
+	border-radius:15px
+}
+
+.cnav a{
+	text-decoration:none;
+	display:block;
+	margin-top:25px;
+	width:100%;
+	height:100%;
+}
+
+.cnav a:hover{
+	background-color:transparent;
+	color:black;
+}
+
+
+
+
+
+
 .tab{
 	float:left;
 }

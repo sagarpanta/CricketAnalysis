@@ -131,6 +131,7 @@ class TeamsController < ApplicationController
 		if signed_in?
 			@current_client = current_user.username
 			@team = Team.find(params[:id])
+			
 
 			respond_to do |format|
 			  if @team.update_attributes(params[:team])

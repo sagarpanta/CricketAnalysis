@@ -45,8 +45,25 @@ $(document).ready(function(){
 	 $('#position').html("X Axis : " + e.pageX + " Y Axis : " + e.pageY +'  width:'+w+' center: '+w/2+'  vwidth:'+bodywidth+' bcenter: '+bodywidth/2);
 	});
 	
+	$('#centralnav').fadeTo(1,0);
+	
+	$('#centralnav').live('mouseover' , function(){
+		$(this).fadeTo(1,1);
+	});
+	
+	$('#centralnav').live('mouseout' , function(){
+		$(this).fadeTo(1,0);
+	});
 	
 	
+	$('.cnav').live('hover', function(){
+		$(this).css('opacity', '0.7');
+		
+	});
+	
+	$('.cnav').live('mouseout', function(){
+		$(this).css('opacity', '0.6');
+	});	
 	
 	
 	$('.actions input').live('mouseover', function(){
@@ -392,6 +409,7 @@ $(document).ready(function(){
 		$(this).children('img').attr('src', '/assets/update-over.png');
 		var jsonObj = {};
 		var selected_players = $('#removable_players_table').children('tbody').children('tr');
+		var clkey = $('#clientkey').val();
 		var ckey = $("#team_coachkey option:selected").val();
 		var mkey = $("#team_managerkey option:selected").val();
 		var tname = $('#team_teamname').val();
@@ -400,6 +418,7 @@ $(document).ready(function(){
 		var formatkey = $("#team_formatkey option:selected").val();
 		var countrykey = $("#countrykey_team option:selected").val();
 		var count_players = $(selected_players).length;
+		
 
 		var team_players = [];
 		$.ajax({
@@ -433,7 +452,7 @@ $(document).ready(function(){
 				$(selected_players).each(function(){
 					var pkey = $(this).find('[data-pid]').attr('data-pid');
 					var pid = $(this).find('.removable_playerid').html();
-					jsonObj = {playerkey:pkey, playerid:pid, managerkey:mkey,coachkey:ckey,teamname:tname,teamid:teamid,teamtypekey:teamtypekey, formatkey:formatkey, countrykey:countrykey};
+					jsonObj = {clientkey:clkey, playerkey:pkey, playerid:pid, managerkey:mkey,coachkey:ckey,teamname:tname,teamid:teamid,teamtypekey:teamtypekey, formatkey:formatkey, countrykey:countrykey};
 					$.ajax({
 						url: '/teams',
 						type: 'post',
@@ -500,6 +519,7 @@ $(document).ready(function(){
 	var x = $('.x').html();
 	if (x==1){
 		$('#navigation_bar').hide();
+		$('#centralnav').hide();
 	}
 	
 	console.log('this is alt');

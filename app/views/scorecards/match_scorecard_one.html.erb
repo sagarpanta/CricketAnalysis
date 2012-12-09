@@ -1,3 +1,5 @@
+
+
 <div id="tournament"><%= @tournament.name %></div>
 <div id="team"><%= @teamone.teamname %> vs <%= @teamtwo.teamname %></div>
 <div id="venue"><%= @formatarr[0] %> @ <%= @venue[0].venuename %></div>
@@ -14,8 +16,7 @@
 <div id="wicket" style="display:none"><%= @wickets %></div>
 <div id="totalscore" style="display:none"><%= @runs %></div>
 <div id="inningkey" style="display:none"><%= @inning %>Inning</div>
-<div id="clientkey" style="color:white"><%= current_user.id %></div>
-
+<div id="clientkey" style="display:none"><%= current_user.id %></div>
 <div id="scorecard">
 		<table>
 			<tr>
