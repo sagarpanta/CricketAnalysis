@@ -224,9 +224,10 @@ class MatchesController < ApplicationController
   end
   
   def match_status
-	begin
+
 		if signed_in?
 			@match = Match.find_by_id(params[:id])
+
 			@matchid = @match.id
 			#@runsperover = Scorecard.find_by_sql('select ballnum, convert(varchar, inning) as inning,SUM(runs) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, ballnum ')
 			@runsperover = Scorecard.find_by_sql('select [over], convert(varchar, inning) as inning,SUM(runs+wides+noballs+legbyes+byes) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, [over] ')
@@ -235,18 +236,18 @@ class MatchesController < ApplicationController
 			
 			@currentinning = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('max(inning) as inning')
 			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max([over]*1.0)) as runrate, max([over]) as currentover, sum(runs) as score, max(ballnum) as currball')
-			@lastfiveRR = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(count(distinct [over])*1.0) as runrate').where('[over] between '+(@current[0].currentover-4).to_s + ' and '+ @current[0].currentover.to_s)
+			@lastfiveRR = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(count(distinct [over])*1.0) as runrate').where('[over] between '+(@current[0].currentover.nil? ? 0:@current[0].currentover-4).to_s + ' and '+ (@current[0].currentover.nil? ? 0:@current[0].currentover).to_s)
 			@totalmatchballs = @match.matchovers * 6
 			
-			@currentoverindecimal = @current[0].currball/6 + @current[0].currball%6/6.0
-			@ballsremaining = @totalmatchballs - @current[0].currball
+			@currentoverindecimal = @current[0].currball.nil? ? 0:@current[0].currball/6 + @current[0].currball%6/6.0
+			@ballsremaining = @current[0].currball.nil? ? @totalmatchballs:@totalmatchballs - @current[0].currball
 			
 			@oversremaining = @ballsremaining/6+@ballsremaining%6/6.0
 			
-			@projectedwithCurrRR = (@current[0].runrate * @oversremaining).to_i + @current[0].score
+			@projectedwithCurrRR = @current[0].runrate.nil? ? 0:(@current[0].runrate * @oversremaining).to_i + @current[0].score
 			
-			@projectedwithsix = (6 * @oversremaining).to_i + @current[0].score
-			@projectedwitheight = (8 * @oversremaining).to_i + @current[0].score
+			@projectedwithsix = (6 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score)
+			@projectedwitheight = (8 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score)
 			
 			@arrRunsPerOver = Match.getChartData(@runsperover)
 			@dataRPO = Match.data_stringify(@arrRunsPerOver)
@@ -259,12 +260,7 @@ class MatchesController < ApplicationController
 		else 
 			redirect_to signin_path
 		end
-	rescue => e
-		 @message = e.message
-		 @client = current_user
-		 @caught_at = 'matches#match_status'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
+
   end	
   
  
