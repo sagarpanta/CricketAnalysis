@@ -334,7 +334,9 @@ class ScorecardsController < ApplicationController
 				
 			end
 			
-			@batsmen = @batsmen.sort_by{|b| b[:battingposition]}
+			@batsmen = Scorecard.sortPlayers(@batsmen)
+			
+
 			
 			#types of dismissals. Add -2 to the entry, which is the default value 
 			#i.e. the batsman has not played yet or is still no out.

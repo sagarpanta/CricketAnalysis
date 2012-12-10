@@ -10,7 +10,7 @@ gem 'rails'
 #gem 'tiny_tds'
 #gem 'activerecord-sqlserver-adapter'
 
-gem 'pivot_table'
+#gem 'pivot_table'
 
 # Gems used only for assets and not required
 # in production environments by default.

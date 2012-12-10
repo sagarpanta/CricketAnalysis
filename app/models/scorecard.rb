@@ -82,6 +82,17 @@ class Scorecard < ActiveRecord::Base
 		
   end
   
+  def self.sortPlayers(players)
+	for i in 0...players.length-1
+		for j in i...players.length
+			if players[i][:battingposition] >  players[j][:battingposition]
+				players[i] = players[j]
+			end
+		end
+	end
+	return players
+  end
+  
       
   
 end
