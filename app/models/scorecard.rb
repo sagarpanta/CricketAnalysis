@@ -86,7 +86,10 @@ class Scorecard < ActiveRecord::Base
 	for i in 0...players.length-1
 		for j in i...players.length
 			if players[i][:battingposition] >  players[j][:battingposition]
+				temp = {}
+				temp = players[i]
 				players[i] = players[j]
+				players[j] = temp
 			end
 		end
 	end
