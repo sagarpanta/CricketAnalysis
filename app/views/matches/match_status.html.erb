@@ -9,7 +9,7 @@
 
 <table>
 	<tr>
-		<td class="rr">Current Run Rate: <%= number_with_precision(@current[0].runrate, :precision => 2) %></td>
+		<td class="rr">Current Run Rate: <%= number_with_precision(@currRR, :precision => 2) %></td>
 		<td class="rr">Last Five Overs: <%= number_with_precision(@lastfiveRR[0].runrate, :precision => 2) %></td>
 	</tr>
 	<tr>
@@ -28,12 +28,12 @@
 </table>
 
 
-<div id="currScore" style="display:none"><%= @current[0].score %></div>
+<div id="currScore" style="display:none"><%= @currScore %></div>
 <div id="oversRemaining" style="display:none"><%= @oversremaining %></div>
 <div id="matchOvers" style="display:none"><%= @match.matchovers %></div>
-<div id="currBall" style="display:none"><%= @current[0].currball %></div>
-<div id="currOver" style="display:none"><%= @current[0].currentover %></div>
-<div id="currRR" style="display:none"><%= @current[0].runrate %></div>
+<div id="currBall" style="display:none"><%= @currBall %></div>
+<div id="currOver" style="display:none"><%= @curr %></div>
+<div id="currRR" style="display:none"><%= @currRR %></div>
 <div id="currOverInDec" style="display:none"><%= @currentoverindecimal %></div>
 				
 					
