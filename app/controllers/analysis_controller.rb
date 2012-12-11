@@ -1238,7 +1238,7 @@ class AnalysisController < ApplicationController
 					WHERE B._rank IS NULL
 				)
 			
-				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+isnull(_adds,0))) as val
+				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+coalesce(_adds,0))) as val
 				from
 				(
 				select  t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+', SUM(t2._rank - t1._rank+1) tot,(1.0*count(t2._rank - t1._rank+1)) cnt
@@ -1324,7 +1324,7 @@ class AnalysisController < ApplicationController
 					WHERE B._rank IS NULL
 				)
 			
-				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+isnull(_adds,0))) as val
+				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+coalesce(_adds,0))) as val
 				from
 				(
 				select  t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+', SUM(t2._rank - t1._rank+1) tot,(1.0*count(t2._rank - t1._rank+1)) cnt
@@ -1409,7 +1409,7 @@ class AnalysisController < ApplicationController
 					WHERE B._rank IS NULL
 				)
 			
-				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+isnull(_adds,0))) as val
+				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+coalesce(_adds,0))) as val
 				from
 				(
 				select  t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+', SUM(t2._rank - t1._rank+1) tot,(1.0*count(t2._rank - t1._rank+1)) cnt
