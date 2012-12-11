@@ -236,21 +236,21 @@ class MatchesController < ApplicationController
 			
 			@currentinning = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('max(inning) as inning')
 			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max("over"*1.0)) as runrate, max("over") as currentover, sum(runs) as score, max(ballnum) as currball')
-			logger.info 'current over ' + @current[0].currentover.to_s
+
 			@five = @current[0].currentover.nil? ? 0:@current[0].currentover.to_i-4
 			@curr = @current[0].currentover.nil? ? 0:@current[0].currentover
 			@lastfiveRR = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(count(distinct "over")*1.0) as runrate').where('"over" between '+(@five).to_s + ' and '+ (@curr).to_s)
 			@totalmatchballs = @match.matchovers * 6
 			
-			@currentoverindecimal = @current[0].currball.nil? ? 0:@current[0].currball/6 + @current[0].currball%6/6.0
-			@ballsremaining = @current[0].currball.nil? ? @totalmatchballs:@totalmatchballs - @current[0].currball
+			@currentoverindecimal = @current[0].currball.nil? ? 0:@current[0].currball.to_i/6 + @current[0].currball.to_i%6/6.0
+			@ballsremaining = @current[0].currball.nil? ? @totalmatchballs:@totalmatchballs - @current[0].currball.to_i
 			
 			@oversremaining = @ballsremaining/6+@ballsremaining%6/6.0
 			
-			@projectedwithCurrRR = @current[0].runrate.nil? ? 0:(@current[0].runrate * @oversremaining).to_i + @current[0].score
+			@projectedwithCurrRR = @current[0].runrate.nil? ? 0:(@current[0].runrate.to_f * @oversremaining).to_i + @current[0].score.to_i
 			
-			@projectedwithsix = (6 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score)
-			@projectedwitheight = (8 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score)
+			@projectedwithsix = (6 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score.to_i)
+			@projectedwitheight = (8 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score.to_i)
 			
 			@arrRunsPerOver = Match.getChartData(@runsperover)
 			@dataRPO = Match.data_stringify(@arrRunsPerOver)
