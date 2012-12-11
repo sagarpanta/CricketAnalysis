@@ -236,7 +236,7 @@ class MatchesController < ApplicationController
 			
 			@currentinning = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('max(inning) as inning')
 			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max("over"*1.0)) as runrate, max("over") as currentover, sum(runs) as score, max(ballnum) as currball')
-			
+			binding.pry
 			@five = @current[0].currentover.nil? ? 0:@current[0].currentover-4
 			@curr = @current[0].currentover.nil? ? 0:@current[0].currentover
 			@lastfiveRR = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(count(distinct "over")*1.0) as runrate').where('"over" between '+(@five).to_s + ' and '+ (@curr).to_s)
