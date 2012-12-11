@@ -38,7 +38,6 @@ $(document).ready(function(){
 	  
 
 	  var matchid = $('#matchid').html();
-	  var innings = parseInt($('#innings').html());
 	  var runsperover = $('#runsperover').html();
 	  
 	  var cumrunsperover = $('#cumrunsperover').html();
