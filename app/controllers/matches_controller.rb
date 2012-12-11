@@ -230,9 +230,9 @@ class MatchesController < ApplicationController
 
 			@matchid = @match.id
 			#@runsperover = Scorecard.find_by_sql('select ballnum, convert(varchar, inning) as inning,SUM(runs) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, ballnum ')
-			@runsperover = Scorecard.find_by_sql('select "over", to_char(inning, varchar(1)) as inning,SUM(runs+wides+noballs+legbyes+byes) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, "over" ')
+			@runsperover = Scorecard.find_by_sql('select "over", to_char(inning, '+"'9'"+') as inning,SUM(runs+wides+noballs+legbyes+byes) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, "over" ')
 			
-			@cumulativerunsperover =  Scorecard.find_by_sql('select distinct [over], to_char(inning, varchar(1)) as inning,(select SUM(runs+wides+noballs+legbyes+byes) from scorecards s1 where clientkey = s.clientkey and matchkey = s.matchkey and inning=s.inning and [over]<= s.[over]) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s)
+			@cumulativerunsperover =  Scorecard.find_by_sql('select distinct [over], to_char(inning, '+"'9'"+') as inning,(select SUM(runs+wides+noballs+legbyes+byes) from scorecards s1 where clientkey = s.clientkey and matchkey = s.matchkey and inning=s.inning and [over]<= s.[over]) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s)
 			
 			@currentinning = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('max(inning) as inning')
 			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max([over]*1.0)) as runrate, max([over]) as currentover, sum(runs) as score, max(ballnum) as currball')
