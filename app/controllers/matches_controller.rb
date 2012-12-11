@@ -259,6 +259,8 @@ class MatchesController < ApplicationController
 			@runsperover = Scorecard.find_by_sql(rpo_sql)
 			@cumulativerunsperover =  Scorecard.find_by_sql(crpo_sql)
 			
+			
+			
 			@currentinning = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('max(inning) as inning')
 			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max("over"*1.0)) as runrate, max("over") as currentover, sum(runs) as score, max(ballnum) as currball')
 
@@ -286,6 +288,9 @@ class MatchesController < ApplicationController
 			
 			@arrCumRunsPerOver = Match.getChartData(@cumulativerunsperover)
 			@dataCRPO = Match.data_stringify(@arrCumRunsPerOver)
+			
+			logger.info 'arr rpo   ' + @arrRunsPerOver
+			logger.info 'arr crpo   ' + @arrCumRunsPerOver
 			respond_to do |format|
 				format.html	
 			end
