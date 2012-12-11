@@ -268,6 +268,7 @@ class MatchesController < ApplicationController
 			@currScore = @current[0].score.nil? ? 0:@current[0].score
 			@currBall = @current[0].currball.nil? ? 0:@current[0].currball
 			@lastfiveRR = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(count(distinct "over")*1.0) as runrate').where('"over" between '+(@five).to_s + ' and '+ (@curr).to_s)
+			@lfRR = @lastfiveRR[0].runrate.nil? ? 0.0:@lastfiveRR[0].runrate
 			@totalmatchballs = @match.matchovers * 6
 			
 			@currentoverindecimal = @current[0].currball.nil? ? 0:@current[0].currball.to_i/6 + @current[0].currball.to_i%6/6.0
