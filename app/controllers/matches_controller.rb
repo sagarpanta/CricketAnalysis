@@ -223,8 +223,6 @@ class MatchesController < ApplicationController
 	end
   end
  
-  
-=begin  
   def match_status
  
 	begin
@@ -232,9 +230,36 @@ class MatchesController < ApplicationController
 			@match = Match.find_by_id(params[:id])
 			@matchid = @match.id
 			#@runsperover = Scorecard.find_by_sql('select ballnum, convert(varchar, inning) as inning,SUM(runs) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, ballnum ')
-			@runsperover = Scorecard.find_by_sql('select [over], convert(varchar, inning) as inning,SUM(runs+wides+noballs+legbyes+byes) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, [over] ')
 			
-			@cumulativerunsperover =  Scorecard.find_by_sql('select distinct [over], convert(varchar, inning) as inning,(select SUM(runs+wides+noballs+legbyes+byes) from scorecards s1 where clientkey = s.clientkey and matchkey = s.matchkey and inning=s.inning and [over]<= s.[over]) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s)
+			rpo_sql = '
+					select A.[over], convert(varchar,A.inning) as inning , ISNULL(SUM(runs+wides+noballs+legbyes+byes),0) as runs
+					from
+					(
+					select distinct s.inning, s1.[over], s.clientkey, s.matchkey
+					from scorecards s cross join scorecards s1 
+					where  s.clientkey= '+current_user.id.to_s+' and s.matchkey= '+params[:id].to_s+'
+					and  s1.clientkey= '+current_user.id.to_s+' and s1.matchkey= '+params[:id].to_s+'
+					)A
+					LEFT join scorecards s on A.inning = s.inning and A.[over] = s.[over] and A.clientkey = s.clientkey and A.matchkey = s.matchkey
+
+					group by A.inning, A.[over] 
+					' 
+
+			crpo_sql = '
+					select A.[over], convert(varchar,A.inning) as inning , ISNULL(SUM(runs+wides+noballs+legbyes+byes),0) as runs
+					from
+					(
+					select distinct s.inning, s1.[over], s.clientkey, s.matchkey
+					from scorecards s cross join scorecards s1 
+					where  s.clientkey= '+current_user.id.to_s+' and s.matchkey= '+params[:id].to_s+'
+					and  s1.clientkey= '+current_user.id.to_s+' and s1.matchkey= '+params[:id].to_s+'
+					)A
+					LEFT join scorecards s on A.inning = s.inning and A.[over] >= s.[over] and A.clientkey = s.clientkey and A.matchkey = s.matchkey
+
+					group by A.inning, A.[over] 
+					'
+			@runsperover = Scorecard.find_by_sql(rpo_sql)
+			@cumulativerunsperover =  Scorecard.find_by_sql(crpo_sql)
 			
 			@currentinning = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('max(inning) as inning')
 			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max([over]*1.0)) as runrate, max([over]) as currentover, sum(runs) as score, max(ballnum) as currball')
@@ -253,9 +278,9 @@ class MatchesController < ApplicationController
 			
 			@arrRunsPerOver = Match.getChartData(@runsperover)
 			@dataRPO = Match.data_stringify(@arrRunsPerOver)
-			
 			@arrCumRunsPerOver = Match.getChartData(@cumulativerunsperover)
 			@dataCRPO = Match.data_stringify(@arrCumRunsPerOver)
+
 			respond_to do |format|
 				format.html	
 			end
@@ -268,9 +293,8 @@ class MatchesController < ApplicationController
 		 @caught_at = 'matches#match_status'
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end
-  end
-=end  
- 
+  end  
+=begin 
   def match_status
 	begin
 		if signed_in?
@@ -319,4 +343,5 @@ class MatchesController < ApplicationController
 	end
 
   end	
+=end  
 end

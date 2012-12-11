@@ -50,74 +50,49 @@ $(document).ready(function(){
 		  currball = parseInt($('#currBall').html());
 		  var i = 0;
 		  var _data = new Array();
+		  var _data_c = new Array();
+		  
 		  _data = runsperover.split(',');
+		  _data_c = cumrunsperover.split(',');
 		  
 		  var chartdata = new Array();
+		  var chartdata_c = new Array();
+		  
 		  var temp = new Array();
-		 
-
-		  var index_pos = 0;
-		  for(i=0; i<=innings; i++) {
-			temp.push(_data[i]);
-			console.log(temp);
-			index_pos = i+1;
-		  }
-		  chartdata.push(temp);
-
-		  var temp = new Array();
-		  for (i = index_pos; i<_data.length; i++){
-			temp.push(parseInt(_data[i]))
-			if ((i+1)%2 == 0){
-				chartdata.push(temp);
-				temp = [];
+		  var temp_c = new Array();
+		  
+		  var x = 1;
+		  for(i=0; i<=_data.length; i++) {
+			if (x%3==2 || x%3==0){
+				temp.push(parseInt(_data[i]));
+				temp_c.push(parseInt(_data_c[i]));
+			}
+			else{
+				temp.push(_data[i]);
+				temp_c.push(_data_c[i]);
 			}
 
+			if (x%3==0){
+				chartdata.push(temp);
+				chartdata_c.push(temp_c);
+				
+				temp = new Array();
+				temp_c = new Array();
+			}
+			x = x+1;
 		  }
-		  chartdata[0].push('avg');
-		  var  avg = parseFloat($('#currRR').html());
 		  
-		  for (i=1; i<chartdata.length; i++) {
-			chartdata[i].push(avg);
-		  }
-		  
-		  console.log(chartdata);
+
+ 
 		  
 		  google_match_function(chartdata, currOver, 'container1', 'Runs Per Over');
 		  $('#container1').show();
 		  
-		  
-		  //*****************
-		  var i = 0;
-		  var _data = new Array();
-		  _data = cumrunsperover.split(',');
-		  
-		  var chartdata = new Array();
-		  var temp = new Array();
-		 
-
-		  var index_pos = 0;
-		  for(i=0; i<=innings; i++) {
-			temp.push(_data[i]);
-			console.log(temp);
-			index_pos = i+1;
-		  }
-		  chartdata.push(temp);
-
-		  var temp = new Array();
-		  for (i = index_pos; i<_data.length; i++){
-			temp.push(parseInt(_data[i]))
-			if ((i+1)%2 == 0){
-				chartdata.push(temp);
-				temp = [];
-			}
-
-		  }
-		  
-		  google_match_function(chartdata, currOver,'container2', 'Cumulative Runs Per Over');
+		  google_match_function(chartdata_c, currOver, 'container2', 'Cumulative Runs Per Over');
 		  $('#container2').show();
 		  
 		  
-		  console.log(chartdata);
+
 	   }
 	   
 	 $('[name="button"]').live('click', function(){
