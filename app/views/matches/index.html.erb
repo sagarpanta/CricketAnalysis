@@ -26,8 +26,6 @@
     <th>Venue</th>
     <th>Match Date</th>
     <th>Time of Match</th>
-    <th>Match Won</th>
-    <th>Match Tied</th>
     <th>Winner</th>
     <th>Details</th>
     <th>Format</th>
@@ -45,8 +43,6 @@
     <td><%= match.getVenue %></td>
     <td><%= match.matchdate %></td>
     <td><%= match.dayandnite == 1? 'Day' : 'D/N' %></td>
-    <td><%= match.matchwon %></td>
-    <td><%= match.matchtied %></td>
     <td><%= match.getWinner(current_user.id) %></td>
     <td><%= match.details %></td>
     <td><%= match.getFormat %></td>

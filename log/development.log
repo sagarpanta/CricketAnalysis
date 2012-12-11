@@ -1,4 +1,0 @@
-  [1m[36mClient Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''[0m
-  [1m[35mMatch Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [matches].* FROM [matches] WHERE [matches].[id] = N''2'''
-  [1m[36mScorecard Load (70.0ms)[0m  [1mEXEC sp_executesql N'select over, convert(varchar, inning) as inning,SUM(runs+wides+noballs+legbyes+byes) as runs from scorecards s where clientkey= 2 and matchkey= 2 group by inning, over '[0m
-TinyTds::Error: Incorrect syntax near the keyword 'over'.: EXEC sp_executesql N'select over, convert(varchar, inning) as inning,SUM(runs+wides+noballs+legbyes+byes) as runs from scorecards s where clientkey= 2 and matchkey= 2 group by inning, over '

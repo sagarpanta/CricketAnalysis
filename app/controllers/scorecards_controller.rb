@@ -257,9 +257,9 @@ class ScorecardsController < ApplicationController
 			@battingendname = @battingend[@battingendkey]
 			@bowlingendname = @battingend[@bowlingendkey]
 			
-			#if it is an over and the last runs taken is not one or three or five, 
+			#if it is an over and the last runs taken is not one or three or five and it is not zero ball with some wides or noballs, 
 			#then swap the striker and non striker, and swap the batting end and bowling end
-			if ballsdelivered%6 == 0 and @lastrun%2!=1
+			if ballsdelivered>0 and ballsdelivered%6 == 0 and @lastrun%2!=1
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
@@ -267,6 +267,10 @@ class ScorecardsController < ApplicationController
 				temp1 = @battingendkey
 				@battingendkey = @bowlingendkey
 				@bowlingendkey = temp1		
+			#if it is the first ball of the inning (not counted because of wide or noball)
+			elsif ballsdelivered == 0 and ballsdelivered%6 == 0 and @lastrun%2!=1
+				@currentstrikerkey = @currentstrikerkey
+				@currentnonstrikerkey = @currentnonstrikerkey
 			end
 
 			#counter is the way to add pre populated position to the batsmen.
@@ -287,23 +291,13 @@ class ScorecardsController < ApplicationController
 				
 				
 				hilite = ''
-				if @currentstrikerkey == b and @lastrun%2!=1 and ballsdelivered%6 != 0
-					hilite = 'hilite'
-				elsif @currentstrikerkey == b and ballsdelivered%6 == 0
-					hilite = 'hilite'
-				elsif @currentstrikerkey == b and @lastrun%2==1 and ballsdelivered%6 != 0
-					hilite = 'hilite-nonstriker'
-				elsif @currentnonstrikerkey == b and @lastrun%2!=1 and ballsdelivered%6 != 0
-					hilite = 'hilite-nonstriker'
-				elsif @currentnonstrikerkey == b and ballsdelivered%6 == 0
-					hilite = 'hilite-nonstriker'
-				elsif @currentnonstrikerkey == b and @lastrun%2==1 and ballsdelivered%6 != 0
-					hilite = 'hilite'
-				else
-					hilite = ''
+				
+				if @currentstrikerkey == b
+					hilite='hilite'
+				elsif @currentnonstrikerkey == b
+					hilite='hilite-nonstriker'
 				end
 				
-			
 					
 				#get the last entry of the batsman b and get his information
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
@@ -354,9 +348,8 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs)/(sum(ballsdelivered)/6.0) end as economy') 
+				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs)/(sum(ballsdelivered)/6.0) end as economy') 
 				
-
 				hilite = ''
 				otw = ''
 				rtw = ''
@@ -372,8 +365,7 @@ class ScorecardsController < ApplicationController
 				else
 					hilite = ''
 				end
-			
-
+				
 				@fieldingside << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :playertype=> player.playertype,
 								 :bowlingposition=>playerlastentry.nil? ? nil:playerlastentry[:bowlingposition], 
 								 :runs=> stats.nil? ? '':stats[0][:runs].nil? ? '':stats[0][:runs],
@@ -388,12 +380,12 @@ class ScorecardsController < ApplicationController
 								 :sixes=>  stats.nil? ? '':stats[0][:sixes].nil? ? '':stats[0][:sixes],
 								 :wides=> stats.nil? ? '':stats[0][:wides].nil? ? '':stats[0][:wides],
 								 :noballs=> stats.nil? ? '':stats[0][:noballs].nil? ? '':stats[0][:noballs],
+								 :others=> stats.nil? ? '':stats[0][:others].nil? ? '':stats[0][:others],
 								 :wickets=> stats.nil? ? '':stats[0][:wickets].nil? ? '':stats[0][:wickets],
 								 :economy=> stats.nil? ? '':stats[0][:economy].nil? ? '':stats[0][:economy],
 								 :hilite=> hilite,
-								 :otw=> otw,
-								 :rtw=>rtw
-								 }
+								 :otw=>otw,
+								 :rtw=>rtw}
 				@fielders << [player.fullname, b]
 				pos = pos+1
 				counter = counter + 1
@@ -517,10 +509,11 @@ class ScorecardsController < ApplicationController
 						
 			@battingendname = @battingend[@battingendkey]
 			@bowlingendname = @battingend[@bowlingendkey]			
-			#if it is an over and the last runs taken is not one or three or five, 
-			#then swap the striker and non striker, and swap the batting end and bowling end
 
-			if ballsdelivered%6 == 0 and @runs%2!=1
+			
+			#if it is an over and the last runs taken is not one or three or five and it is not zero ball with some wides or noballs, 
+			#then swap the striker and non striker, and swap the batting end and bowling end
+			if ballsdelivered>0 and ballsdelivered%6 == 0 and @lastrun%2!=1
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
@@ -528,8 +521,11 @@ class ScorecardsController < ApplicationController
 				temp1 = @battingendkey
 				@battingendkey = @bowlingendkey
 				@bowlingendkey = temp1		
+			#if it is the first ball of the inning (not counted because of wide or noball)
+			elsif ballsdelivered == 0 and ballsdelivered%6 == 0 and @lastrun%2!=1
+				@currentstrikerkey = @currentstrikerkey
+				@currentnonstrikerkey = @currentnonstrikerkey
 			end
-
 
 
 			
@@ -549,22 +545,15 @@ class ScorecardsController < ApplicationController
 				#get the stats of batsman b so far.
 				stats = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).select('sum(runs) as runs, sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(ballsfaced) as ballsfaced, case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate')
 				
+				
 				hilite = ''
-				if @currentstrikerkey == b and @lastrun%2!=1 and ballsdelivered%6 != 0
-					hilite = 'hilite'
-				elsif @currentstrikerkey == b and ballsdelivered%6 == 0
-					hilite = 'hilite'
-				elsif @currentstrikerkey == b and @lastrun%2==1 and ballsdelivered%6 != 0
-					hilite = 'hilite-nonstriker'
-				elsif @currentnonstrikerkey == b and @lastrun%2!=1 and ballsdelivered%6 != 0
-					hilite = 'hilite-nonstriker'
-				elsif @currentnonstrikerkey == b and ballsdelivered%6 == 0
-					hilite = 'hilite-nonstriker'
-				elsif @currentnonstrikerkey == b and @lastrun%2==1 and ballsdelivered%6 != 0
-					hilite = 'hilite'
-				else
-					hilite = ''
+				
+				if @currentstrikerkey == b
+					hilite='hilite'
+				elsif @currentnonstrikerkey == b
+					hilite='hilite-nonstriker'
 				end
+				
 				
 				#get the last entry of the batsman b and get his information
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
@@ -613,7 +602,7 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs)/(sum(ballsdelivered)/6.0) end as economy') 
+				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs)/(sum(ballsdelivered)/6.0) end as economy') 
 				
 				hilite = ''
 				otw = ''
@@ -645,6 +634,7 @@ class ScorecardsController < ApplicationController
 								 :sixes=>  stats.nil? ? '':stats[0][:sixes].nil? ? '':stats[0][:sixes],
 								 :wides=> stats.nil? ? '':stats[0][:wides].nil? ? '':stats[0][:wides],
 								 :noballs=> stats.nil? ? '':stats[0][:noballs].nil? ? '':stats[0][:noballs],
+								 :others=> stats.nil? ? '':stats[0][:others].nil? ? '':stats[0][:others],
 								 :wickets=> stats.nil? ? '':stats[0][:wickets].nil? ? '':stats[0][:wickets],
 								 :economy=> stats.nil? ? '':stats[0][:economy].nil? ? '':stats[0][:economy],
 								 :hilite=> hilite,
@@ -654,6 +644,7 @@ class ScorecardsController < ApplicationController
 				pos = pos+1
 				counter = counter + 1
 			end
+			
 			
 				
 			@bowlers = []
@@ -690,7 +681,6 @@ class ScorecardsController < ApplicationController
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.find_by_id(params[:id])
-
 		
 			################################ First Inning ##########################################3
 			
@@ -995,6 +985,10 @@ class ScorecardsController < ApplicationController
 		else 
 			redirect_to signin_path
 		end	
+		
+		respond_to do |format| 
+		  format.html {render :layout => false}
+		end
 	rescue => e
 		 @message = e.message
 		 @client = current_user

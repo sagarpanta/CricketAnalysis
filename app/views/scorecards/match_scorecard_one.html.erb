@@ -17,6 +17,7 @@
 <div id="totalscore" style="display:none"><%= @runs %></div>
 <div id="inningkey" style="display:none"><%= @inning %>Inning</div>
 <div id="clientkey" style="display:none"><%= current_user.id %></div>
+
 <div id="scorecard">
 		<table>
 			<tr>
@@ -125,13 +126,14 @@
 					<th class="Bowling_summary">Maidens</th>
 					<th class="Bowling_summary">Wickets</th>
 					<th class="Bowling_summary">Economy</th>
-					<th class="Bowling_summary">0's</th>
 					<th class="Bowling_summary">1's</th>
 					<th class="Bowling_summary">2's</th>
 					<th class="Bowling_summary">3's</th>
 					<th class="Bowling_summary">4's</th>
-					<th class="Bowling_summary">5's</th>
 					<th class="Bowling_summary">6's</th>
+					<th class="Bowling_summary">WD</th>
+					<th class="Bowling_summary">NB</th>
+					<th class="Bowling_summary">OTH</th>
 
 					
 					<% @bowlers.each do |b| %>
@@ -147,13 +149,14 @@
 								<td class="bowler_maidens"><%= b[:maidens] %></td>
 								<td class="bowler_wickets"><%= b[:wickets] %></td>
 								<td class="bowler_econ"><%= number_with_precision(b[:economy], :precision => 1) %></td>
-								<td class="bowler_zeros"><%= b[:zeros] %></td>
 								<td class="bowler_ones"><%= b[:ones] %></td>
 								<td class="bowler_twos"><%= b[:twos] %></td>
 								<td class="bowler_threes"><%= b[:threes] %></td>
 								<td class="bowler_fours"><%= b[:fours] %></td>
-								<td class="bowler_fives"><%= b[:fives] %></td>
 								<td class="bowler_sixes"><%= b[:sixes] %></td>
+								<td class="bowler_wides"><%= b[:wides] %></td>
+								<td class="bowler_noballs"><%= b[:noballs] %></td>
+								<td class="bowler_others"><%= b[:others] %></td>
 							</tr>
 						<% end %>
 					<% end %>

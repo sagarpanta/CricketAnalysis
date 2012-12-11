@@ -122,7 +122,11 @@ class ClientsController < ApplicationController
   
 
   def signin
-	@title = 'Sign In'
+	if signed_in?
+		redirect_to home_path
+	else
+		@title = 'Sign In'
+	end
   end
   
   def home

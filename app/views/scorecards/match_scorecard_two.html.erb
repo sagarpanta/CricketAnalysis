@@ -52,14 +52,17 @@
 				<tr></tr>
 				<tr></tr>
 				<tr>
-					<td></td><td id="submit_runs"><%= image_tag '/assets/button.png', :width=>'100px' %></td>
+					<td></td>
+					<td id="submit_runs"><%= image_tag '/assets/button.png', :width=>'100px' %></td>
 				</tr>
-
 			</table>
 		</div>
 
 
-				<div id="battingend"><%= select 'end', 'battingend' , @battingend.collect {|p| [ p['name'],p['value']]}, :selected=>@battingendkey %></div>
+
+
+		
+		<div id="battingend"><%= select 'end', 'battingend' , @battingend.collect {|p| [ p['name'],p['value']]}, :selected=>@battingendkey %></div>
 		<!--Current striker's balls before boundary and balls before run-->
 
 
@@ -102,8 +105,6 @@
 							<td class="batsman_fours"><%= b[:fours] %></td>
 							<td class="batsman_fives"><%= b[:fives] %></td>
 							<td class="batsman_sixes"><%= b[:sixes] %></td>
-							<td class="ballsbeforeboundary" style="display:none"><%= b[:ballsbeforeboundary] %></td>
-							<td class="ballsbeforerun" style="display:none"><%= b[:ballsbeforerun] %></td>
 						</tr>
 					<% end %>
 				</tbody>
@@ -114,22 +115,24 @@
 		<div id="bowlingend"><%= select 'end', 'bowlingend' , @battingend.collect {|p| [ p['name'],p['value']]}, :selected=>@bowlingendkey %></div>
 
 		<div>
-			<table>
+			<table id="bowlersort">
 				<tbody>
 					<th class="Bowling_summary">Bowlers</th>
+					<th class="Bowling_summary"></th>
 					<th class="Bowling_summary"></th>
 					<th class="Bowling_summary">Overs</th>
 					<th class="Bowling_summary">Runs</th>
 					<th class="Bowling_summary">Maidens</th>
 					<th class="Bowling_summary">Wickets</th>
 					<th class="Bowling_summary">Economy</th>
-					<th class="Bowling_summary">0's</th>
 					<th class="Bowling_summary">1's</th>
 					<th class="Bowling_summary">2's</th>
 					<th class="Bowling_summary">3's</th>
 					<th class="Bowling_summary">4's</th>
-					<th class="Bowling_summary">5's</th>
 					<th class="Bowling_summary">6's</th>
+					<th class="Bowling_summary">WD</th>
+					<th class="Bowling_summary">NB</th>
+					<th class="Bowling_summary">OTH</th>
 
 					
 					<% @bowlers.each do |b| %>
@@ -145,13 +148,14 @@
 								<td class="bowler_maidens"><%= b[:maidens] %></td>
 								<td class="bowler_wickets"><%= b[:wickets] %></td>
 								<td class="bowler_econ"><%= number_with_precision(b[:economy], :precision => 1) %></td>
-								<td class="bowler_zeros"><%= b[:zeros] %></td>
 								<td class="bowler_ones"><%= b[:ones] %></td>
 								<td class="bowler_twos"><%= b[:twos] %></td>
 								<td class="bowler_threes"><%= b[:threes] %></td>
 								<td class="bowler_fours"><%= b[:fours] %></td>
-								<td class="bowler_fives"><%= b[:fives] %></td>
 								<td class="bowler_sixes"><%= b[:sixes] %></td>
+								<td class="bowler_wides"><%= b[:wides] %></td>
+								<td class="bowler_noballs"><%= b[:noballs] %></td>
+								<td class="bowler_others"><%= b[:others] %></td>
 							</tr>
 						<% end %>
 					<% end %>
@@ -190,8 +194,8 @@
 	<button id="btn-cancel">Cancel</button>
 </div>
 
-
-<div class="scorecard"><%= link_to '1nd Inning' , {:controller=>"scorecards", :action=>"match_scorecard_one", :id=>@match.id} %>
+<div class="scorecard"><%= link_to '2nd Inning' , {:controller=>"scorecards", :action=>"match_scorecard_one", :id=>@match.id} %>
 <%= link_to 'Current Match Status' , {:controller=>"matches", :action=>"match_status", :id=>@match.id} %>
+<%= link_to 'Export Scorecard' ,  {:controller=>"scorecards", :action=>"scorecard", :id=>@match.id, :format=> 'pdf'} %>
 </div>
-     
+    
