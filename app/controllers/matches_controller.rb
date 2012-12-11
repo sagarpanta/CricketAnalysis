@@ -230,7 +230,7 @@ class MatchesController < ApplicationController
 
 			@matchid = @match.id
 			#@runsperover = Scorecard.find_by_sql('select ballnum, convert(varchar, inning) as inning,SUM(runs) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, ballnum ')
-			@runsperover = Scorecard.find_by_sql('select [over], convert(varchar, inning) as inning,SUM(runs+wides+noballs+legbyes+byes) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, [over] ')
+			@runsperover = Scorecard.find_by_sql('select "over", convert(varchar, inning) as inning,SUM(runs+wides+noballs+legbyes+byes) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, "over" ')
 			
 			@cumulativerunsperover =  Scorecard.find_by_sql('select distinct [over], convert(varchar, inning) as inning,(select SUM(runs+wides+noballs+legbyes+byes) from scorecards s1 where clientkey = s.clientkey and matchkey = s.matchkey and inning=s.inning and [over]<= s.[over]) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s)
 			
