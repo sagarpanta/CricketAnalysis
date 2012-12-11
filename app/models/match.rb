@@ -80,6 +80,7 @@ class Match < ActiveRecord::Base
 		for g in groups
 			
 			_data << Match.getData(chartdata, g[0], columns)
+
 		end
 	end
 	return _data
@@ -90,7 +91,7 @@ class Match < ActiveRecord::Base
   def self.getData(chartdata, group, columns)
 	_data = [group]
 	for l in (1..columns.length)
-		_data << 0
+		_data << nil
 	end
 	filteredData = []
 	chartdata.each do |d|
@@ -102,7 +103,7 @@ class Match < ActiveRecord::Base
 	filteredData.each do |f|
 		if columns.include? f.inning 
 			pos = columns.index(f.inning)
-			_data[pos+1]  = f.runs.to_f
+			_data[pos+1]  = f.runs.nil? ? nil:f.runs.to_f
 		end
 	end
 	_data[0] = _data[0].to_s

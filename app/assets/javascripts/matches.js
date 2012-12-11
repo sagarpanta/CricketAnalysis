@@ -35,8 +35,22 @@ $(document).ready(function(){
         chart.draw(data, options);
       }
 	  
+	var google_match_function_bar =  function drawVisualization(chartdata, currOver, htmlid, title) {
+        // Some raw data (not necessarily accurate)
+		
+        var data = google.visualization.arrayToDataTable(chartdata);
+		
+        var options = {
+          title : title,
+		  titleTextStyle:  {color: 'darkgray', fontName: 'verdana', fontSize: 12},
+          vAxis: {title: 'runs'},
+          hAxis: {title: 'over', gridlines: {color: '#333', count: currOver}, showTextEvery:1}
+        };	
+		var chart;
+		chart = new google.visualization.ColumnChart(document.getElementById(htmlid));
+        chart.draw(data, options);
+      }
 	  
-
 	  var matchid = $('#matchid').html();
 	  var runsperover = $('#runsperover').html();
 	  
@@ -59,7 +73,8 @@ $(document).ready(function(){
 		  
 		  var temp = new Array();
 		  var temp_c = new Array();
-		  
+		  console.log(runsperover);
+		  console.log(cumrunsperover);
 		  var x = 1;
 		  for(i=0; i<=_data.length; i++) {
 			if (x%3==2 || x%3==0){
@@ -84,7 +99,7 @@ $(document).ready(function(){
 
  
 		  
-		  google_match_function(chartdata, currOver, 'container1', 'Runs Per Over');
+		  google_match_function_bar(chartdata, currOver, 'container1', 'Runs Per Over');
 		  $('#container1').show();
 		  
 		  google_match_function(chartdata_c, currOver, 'container2', 'Cumulative Runs Per Over');
