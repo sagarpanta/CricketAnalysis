@@ -232,7 +232,7 @@ class MatchesController < ApplicationController
 			#@runsperover = Scorecard.find_by_sql('select ballnum, convert(varchar, inning) as inning,SUM(runs) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, ballnum ')
 			
 			rpo_sql = '
-					select A."over", convert(varchar,A.inning) as inning , ISNULL(SUM(runs+wides+noballs+legbyes+byes),0) as runs
+					select A."over", convert(varchar,A.inning) as inning , coalesce(SUM(runs+wides+noballs+legbyes+byes),0) as runs
 					from
 					(
 					select distinct s.inning, s1."over", s.clientkey, s.matchkey
@@ -245,7 +245,7 @@ class MatchesController < ApplicationController
 					' 
 
 			crpo_sql = '
-					select A."over", to_char(inning, '+"'9'"+') as inning , ISNULL(SUM(runs+wides+noballs+legbyes+byes),0) as runs
+					select A."over", to_char(inning, '+"'9'"+') as inning , coalesce(SUM(runs+wides+noballs+legbyes+byes),0) as runs
 					from
 					(
 					select distinct s.inning, s1."over", s.clientkey, s.matchkey
