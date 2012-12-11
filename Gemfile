@@ -27,7 +27,7 @@ end
 gem 'jquery-rails'
 gem 'pdfkit'
 
-gem 'pry'
+#gem 'pry'
 
 gem 'thin'
 gem 'pg'
