@@ -22,8 +22,6 @@ GEM
       activesupport (= 3.2.9)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activerecord-sqlserver-adapter (3.2.10)
-      activerecord (~> 3.2.0)
     activeresource (3.2.9)
       activemodel (= 3.2.9)
       activesupport (= 3.2.9)
@@ -32,7 +30,6 @@ GEM
       multi_json (~> 1.0)
     arel (3.0.2)
     builder (3.0.4)
-    coderay (1.0.8)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -56,16 +53,11 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    method_source (0.8.1)
     mime-types (1.19)
     multi_json (1.3.7)
     pdfkit (0.5.2)
+    pg (0.14.1-x86-mingw32)
     polyglot (0.3.3)
-    pry (0.9.10-x86-mingw32)
-      coderay (~> 1.0.5)
-      method_source (~> 0.8)
-      slop (~> 3.3.1)
-      win32console (~> 1.3)
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -96,7 +88,6 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    slop (3.3.3)
     sprockets (2.2.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -108,7 +99,6 @@ GEM
       rack (>= 1.0.0)
     thor (0.16.0)
     tilt (1.3.3)
-    tiny_tds (0.5.1-x86-mingw32)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
@@ -116,19 +106,16 @@ GEM
     uglifier (1.3.0)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
-    win32console (1.3.2-x86-mingw32)
 
 PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  activerecord-sqlserver-adapter
   coffee-rails (~> 3.2.1)
   jquery-rails
   pdfkit
-  pry
+  pg
   rails
   sass-rails (~> 3.2.3)
   thin
-  tiny_tds
   uglifier (>= 1.0.3)
