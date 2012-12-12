@@ -432,7 +432,7 @@ $(document).ready(function(){
 			$(this).parent().children('.wktakingbowler').children('select').attr('disabled', 'disabled');
 			$(this).parent().children('.fielder').children('select').removeAttr('disabled');
 		}
-		dismissedbatsmankey = $(this).parent().children('.Batsmanid').html();
+		dismissedbatsmankey = $(this).parent().children('.Batsmankey').html();
 		outbatsmankey = $(this).parent().children('.Batsmankey').html();
 		
 		console.log(outbatsmankey);
