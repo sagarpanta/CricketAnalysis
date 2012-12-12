@@ -312,6 +312,7 @@ class MatchesController < ApplicationController
 					from scorecards s cross join scorecards s1 
 					where  s.clientkey= '+current_user.id.to_s+' and s.matchkey= '+params[:id].to_s+'
 					and  s1.clientkey= '+current_user.id.to_s+' and s1.matchkey= '+params[:id].to_s+'
+					order by s.inning, s1."over"
 					)A
 					LEFT join scorecards s on A.inning = s.inning and A."over" = s."over" and A.clientkey = s.clientkey and A.matchkey = s.matchkey
 					group by A.inning, A."over" 
@@ -324,6 +325,7 @@ class MatchesController < ApplicationController
 					from scorecards s cross join scorecards s1 
 					where  s.clientkey= '+current_user.id.to_s+' and s.matchkey= '+params[:id].to_s+'
 					and  s1.clientkey= '+current_user.id.to_s+' and s1.matchkey= '+params[:id].to_s+'
+					order by s.inning, s1."over"
 					)A
 					LEFT join scorecards s on A.inning = s.inning and A."over" >= s."over" and A.clientkey = s.clientkey and A.matchkey = s.matchkey
 					group by A.inning, A."over" 
