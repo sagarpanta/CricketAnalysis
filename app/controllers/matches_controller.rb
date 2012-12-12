@@ -317,6 +317,7 @@ class MatchesController < ApplicationController
 					)A
 					LEFT join scorecards s on A.inning = s.inning and A."over" = s."over" and A.clientkey = s.clientkey and A.matchkey = s.matchkey
 					group by A.inning, A."over" 
+					order by A.inning, A."over" 
 					' 
 			crpo_sql = '
 					select A."over", to_char(A.inning, '+"'9'"+') as inning , SUM(runs+wides+noballs+legbyes+byes) as runs
@@ -329,6 +330,7 @@ class MatchesController < ApplicationController
 					)A
 					LEFT join scorecards s on A.inning = s.inning and A."over" >= s."over" and A.clientkey = s.clientkey and A.matchkey = s.matchkey
 					group by A.inning, A."over" 
+					order by A.inning, A."over" 
 					'
 			@runsperover = Scorecard.find_by_sql(rpo_sql)
 			@cumulativerunsperover =  Scorecard.find_by_sql(crpo_sql)
