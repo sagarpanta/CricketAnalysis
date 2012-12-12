@@ -520,13 +520,23 @@ $(document).ready(function(){
 		currentbowlerkey = $('.Bowlerid').parent().find('.hilite').parent().children('.Bowlerkey').html();
 		currentbowlerid = $('.Bowlerid').parent().find('.hilite').parent().children('.Bowlerid').html();	
 		
-		
+			console.log('currentstriker ' + currentstrikerkey);
+			console.log('outbastmankey ' + outbatsmankey);
 		if (outbatsmankey == currentstrikerkey) {
 			$('.Batsman').parent().find('.hilite').parent().children('.batting_position').children('select').attr('disabled', 'disabled');
 			$('.Batsman').parent().find('.hilite').parent().children('.fielder').children('select').attr('disabled', 'disabled');
 			$('.Batsman').parent().find('.hilite').parent().children('.wktakingbowler').children('select').attr('disabled', 'disabled');
 			$('.Batsman').parent().find('.hilite').parent().children('.Dismissaltype').children('select').attr('disabled', 'disabled');
 		}
+		else{
+			$('.Batsman').parent().find('.hilite-nonstriker').parent().children('.batting_position').children('select').attr('disabled', 'disabled');
+			$('.Batsman').parent().find('.hilite-nonstriker').parent().children('.fielder').children('select').attr('disabled', 'disabled');
+			$('.Batsman').parent().find('.hilite-nonstriker').parent().children('.wktakingbowler').children('select').attr('disabled', 'disabled');
+			$('.Batsman').parent().find('.hilite-nonstriker').parent().children('.Dismissaltype').children('select').attr('disabled', 'disabled');	
+		
+		}
+		
+		
 		
 		//fielderkey = $('.Batsman').parent().find('.hilite').parent().children('.fielder').children('select').children('option:selected').val();
 		
