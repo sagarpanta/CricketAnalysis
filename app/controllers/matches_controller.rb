@@ -222,7 +222,8 @@ class MatchesController < ApplicationController
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end
   end
-=begin 
+
+=begin  
   def match_status
 	begin
 		if signed_in?
@@ -240,8 +241,8 @@ class MatchesController < ApplicationController
 					and  s1.clientkey= '+current_user.id.to_s+' and s1.matchkey= '+params[:id].to_s+'
 					)A
 					LEFT join scorecards s on A.inning = s.inning and A.[over] = s.[over] and A.clientkey = s.clientkey and A.matchkey = s.matchkey
-
 					group by A.inning, A.[over] 
+					order by A.inning, A.[over]
 					' 
 
 			crpo_sql = '
@@ -254,13 +255,14 @@ class MatchesController < ApplicationController
 					and  s1.clientkey= '+current_user.id.to_s+' and s1.matchkey= '+params[:id].to_s+'
 					)A
 					LEFT join scorecards s on A.inning = s.inning and A.[over] >= s.[over] and A.clientkey = s.clientkey and A.matchkey = s.matchkey
-
 					group by A.inning, A.[over] 
+					order by A.inning, A.[over]
 					'
 			@runsperover = Scorecard.find_by_sql(rpo_sql)
 			@cumulativerunsperover =  Scorecard.find_by_sql(crpo_sql)
-			
-			
+
+			@ti = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('count(distinct inning) as c_inning')
+			@totalinnings = @ti.nil? ? 0:@ti[0].c_inning
 			@currentinning = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('max(inning) as inning')
 			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max([over]*1.0)) as runrate, max([over]) as currentover, sum(runs) as score, max(ballnum) as currball')
 			@lastfiveRR = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(count(distinct [over])*1.0) as runrate').where('[over] between '+(@current[0].currentover-4).to_s + ' and '+ @current[0].currentover.to_s)
@@ -294,8 +296,8 @@ class MatchesController < ApplicationController
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end
   end  
+=end
 
-=end 
 
   def match_status
 	begin
@@ -312,7 +314,6 @@ class MatchesController < ApplicationController
 					from scorecards s cross join scorecards s1 
 					where  s.clientkey= '+current_user.id.to_s+' and s.matchkey= '+params[:id].to_s+'
 					and  s1.clientkey= '+current_user.id.to_s+' and s1.matchkey= '+params[:id].to_s+'
-					order by s.inning, s1."over"
 					)A
 					LEFT join scorecards s on A.inning = s.inning and A."over" = s."over" and A.clientkey = s.clientkey and A.matchkey = s.matchkey
 					group by A.inning, A."over" 
@@ -325,7 +326,6 @@ class MatchesController < ApplicationController
 					from scorecards s cross join scorecards s1 
 					where  s.clientkey= '+current_user.id.to_s+' and s.matchkey= '+params[:id].to_s+'
 					and  s1.clientkey= '+current_user.id.to_s+' and s1.matchkey= '+params[:id].to_s+'
-					order by s.inning, s1."over"
 					)A
 					LEFT join scorecards s on A.inning = s.inning and A."over" >= s."over" and A.clientkey = s.clientkey and A.matchkey = s.matchkey
 					group by A.inning, A."over" 
@@ -373,5 +373,5 @@ class MatchesController < ApplicationController
 		 @caught_at = 'matches#match_status'
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end
-  end   
+  end 
 end

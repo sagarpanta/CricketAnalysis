@@ -52,6 +52,7 @@ $(document).ready(function(){
       }
 	  
 	  var matchid = $('#matchid').html();
+	  var totalinnings = parseInt($('#totalinnings').html());
 	  var runsperover = $('#runsperover').html();
 	  
 	  var cumrunsperover = $('#cumrunsperover').html();
@@ -75,9 +76,12 @@ $(document).ready(function(){
 		  var temp_c = new Array();
 		  console.log(runsperover);
 		  console.log(cumrunsperover);
+		  console.log('total inns ' + totalinnings);
 		  var x = 1;
 		  for(i=0; i<=_data.length; i++) {
-			if (x%3==2 || x%3==0){
+			//if 2nd inning is currently on or already being played, then the consider changing the string value to int for every 2nd and 3rd element of the set (x%3==2 || x%3==0). Ignore the first set completely (x>3)
+			//if only 1st inning is being played, then consider changing every 2nd value to integer (x%2==0). Ignore the first set completely (x>2)
+			if ((totalinnings == 2 && (x%3==2 || x%3==0) && x>3) ||  (totalinnings == 1 && x%2==0 && x>2)){
 				temp.push(parseInt(_data[i]));
 				temp_c.push(parseInt(_data_c[i]));
 			}
@@ -86,7 +90,7 @@ $(document).ready(function(){
 				temp_c.push(_data_c[i]);
 			}
 
-			if (x%3==0){
+			if ((totalinnings == 2 && x%3==0) || (totalinnings == 1 && x%2==0)){
 				chartdata.push(temp);
 				chartdata_c.push(temp_c);
 				
@@ -96,7 +100,7 @@ $(document).ready(function(){
 			x = x+1;
 		  }
 		  
-
+		  console.log(chartdata);
  
 		  
 		  google_match_function_bar(chartdata, currOver, 'container1', 'Runs Per Over');
