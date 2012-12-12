@@ -434,7 +434,7 @@ class ScorecardsController < ApplicationController
 			@current_client = current_user.username
 			@match = Match.find_by_id(params[:id])
 		
-			@target = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
+			@target = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
 			#redirect_to scorecard_first_inning_path({:id=>@match.id})
 			#####common entry for all records
 			@tournament = Tournament.find_by_id(@match.tournamentkey)
@@ -713,7 +713,7 @@ class ScorecardsController < ApplicationController
 			################################ First Inning ##########################################3
 			
 			
-			@score_first_inning = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
+			@score_first_inning = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
 			#####common entry for all records
 			@tournament = Tournament.find_by_id(@match.tournamentkey)
 			@venue = Venue.find_by_id(@match.venuekey)
@@ -899,7 +899,7 @@ class ScorecardsController < ApplicationController
 			################################ Second Inning ##########################################3
 			
 			
-			@score_second_inning = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
+			@score_second_inning = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
 			#####common entry for all records
 
 			
