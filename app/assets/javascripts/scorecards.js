@@ -414,7 +414,7 @@ $(document).ready(function(){
 	});
 	
 	$('.Dismissaltype').change(function() {
-		
+		console.log($('.Dismissaltype'));
 		dismissaltypekey = $(this).children('select').children('option:selected').val() ;
 		if (dismissaltypekey == 1 || dismissaltypekey == 8){
 			$(this).parent().children('.fielder').children('select').attr('disabled', 'disabled');
@@ -434,6 +434,8 @@ $(document).ready(function(){
 		}
 		dismissedbatsmankey = $(this).parent().children('.Batsmanid').html();
 		outbatsmankey = $(this).parent().children('.Batsmankey').html();
+		
+		console.log(outbastmankey);
 
 	});
 	
