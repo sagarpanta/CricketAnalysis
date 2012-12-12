@@ -222,7 +222,7 @@ class MatchesController < ApplicationController
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end
   end
-
+=begin 
   def match_status
 	begin
 		if signed_in?
@@ -295,7 +295,8 @@ class MatchesController < ApplicationController
 	end
   end  
 
-=begin
+=end 
+
   def match_status
 	begin
 		if signed_in?
@@ -370,6 +371,5 @@ class MatchesController < ApplicationController
 		 @caught_at = 'matches#match_status'
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end
-  end 
-=end  
+  end   
 end
