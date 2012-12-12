@@ -246,27 +246,27 @@ $(document).ready(function(){
 		switch(runs_string){
 			case "1":
 				wides = 1;
-				//ones = 1;
+				ones = 0;
 				break;
 			case "2":
 				wides = 2;
-				//twos = 1;
+				twos = 0;
 				break;
 			case "3":
 				wides = 3;
-				//threes = 1;
+				threes = 0;
 				break;
 			case "4":
 				wides = 4;
-				//fours = 1;
+				fours = 0;
 				break;
 			case "5":
 				wides = 5;
-				//fives = 1;
+				fives = 0;
 				break;
 			case "6":
 				wides = 6;
-				//sixes = 1;
+				sixes = 0;
 				break;
 		}
 		maidenovercounter = 0;
@@ -588,14 +588,13 @@ $(document).ready(function(){
 		if (totalballsfaced != 0){ currentbatsmansr = totalruns/(totalballsfaced*1.0)*100;}
 		var totalstrikerate = totalruns/totalballsfaced*100;
 		var totalzeros = zeros+parseInt(currentbatsmanzeros);
-		if (runs>0){
-			var totalones = ones+parseInt(currentbatsmanones);
-			var totaltwos = twos+parseInt(currentbatsmantwos);
-			var totalthrees = threes+parseInt(currentbatsmanthrees);
-			var totalfours = fours + parseInt(currentbatsmanfours);
-			var totalfives = fives + parseInt(currentbatsmanfives);
-			var totalsixes = sixes + parseInt(currentbatsmansixes);
-		}
+		var totalones = ones+parseInt(currentbatsmanones);
+		var totaltwos = twos+parseInt(currentbatsmantwos);
+		var totalthrees = threes+parseInt(currentbatsmanthrees);
+		var totalfours = fours + parseInt(currentbatsmanfours);
+		var totalfives = fives + parseInt(currentbatsmanfives);
+		var totalsixes = sixes + parseInt(currentbatsmansixes);
+
 	
 		$('.Batsman.hilite').parent().children('.batsman_runs').html(totalruns);
 		$('.Batsman.hilite').parent().children('.batsman_balls_faced').html(totalballsfaced);
