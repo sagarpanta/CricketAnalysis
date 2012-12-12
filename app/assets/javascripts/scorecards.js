@@ -511,10 +511,7 @@ $(document).ready(function(){
 		//console.log(teamoneid + '    ' + teamtwoid);
 		battingendkey =  $('#battingend option:selected').val();
 		bowlingendkey =  $('#bowlingend option:selected').val();
-		
-		console.log(battingendkey);
-		console.log(bowlingendkey);
-		
+			
 		currentstrikerkey = $('.Batsman').parent().find('.hilite').parent().children('.Batsmankey').html();
 		currentnonstrikerkey = $('.Batsman').parent().find('.hilite-nonstriker').parent().children('.Batsmankey').html();
 		currentbowlerkey = $('.Bowlerid').parent().find('.hilite').parent().children('.Bowlerkey').html();
@@ -528,7 +525,7 @@ $(document).ready(function(){
 			$('.Batsman').parent().find('.hilite').parent().children('.wktakingbowler').children('select').attr('disabled', 'disabled');
 			$('.Batsman').parent().find('.hilite').parent().children('.Dismissaltype').children('select').attr('disabled', 'disabled');
 		}
-		else{
+		else if (outbatsmankey == currentnonstrikerkey){
 			$('.Batsman').parent().find('.hilite-nonstriker').parent().children('.batting_position').children('select').attr('disabled', 'disabled');
 			$('.Batsman').parent().find('.hilite-nonstriker').parent().children('.fielder').children('select').attr('disabled', 'disabled');
 			$('.Batsman').parent().find('.hilite-nonstriker').parent().children('.wktakingbowler').children('select').attr('disabled', 'disabled');

@@ -237,6 +237,8 @@ class ScorecardsController < ApplicationController
 			@currentbowlerkey = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).currentbowlerkey
 			@currentbowlingside = Scorecard.where('matchkey=? and inning = ? and currentbowlerkey=?', params[:id], @inning, @currentbowlerkey).first.nil? ? -2:Scorecard.find_by_id(@maxid).side
 			@lastrun = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).runs
+			@lastbye = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).byes
+			@lastlbye = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).legbyes
 			@lastnoball = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).noballs
 
 			@battingposition = [1,2,3,4,5,6,7,8,9,10,11]
@@ -259,18 +261,30 @@ class ScorecardsController < ApplicationController
 			
 			#if it is an over and the last runs taken is not one or three or five and it is not zero ball with some wides or noballs, 
 			#then swap the striker and non striker, and swap the batting end and bowling end
-			if ballsdelivered>0 and ballsdelivered%6 == 0 and @lastrun%2!=1
+			if ballsdelivered%6!=0 and (@lastrun%2==1 or @lastbye == 1 or @lastlbye == 1)
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
 				
 				temp1 = @battingendkey
 				@battingendkey = @bowlingendkey
-				@bowlingendkey = temp1		
-			#if it is the first ball of the inning (not counted because of wide or noball)
-			elsif ballsdelivered == 0 and ballsdelivered%6 == 0 and @lastrun%2!=1
+				@bowlingendkey = temp1
+			elsif ballsdelivered%6!=0 and (@lastrun%2==0 or @lastbye == 0 or @lastlbye == 0)
 				@currentstrikerkey = @currentstrikerkey
 				@currentnonstrikerkey = @currentnonstrikerkey
+			elsif ballsdelivered%6==0 and (@lastrun%2==1 or @lastbye == 1 or @lastlbye == 1)
+				@currentstrikerkey = @currentstrikerkey
+				@currentnonstrikerkey = @currentnonstrikerkey
+			elsif ballsdelivered%6==0 and (@lastrun%2==0 or @lastbye == 0 or @lastlbye == 0)
+				temp = @currentstrikerkey
+				@currentstrikerkey = @currentnonstrikerkey
+				@currentnonstrikerkey = temp
+			end	
+			
+			if ballsdelivered%6 == 0
+				temp1 = @battingendkey
+				@battingendkey = @bowlingendkey
+				@bowlingendkey = temp1
 			end
 
 			#counter is the way to add pre populated position to the batsmen.
@@ -284,7 +298,7 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				#this is the last entry id of the bastman b
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).maximum(:id)
-
+				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', params[:id],@inning,b).maximum(:id)
 				
 				#get the stats of batsman b so far.
 				stats_query = 'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced,  case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
@@ -307,24 +321,45 @@ class ScorecardsController < ApplicationController
 				
 				
 				hilite = ''
-				
 				if @currentstrikerkey == b
 					hilite='hilite'
 				elsif @currentnonstrikerkey == b
 					hilite='hilite-nonstriker'
 				end
-				
+
 					
 				#get the last entry of the batsman b and get his information
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
-				wktakingbowlerkey = outtypekey!=1? -2:playerlastentry[:bowlerkey]
-				disabled = outtypekey<=0? false : true
+				playerlastentry_as_NS = Scorecard.find_by_id(playerlastentry_id_as_nonstriker)
+				
+				dbk = playerlastentry.nil? ? -2:playerlastentry[:dismissedbatsmankey]
+				dbk1 = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:dismissedbatsmankey]
+				
+				
+				if dbk == b
+					outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
+					wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+					fielderkey = playerlastentry.nil? ? -2:playerlastentry[:fielderkey]
+					disabled = outtypekey<=0? false : true				
+				elsif dbk1==b
+
+					outtypekey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:outtypekey]
+					fielderkey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:fielderkey]
+					wktakingbowlerkey = -2
+					disabled = outtypekey<=0? false : true							
+				else
+					#outtypekey is set to -2 but not others like wktakingbowlerkey because bold is the first element
+					#of the select tag where as empty is the first element of the select tag for wktakingbowlerkey
+					outtypekey = -2
+				end
+				
+					
+				
 				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, 
 							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
-							 :outtypekey=> playerlastentry.nil? ? -2:playerlastentry[:outtypekey], 
-							 :fielderkey =>playerlastentry.nil? ? -2:playerlastentry[:fielderkey], 
+							 :outtypekey=> outtypekey , 
+							 :fielderkey =>fielderkey, 
 							 :bowlerkey=>playerlastentry.nil? ? -2:playerlastentry[:bowlerkey], 
 							 :wktakingbowlerkey=>wktakingbowlerkey,
 							 :runs=> stats.nil? ? '':stats[0][:runs],
@@ -529,18 +564,30 @@ class ScorecardsController < ApplicationController
 			
 			#if it is an over and the last runs taken is not one or three or five and it is not zero ball with some wides or noballs, 
 			#then swap the striker and non striker, and swap the batting end and bowling end
-			if ballsdelivered>0 and ballsdelivered%6 == 0 and @lastrun%2!=1
+			if ballsdelivered%6!=0 and (@lastrun%2==1 or @lastbye == 1 or @lastlbye == 1)
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
 				
 				temp1 = @battingendkey
 				@battingendkey = @bowlingendkey
-				@bowlingendkey = temp1		
-			#if it is the first ball of the inning (not counted because of wide or noball)
-			elsif ballsdelivered == 0 and ballsdelivered%6 == 0 and @lastrun%2!=1
+				@bowlingendkey = temp1
+			elsif ballsdelivered%6!=0 and (@lastrun%2==0 or @lastbye == 0 or @lastlbye == 0)
 				@currentstrikerkey = @currentstrikerkey
 				@currentnonstrikerkey = @currentnonstrikerkey
+			elsif ballsdelivered%6==0 and (@lastrun%2==1 or @lastbye == 1 or @lastlbye == 1)
+				@currentstrikerkey = @currentstrikerkey
+				@currentnonstrikerkey = @currentnonstrikerkey
+			elsif ballsdelivered%6==0 and (@lastrun%2==0 or @lastbye == 0 or @lastlbye == 0)
+				temp = @currentstrikerkey
+				@currentstrikerkey = @currentnonstrikerkey
+				@currentnonstrikerkey = temp
+			end	
+			
+			if ballsdelivered%6 == 0
+				temp1 = @battingendkey
+				@battingendkey = @bowlingendkey
+				@bowlingendkey = temp1
 			end
 
 
