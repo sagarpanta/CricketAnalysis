@@ -100,6 +100,7 @@ $(document).ready(function(){
 			x = x+1;
 		  }
 		  
+		  
 		  console.log(chartdata);
  
 		  
