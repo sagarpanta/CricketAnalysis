@@ -9,7 +9,7 @@
 		<div id="inning_one">
 
 				<div>
-					<table>
+					<table class="pdf_scorecard">
 						<th>Batsman</th>
 						<th></th>
 						<th></th>
@@ -37,7 +37,7 @@
 
 
 				<div>
-					<table>
+					<table class="pdf_scorecard">
 						<th>Bowlers</th>
 						<th>Overs</th>
 						<th>Runs</th>
@@ -73,16 +73,18 @@
 		<div>Second Inning</div>
 		<div id="inning_two">
 				<div>
-					<table>
-						<th>Batsman</th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th>Runs</th>
-						<th>Balls Faced</th>
-						<th>Strike Rate</th>
-						<th>4's</th>
-						<th>6's</th>
+					<table class="pdf_scorecard">
+						<tr>
+							<th>Batsman</th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th>Runs</th>
+							<th>Balls Faced</th>
+							<th>Strike Rate</th>
+							<th>4's</th>
+							<th>6's</th>
+						</tr>
 
 						
 						<% @batsmen1.each do |b| %>
@@ -103,7 +105,7 @@
 
 
 				<div>
-					<table>
+					<table class="pdf_scorecard">
 						<th>Bowlers</th>
 						<th>Overs</th>
 						<th>Runs</th>

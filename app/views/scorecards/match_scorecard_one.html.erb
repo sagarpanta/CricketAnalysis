@@ -141,7 +141,7 @@
 							<tr class="highlight">
 								<td class="Bowler <%= b[:hilite] %>"><%= b[:name] %></td>
 								<td class="bowling_side"><ul><li class="<%= b[:rtw] %>">RTW</li><li class="<%= b[:otw] %>">OTW</li></ul></td>
-								<td class="bowling_position"><%= select 'bowler' , 'bowlingposition', @bowlingposition.collect {|p| p} , :selected=> b[:bowlingposition] %></td>
+								<td class="bowling_position"><%= select 'bowler','bowlingposition', @bowlingposition.collect {|p| p} , :selected=> b[:bowlingposition] %></td>
 								<td class="Bowlerid" style="display:none"><%= b[:playerid] %></td>
 								<td class="Bowlerkey" style="display:none"><%= b[:playerkey] %></td>
 								<td class="bowler_overs"><%= b[:overs] %></td>

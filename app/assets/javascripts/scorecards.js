@@ -55,6 +55,7 @@ $(document).ready(function(){
 		var rclicked = 0, wclicked = 0, nclicked = 0, bclicked =0, lbclicked=0;
 		var line = 0, length= 0, shottype = 0;
 		var bowling_side = -2;
+		var freehit = 0;
 		
 		
 		clientkey = $('#clientkey').html();
@@ -65,9 +66,6 @@ $(document).ready(function(){
 		$('.scoring_numbers').removeAttr('scoring_number_clicked');
 		$('.scoring_numbers').css('opacity', '0.9')
 		$(this).css('opacity', '0.7').addClass('scoring_number_clicked');
-		batsmanid = $('.Batsman').parent().find('.hilite').parent().children('.Batsmanid').html();
-		batsmankey = $('.Batsman').parent().find('.hilite').parent().children('.Batsmankey').html();
-		bowlerid = $('.Batsman').parent().find('.hilite').parent().children('.Bowlerid').html();
 	});
 	
 	$('.scoring_numbers').live('hover', function(){
@@ -91,6 +89,8 @@ $(document).ready(function(){
 		modal: true
 	});
 	
+	
+	
 	$('#btn-submit').live('click', function(){
 		$( "#dialog-form" ).dialog('close');
 		$('#shottype_shottypekey').val('').trigger('liszt:updated');
@@ -106,8 +106,12 @@ $(document).ready(function(){
 		line = 0;
 		length = 0;
 		shottype = 0;
+		ballsdelivered = 0;
+		ballsfaced=0;
+		runs = ones = twos = threes = fours = fives = sixes = 0;
 	});
 	
+
 	
 	$('.dialog_td1').live('click', function(){
 		$('.dialog_td1').css('background-color', 'lightgrey');
@@ -209,7 +213,12 @@ $(document).ready(function(){
 				maidenovercounter = 0;
 				break;
 		}
-		ballsdelivered = 1;
+		if (noballs==1){
+			ballsdelivered = 0;
+		}
+		else{
+			ballsdelivered = 1;
+		}
 		ballsfaced = 1;
 		$( "#dialog-form" ).dialog( "open" ); 
 	});
@@ -237,27 +246,27 @@ $(document).ready(function(){
 		switch(runs_string){
 			case "1":
 				wides = 1;
-				ones = 1;
+				//ones = 1;
 				break;
 			case "2":
 				wides = 2;
-				twos = 1;
+				//twos = 1;
 				break;
 			case "3":
 				wides = 3;
-				threes = 1;
+				//threes = 1;
 				break;
 			case "4":
 				wides = 4;
-				fours = 1;
+				//fours = 1;
 				break;
 			case "5":
 				wides = 5;
-				fives = 1;
+				//fives = 1;
 				break;
 			case "6":
 				wides = 6;
-				sixes = 1;
+				//sixes = 1;
 				break;
 		}
 		maidenovercounter = 0;
@@ -337,7 +346,12 @@ $(document).ready(function(){
 				sixes = 1;
 				break;
 		}
-		ballsdelivered = 1
+		if (noballs==1){
+			ballsdelivered = 0;
+		}
+		else{
+			ballsdelivered = 1;
+		}
 		ballsfaced = 1
 		maidenovercounter = 0;
 		$( "#dialog-form" ).dialog( "open" ); 
@@ -388,7 +402,12 @@ $(document).ready(function(){
 				sixes = 1;
 				break;
 		}
-		ballsdelivered = 1
+		if (noballs==1){
+			ballsdelivered = 0;
+		}
+		else{
+			ballsdelivered = 1;
+		}
 		ballsfaced = 1
 		maidenovercounter = 0;
 		$( "#dialog-form" ).dialog( "open" ); 
@@ -480,10 +499,11 @@ $(document).ready(function(){
 	});
 	
 	$('#submit_runs').live('click', function(){
-		if (noballs==1 && runs == 0){
-			$( "#dialog-form" ).dialog( "open" ); 
-		}
 		$(this).children('img').attr('src','/assets/button-over.png');	
+		
+		batsmanid = $('.Batsman').parent().find('.hilite').parent().children('.Batsmanid').html();
+		batsmankey = $('.Batsman').parent().find('.hilite').parent().children('.Batsmankey').html();
+		bowlerid = $('.Batsman').parent().find('.hilite').parent().children('.Bowlerid').html();
 		teamoneid = $('#teamoneid').html();
 		teamtwoid = $('#teamtwoid').html();
 		//console.log(teamoneid + '    ' + teamtwoid);
@@ -533,14 +553,13 @@ $(document).ready(function(){
 			maiden = 0;
 		}
 	
-		var	totalzeros = 0;
-		var	totalones = 0;
-		var	totaltwos = 0;
-		var	totalthrees = 0;
-		var	totalfours = 0;
-		var	totalfives = 0;
-		var	totalsixes = 0;
-		
+		var totalones = 0;
+		var totaltwos = 0;
+		var totalthrees = 0;
+		var totalfours = 0;
+		var totalfives = 0;
+		var totalsixes = 0;
+	
 		var currentbatsmanrun = $('.Batsman.hilite').parent().children('.batsman_runs').html();
 		var currentbatsmanballsfaced = $('.Batsman.hilite').parent().children('.batsman_balls_faced').html();
 		var currentbatsmansr = $('.Batsman.hilite').parent().children('.batsman_strikerate').html();
@@ -568,9 +587,8 @@ $(document).ready(function(){
 		var currentbatsmansr = 0.0;
 		if (totalballsfaced != 0){ currentbatsmansr = totalruns/(totalballsfaced*1.0)*100;}
 		var totalstrikerate = totalruns/totalballsfaced*100;
-		
+		var totalzeros = zeros+parseInt(currentbatsmanzeros);
 		if (runs>0){
-			var totalzeros = zeros+parseInt(currentbatsmanzeros);
 			var totalones = ones+parseInt(currentbatsmanones);
 			var totaltwos = twos+parseInt(currentbatsmantwos);
 			var totalthrees = threes+parseInt(currentbatsmanthrees);
@@ -578,7 +596,6 @@ $(document).ready(function(){
 			var totalfives = fives + parseInt(currentbatsmanfives);
 			var totalsixes = sixes + parseInt(currentbatsmansixes);
 		}
-		
 	
 		$('.Batsman.hilite').parent().children('.batsman_runs').html(totalruns);
 		$('.Batsman.hilite').parent().children('.batsman_balls_faced').html(totalballsfaced);
@@ -636,15 +653,12 @@ $(document).ready(function(){
 		var totalecon = 0;
 		if (totaldeliveries != 0) {totalecon = totalruns/(totaldeliveries/6.0); }
 		var totalzeros = zeros + parseInt(currentbowlerzeros);
-		if (runs>0) {
-			    totalones = ones+parseInt(currentbowlerones);
-			    totaltwos = twos+parseInt(currentbowlertwos);
-			    totalthrees = threes+parseInt(currentbowlerthrees);
-			    totalfours = fours + parseInt(currentbowlerfours);
-			    totalfives = fives + parseInt(currentbowlerfives);
-			    totalsixes = sixes + parseInt(currentbowlersixes);
-		}
-		
+		var totalones = ones+parseInt(currentbowlerones);
+		var totaltwos = twos+parseInt(currentbowlertwos);
+		var totalthrees = threes+parseInt(currentbowlerthrees);
+		var totalfours = fours + parseInt(currentbowlerfours);
+		var totalfives = fives + parseInt(currentbowlerfives);
+
 		var totalwides = wides + parseInt(currentbowlerwides);
 		var totalnoballs = noballs + parseInt(currentbowlernoballs);
 		var totalothers = byes+legbyes + parseInt(currentbowlerothers);
@@ -730,7 +744,7 @@ $(document).ready(function(){
 				$('#legbyes').children('img').attr('src','/assets/up.png');
 				$('.scoring_numbers').removeClass('scoring_number_clicked');
 				$('.scoring_numbers').css('opacity', '0.9');
-								
+		
 				rclicked = 0, wclicked = 0, nclicked, bclicked= 0, lbclicked = 0;
 			},
 			error: function(jqXHR, textStatus, errorThrown){ 
@@ -773,8 +787,8 @@ $(document).ready(function(){
 		 
 		 
 		runs = 0; zeros = 0; ones = 0; twos = 0; threes = 0; fours = 0; fives=0; sixes = 0; sevens = 0; eights = 0; others = 0;
-		outbywk = -2; formatkey = 0; wides = 0; noballs=0; byes=0; legbyes=0; ballsdelivered = 0; ballsfaced = 0; maiden = 0;
-		fielderkey = -2; currentbowlerkey = -2; currentstrikerkey = -2; bowlerkey = -2;
+		outbywk = -2; formatkey = 0; wides = 0; byes=0; noballs = 0;legbyes=0; ballsdelivered = 0; ballsfaced = 0; maiden = 0;
+		fielderkey = -2; currentbowlerkey = -2; currentstrikerkey = -2; bowlerkey = -2, batsmankey = -2; 
 		currentnonstrikerkey = -2; dismissedbatsmankey = -2; wicket = 0; dismissaltypekey = -2; teamoneid = -2; teamtwoid =-2;
 		venuekey = -2;
 		
