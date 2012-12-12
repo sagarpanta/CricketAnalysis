@@ -435,7 +435,7 @@ $(document).ready(function(){
 		dismissedbatsmankey = $(this).parent().children('.Batsmanid').html();
 		outbatsmankey = $(this).parent().children('.Batsmankey').html();
 		
-		console.log(outbastmankey);
+		console.log(outbatsmankey);
 
 	});
 	
