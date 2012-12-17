@@ -22,6 +22,7 @@
   <tr>
     <th>Client</th>
     <th>Country</th>
+	<th>Country Short</th>
     <th></th>
     <th></th>
     <th></th>
@@ -31,6 +32,7 @@
   <tr>
     <td><%= country.clientkey %></td>
     <td><%= country.country %></td>
+	<td><%= country.country_s %></td>
     <td><%= link_to 'Edit', edit_country_path(country) %></td>
     <td><%= link_to 'Destroy', country, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>

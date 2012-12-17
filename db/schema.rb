@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121216005219) do
+ActiveRecord::Schema.define(:version => 20121217090210) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(:version => 20121216005219) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "clientkey"
+    t.string   "country_s"
   end
 
   create_table "dismissals", :force => true do |t|
