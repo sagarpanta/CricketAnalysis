@@ -25,6 +25,7 @@ class AddShottypesToShottype < ActiveRecord::Migration
 		{:shottype => 'Lofted On Drive'},
 		{:shottype => 'Lofted Flick'},
 		{:shottype => 'Lofted Pull'},
+		{:shottype => 'Lofted Straight Drive'},
 		{:shottype => 'On Drive'},
 		{:shottype => 'Off Drive'},
 		{:shottype => 'Paddle Sweep'},
