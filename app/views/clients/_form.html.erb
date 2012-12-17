@@ -20,6 +20,14 @@
     <%= f.text_field :username %>
   </div>
   <div class="field">
+    <%= f.label :encrypted_password %><br />
+    <%= f.password_field :encrypted_password %>
+  </div>
+  <div class="field">
+    <%= f.label :encrypted_password_confirmation %><br />
+    <%= f.password_field :encrypted_password_confirmation %>
+  </div>
+  <div class="field">
     <%= f.label :email, "Email" %><br />
     <%= f.text_field :email %>
   </div>
