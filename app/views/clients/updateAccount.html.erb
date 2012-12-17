@@ -1,0 +1,26 @@
+<div id="updateAC_form">
+	<%= form_for(:client, :url => updatedAccount_path) do |f| %>
+	  <div class="fields" id="editAccount" style="color:white">
+		<%= f.label :user , "Client" %><br/>
+		<%= f.select :id, [[@client.username, @client.id]]%>
+	  </div>
+	  <div class="fields"  style="color:white">
+		<%= f.label :username , "Change UserName?" %><br/>
+		<%= f.text_field :username, :size=>"15"  %>
+	  </div>
+	  <div class="fields" style="color:white">
+		<%= f.label :actype , "Account Type" %><br/>
+		<%= f.select :actype, ['Premium' , 'Standard' , 'Temp'] %>
+	  </div>
+	  <div class="fields" style="color:white">
+		<%= f.label :email , "Email" %><br/>
+		<%= f.text_field :email, :size=>15 %>
+	  </div>
+	  <div class="actions" id="submit">
+		<%= f.submit "Update" %>
+	  </div>
+	<% end %>
+</div>
+
+
+

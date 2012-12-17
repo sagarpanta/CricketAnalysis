@@ -8,8 +8,9 @@ CricketAnalysis::Application.routes.draw do
   match 'generatePass' , :to=>'clients#generatePass'
   match 'change_password' , :to=>'clients#change_password'
   match 'changedpassword' , :to=>'clients#changedpassword'
+  match 'updateAccount' , :to=>'clients#updateAccount'
+  match 'updatedAccount', :to=> 'clients#updatedAccount'
 
-  
   match 'signin', :to=> 'clients#signin'
   match 'new_session', :to=> 'clients#new_session'
   match 'home', :to=> 'clients#home'
@@ -22,6 +23,7 @@ CricketAnalysis::Application.routes.draw do
   get 'analysis' , :to=> 'analysis#index'
   match 'generate' , :to=> 'analysis#generate'
   match 'matchwins' , :to=> 'analysis#matchwins'
+  
   
   resources :scorecards
   match 'scorecard_first_inning' , :to=>'scorecards#match_scorecard_one'
@@ -41,6 +43,7 @@ CricketAnalysis::Application.routes.draw do
 
   resources :matches
   match 'match_status' , :to=> 'matches#match_status'
+  match 'match_details' , :to=> 'matches#match_details'
 
 
   resources :tournaments

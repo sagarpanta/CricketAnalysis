@@ -51,6 +51,18 @@
 
 </h5>
 
+<div id="trial"><% if signed_in? %>
+					<div id="days">
+						<% if current_user.actype == 'Temp' %>
+							<br/>
+							<%= ((Time.now - current_user.created_at)/3600/24).to_i %>
+						<% end %>
+					</div>
+					<div id="accounttype" style="display:none"><%= current_user.actype %></div>
+				<% end %>
+</div>
+
+
 <div id="centralnav">
 	<table class="ctabl">
 		<tr>

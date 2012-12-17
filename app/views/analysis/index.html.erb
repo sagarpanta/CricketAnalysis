@@ -3,10 +3,10 @@
 
 
 
-<div id="analysis_img" style="position:absolute;"><%= image_tag('/assets/_analysis4.png', :height=>350, :width=>350) %></div>
+<div id="analysis_img" style="position:absolute;"><%= image_tag '/assets/_analysis4.png', :height=>200, :width=>200 %></div>
 <table id="analysis">
 	<tr>
-		<td class="head">Headind 1</td><td class="head">Headind 1</td><td><%= select 'analysis', 'analysiskey', ['Batting','Bowling'], {}, {:class=>'chzn-select', 'data-placeholder'=>'Analysis of ...', 'single style'=>'width:250px' , :tabindex=>"4"} %></td><td class="head">Headind 1</td><td class="head">Headind 1</td><td class="head">Headind 1</td>
+		<td class="head">Headind 1</td><td class="head">Headind 1</td><td><%= select 'analysis', 'analysiskey', ['Batting','Bowling'], {}, {:class=>'chzn-select', 'data-placeholder'=>'Analysis of ...', 'single style'=>'width:250px' , :tabindex=>"4"} %></td><td class="head">Headind 1</td><td class="head">Headind 1</td>
 	</tr>
 	<tr>
 		<td class="identifier">Country:</td>	
@@ -102,18 +102,18 @@
 		
 	</tr>
 	<tr>
-		<td class="identifier">Batting Position:</td>	 	
+		<td class="identifier">Bat Position:</td>	 	
 		<td class="slct"><%= select 'battingposition', 'battingpositionkey', @battingpositions ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batting Style/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		<td class="middle"></td>
-		<td class="identifier1">Bowling Position:</td>	 	
+		<td class="identifier1">Bowl Position:</td>	 	
 		<td class="slct1"><%= select 'bowlingposition', 'bowlingpositionkey1' , @bowlingpositions ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batting Style/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		
 	</tr>
 	<tr>
-		<td class="identifier">Batting Style:</td>	 	
+		<td class="identifier">Bat Style:</td>	 	
 		<td class="slct"><%= select 'battingstyle' , 'battingstylekey', @battingstyles.collect {|c| [c.battingstyle, c.battingstyle ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batting Style/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		<td class="middle"></td>
-		<td class="identifier1">Bowling Type:</td>	 	
+		<td class="identifier1">Bowl Type:</td>	 	
 		<td class="slct1"><%= select 'bowlingtype' , 'bowlingtypekey1', @bowlingtypes.collect {|c| [c.bowlingtype, c.bowlingtype ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Type/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		
 	</tr>
@@ -126,20 +126,19 @@
 		
 	</tr>
 	<tr>
-		<td class="identifier">Shot Type</td>
+		<td class="identifier">Shot Type:</td>
 		<td class="slct"><%= select 'st' , 'stkey', @shottypes.collect {|s| [s.shottype, s.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Shot Type', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		<td class="middle"></td>
 		<td class="identifier1">Bowling Style:</td>	 	
 		<td class="slct1"><%= select 'bowlingstyle' , 'bowlingstylekey1', @bowlingstyles.collect {|c| [c.bowlingstyle, c.bowlingstyle ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Style/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 	</tr>
 	<tr>
-		<td class="identifier"></td>
-		<td class="slct"></td>
+		<td class="identifier">Shot Direction:</td>
+		<td class="slct"><%= select 'sd' , 'sdkey', @shottypes.collect {|s| [s.shottype, s.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Shot Direction', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		<td class="middle"></td>
 		<td class="identifier1">Line:</td>	
 		<td class="slct1"><%= select 'line' , 'linekey1', @lines.collect {|l| [l.line, l.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Line/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 	</tr>
-	
 	<tr>
 		<td class="identifier"></td>
 		<td class="slct"></td>
@@ -152,11 +151,16 @@
 		<td class="identifier"></td>
 		<td class="slct"></td>
 		<td class="middle"></td>
-		<td class="identifier1">Bowling Side:</td>
+		<td class="identifier1">Bowl Side:</td>
 		<td class="slct1"><%= select 'side' , 'sidekey1', @sides.collect {|s| [s['side'], s['val']]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Side/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
-	 	
 	</tr>	
-
+	<tr>
+		<td class="identifier"></td>
+		<td class="slct"></td>
+		<td class="middle"></td>
+		<td class="identifier1">Bowl Spell:</td>
+		<td class="slct1"><%= select 'spell' , 'spellkey1', @sides.collect {|s| [s['side'], s['val']]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Spell', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
 
 </table>
 
@@ -214,7 +218,7 @@
 		<td class="metric" data-metric="dsmsl" >Dsmsl</td>
 	</tr>
 
-	<tr><td class="groups" id="groupbybattingstyle" data-group="bts">Bat Style</td><td rowspan="14" colspan="16" id="container" style="width: 400px; max-height: 200px; margin: 0 auto" ></td>
+	<tr><td class="groups" id="groupbybattingstyle" data-group="bts">Bat Style</td><td rowspan="15" colspan="16" id="container" style="width: 400px; max-height: 200px; margin: 0 auto" ></td>
 		<td class="groups" id="groupbybowlingtype" data-group="bls">Bowl Style</td></tr>
 	<tr><td class="groups" id="groupbyteam" data-group="team">Team</td>
 		<td class="groups" id="groupbyteamagainst" data-group="teamagainst">Team Against</td></tr>
@@ -242,6 +246,8 @@
 		<td class="groups" id="groupbyline" data-group="line">Line</td></tr>
 	<tr><td class="groups" id="groupbyside" data-group="side">Bowling Side</td>
 		<td class="groups" id="groupbylength" data-group="length">Length</td></tr>
+	<tr><td class="groups" id="groupbydirection" data-group="direction">Direction</td>
+		<td class="groups" id="groupbyspell" data-group="spell">Spell</td></tr>
 </table>
 
 

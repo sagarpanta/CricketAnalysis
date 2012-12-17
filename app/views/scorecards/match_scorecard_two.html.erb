@@ -17,6 +17,8 @@
 <div id="inningkey" style="display:none"><%= @inning %>Inning</div>
 <div id="clientkey" style="display:none"><%= current_user.id %></div>
 
+<div id="directionkey" style="display:none"></div>
+
 <div id="scorecard">
 		<table>
 			<tr>
@@ -32,20 +34,20 @@
 				<td class="scoring_numbers">Other</td>
 			</tr>
 		</table>
-
+		
 		<div>
 			<table>
 				<tr>
 					<td class="scores_to_be_added_to">Runs</td>
-					<td id="runs"><%= image_tag '/assets/up.png' %></td>
+					<td id="runs"><a href="#" class="big-link" data-reveal-id="myModal"><%= image_tag '/assets/up.png' %></a></td>
 					<td class="scores_to_be_added_to">Wides</td>
-					<td id="wides"><%= image_tag '/assets/up.png' %></td>
+					<td id="wides"><a href="#" class="big-link" data-reveal-id="myModal"><%= image_tag '/assets/up.png' %></a></td>
 					<td class="scores_to_be_added_to">No Balls</td>
 					<td id="noballs"><%= image_tag '/assets/up.png' %></td>
 					<td class="scores_to_be_added_to">Byes</td>
-					<td id="byes"><%= image_tag '/assets/up.png' %></td>
+					<td id="byes"><a href="#" class="big-link" data-reveal-id="myModal"><%= image_tag '/assets/up.png' %></a></td>
 					<td class="scores_to_be_added_to">Leg Byes</td>
-					<td id="legbyes"><%= image_tag '/assets/up.png' %></td>
+					<td id="legbyes"><a href="#" class="big-link" data-reveal-id="myModal"><%= image_tag '/assets/up.png' %></a></td>
 				</tr>
 				<tr></tr>
 				<tr></tr>
@@ -58,10 +60,6 @@
 			</table>
 		</div>
 
-
-
-
-		
 		<div id="battingend"><%= select 'end', 'battingend' , @battingend.collect {|p| [ p['name'],p['value']]}, :selected=>@battingendkey %></div>
 		<!--Current striker's balls before boundary and balls before run-->
 
@@ -92,7 +90,7 @@
 							<td class="batting_position"><%= select 'batsman' , 'battingposition', @battingposition.collect {|p| p} , {:selected=> b[:counter]}, { :disabled=>b[:disabled]} %></td>
 							<td class="Batsmanid" style="display:none"><%= b[:playerid] %></td>
 							<td class="Batsmankey" style="display:none"><%= b[:playerkey] %></td>
-							<td class="Dismissaltype"><%= select 'Dismissaltype', 'DismissalTypeKey' , @dismissals, { :selected=>b[:outtypekey]},{ :disabled=>b[:disabled]} %></td>
+							<td class="Dismissaltype" style="width:20px"><%= select 'Dismissaltype', 'DismissalTypeKey' , @dismissals, { :selected=>b[:outtypekey]},{ :disabled=>b[:disabled]} %></td>
 							<td class="fielder"><%= select 'fielder', 'fielderkey' , @fielders,  {:selected=>b[:fielderkey]}, { :disabled=>b[:disabled]} %></td>
 							<td class="wktakingbowler"><%= select 'wktakingbowler', 'wktakingbowlerkey' , @wktakingbowlers,  {:selected=>b[:wktakingbowlerkey]}, { :disabled=>b[:disabled]} %></td>
 							<td class="batsman_runs"><%= b[:runs] %></td>	
@@ -120,6 +118,7 @@
 					<th class="Bowling_summary">Bowlers</th>
 					<th class="Bowling_summary"></th>
 					<th class="Bowling_summary"></th>
+					<th class="Bowling_summary">Spell</th>
 					<th class="Bowling_summary">Overs</th>
 					<th class="Bowling_summary">Runs</th>
 					<th class="Bowling_summary">Maidens</th>
@@ -140,9 +139,10 @@
 							<tr class="highlight">
 								<td class="Bowler <%= b[:hilite] %>"><%= b[:name] %></td>
 								<td class="bowling_side"><ul><li class="<%= b[:rtw] %>">RTW</li><li class="<%= b[:otw] %>">OTW</li></ul></td>
-								<td class="bowling_position"><%= select 'bowler' , 'bowlingposition', @bowlingposition.collect {|p| p} , :selected=> b[:bowlingposition] %></td>
+								<td class="bowling_position"><%= select 'bowler','bowlingposition', @bowlingposition.collect {|p| p} , :selected=> b[:bowlingposition] %></td>
 								<td class="Bowlerid" style="display:none"><%= b[:playerid] %></td>
 								<td class="Bowlerkey" style="display:none"><%= b[:playerkey] %></td>
+								<td class="bowler_spell"><%= select 'bowler','spell', [0,1,2,3,4,5].collect {|p| p}  , :selected=> b[:spell] %></td>
 								<td class="bowler_overs"><%= b[:overs] %></td>
 								<td class="bowler_runs"><%= b[:runs] %></td>
 								<td class="bowler_maidens"><%= b[:maidens] %></td>
@@ -164,34 +164,83 @@
 		</div>
 </div>
 
-<div id="dialog-form" title="Select Length, Line, Shot Type">
-    <table>
-		<tr>
-			<th align="left">Line</th>
-		</tr>
-		<tr>
-			<% @lines.each do |l| %>
-				<td class="dialog_td1" data-line="<%= l.id %>"><%= l.line %></td>
-			<% end %>
-		</tr>
-		<tr>
-			<th align="left">Length</th>
-		</tr>
-		<tr>
-			<% @lengths.each do |l| %>
-				<td class="dialog_td2" data-length="<%= l.id %>"><%= l.length %></td>
-			<% end %>
-		</tr>
+		
+<div id="myModal" class="reveal-modal">
+	<div id="stumps"><%= image_tag('/assets/stumps.png') %></div>
+	<table>
+			<tr>
+				<td class="header">Outside Off</td><td class="header">Stumps</td><td class="header">Pads</td><td class="header">Outside Leg</td>
+			</tr>
+			<tr>
+				<td class='area area_t area_of' data-length="6" data-line="1">FT</td><td class='area area_t area_st' data-length="6" data-line="2">FT</td><td class='area area_t area_pd' data-length="6" data-line="3">FT</td><td class='area area_t area_ol' data-length="6" data-line="4">FT</td>
+			</tr>
+			<tr>
+				<td class='area area_y area_of' data-length="5" data-line="1">Y</td><td class='area area_y area_st' data-length="5" data-line="2">Y</td><td class='area area_y area_pd' data-length="5" data-line="3">Y</td><td class='area area_y area_ol' data-length="5" data-line="4">Y</td>
+			</tr>
+			<tr>
+				<td class='area area_f area_of' data-length="4" data-line="1">F</td><td class='area area_f area_st' data-length="4" data-line="2">F</td><td class='area area_f area_pd' data-length="4" data-line="3">F</td><td class='area area_f area_ol' data-length="4" data-line="4">F</td>
+			</tr>
+			<tr>
+				<td class='area area_g area_of' data-length="3" data-line="1">G</td><td class='area area_g area_st' data-length="3" data-line="2">G</td><td class='area area_g area_pd' data-length="3" data-line="3">G</td><td class='area area_g area_ol' data-length="3" data-line="4">G</td>
+			</tr>
+			<tr>
+				<td class='area area_sg area_of' data-length="2" data-line="1">SG</td><td class='area area_sg area_st' data-length="2" data-line="2">SG</td><td class='area area_sg area_pd' data-length="2" data-line="3">SG</td><td class='area area_sg area_ol' data-length="2" data-line="4">SG</td>
+			</tr>
+			<tr>
+				<td class='area area_s area_of' data-length="1" data-line="1">S</td><td class='area area_s area_st' data-length="1" data-line="2">S</td><td class='area area_s area_pd' data-length="1" data-line="3">S</td><td class='area area_s area_ol' data-length="1" data-line="4">S</td>
+			</tr>
 	</table>
-	
 	<table>
 		<tr>
-			<th align="left">Shot Type</th>
+			<th align="left"  class="header">Shot Type</th>
 		</tr>
 		<tr><td class="dialog_td3"><%= select 'shottype','shottypekey', @shottypes.collect {|s| [s.shottype, s.id]}, {}, {:class=>'chzn-select', 'data-placeholder'=>'Select Shot Type', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td></tr>
 	</table>
-	<button id="btn-submit">Submit</button>
-	<button id="btn-cancel">Cancel</button>
+	<div id="holder"></div>
+</div>
+
+
+<table id="direction">
+		<tbody>
+			<tr>
+				<th scope="row">Square Leg</th>
+				<td>20%</td>
+			</tr>
+			<tr>
+				<th scope="row">Fine Leg</th>
+				<td>25%</td>
+			</tr>
+			<tr>
+				<th scope="row">Third Man</th>
+				<td>25%</td>
+			</tr>
+			<tr>
+				<th scope="row">Point</th>
+				<td>20%</td>
+			</tr>
+			<tr>
+				<th scope="row">Cover</th>
+				<td>25%</td>
+			</tr>
+			<tr>
+				<th scope="row">Long Off</th>
+				<td>20%</td>
+			</tr>
+			<tr>
+				<th scope="row" data-directionkey="7">Long On</th>
+				<td>20%</td>
+			</tr>
+			<tr>
+				<th scope="row" data-directionkey="8">Mid Wicket</th>
+				<td>25%</td>
+			</tr>
+		</tbody>
+</table>
+<div id="details">Winner Details</div>
+<div id="details_values" data-matchid=<%= @match.id %>>
+	<div id="matchwinner"><%= select 'mw', 'mwkey' , @teams.collect {|t| [t.teamname, t.teamid]} %></div>
+	<div id="winnerremarks"><%= text_field_tag 'Remarks' %></div>
+	<div id="matchupdate"><%= image_tag '/assets/button.png', :width=>100 , :height=>30 %></div>
 </div>
 
 <div class="scorecard"><%= link_to '1nd Inning' , {:controller=>"scorecards", :action=>"match_scorecard_one", :id=>@match.id} %>

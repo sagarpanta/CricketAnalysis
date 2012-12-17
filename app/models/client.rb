@@ -1,8 +1,8 @@
 class Client < ActiveRecord::Base
-  attr_accessible :encrypted_password, :encrypted_password_confirmation, :remember_token, :username, :email, :temppass, :name, :country
+  attr_accessible :encrypted_password, :encrypted_password_confirmation, :remember_token, :username, :email, :temppass, :name, :country, :actype
 
-  validates_uniqueness_of  :username, :email, :name , :on=>:create
-  validates_presence_of :username, :encrypted_password , :encrypted_password_confirmation, :email, :name
+  validates_uniqueness_of  :username, :email, :name 
+  validates_presence_of :username, :encrypted_password , :email, :name
   validates :encrypted_password, :presence => true,
 					   :confirmation => true,
 					   :length => {:within => 6..40},
@@ -10,14 +10,17 @@ class Client < ActiveRecord::Base
   validates :encrypted_password, :confirmation => true,
 					   :length => {:within => 6..40},
 					   :allow_blank => true,
-					   :on => :update
+					   :on => :update,
+					   :if => :encrypted_password_confirmation
 					   
-  validates_format_of :email, :with => /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/
+  validates_format_of :email, :with => /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/	
   
-  before_save { |user| user.email = email.downcase }
-  before_save :encrypt_password
+  before_save { |user| user.email = email.downcase  }
+  before_save :check_changed_fields
 
-
+  def country=(country)
+	 write_attribute(:country, country.upcase)
+  end 
 
   def has_password?(submitted_password)
 	encrypted_password == encrypt(submitted_password)
@@ -36,10 +39,17 @@ class Client < ActiveRecord::Base
 
 private
 
+	def check_changed_fields
+		if encrypted_password_changed?
+			encrypt_password	
+		end
+	end
+	
 	def encrypt_password
       self.salt = make_salt unless has_password?(encrypted_password)
       self.encrypted_password = encrypt(encrypted_password)
     end
+	
 
     def encrypt(string)
       secure_hash("#{salt}--#{string}")

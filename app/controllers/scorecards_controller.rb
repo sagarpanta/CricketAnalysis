@@ -163,12 +163,11 @@ class ScorecardsController < ApplicationController
   end
  
   def match_scorecard_one
-	
+	begin
 		if signed_in?
 			@current_client = current_user.username
-			@match = Match.find_by_id(params[:id])
+			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
 
-		
 			#####common entry for all records
 			@tournament = Tournament.find_by_id(@match.tournamentkey)
 			@venue = Venue.find_by_id(@match.venuekey)
@@ -240,7 +239,7 @@ class ScorecardsController < ApplicationController
 			@lastbye = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).byes
 			@lastlbye = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).legbyes
 			@lastnoball = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).noballs
-
+			@lastwide = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).wides
 			@battingposition = [1,2,3,4,5,6,7,8,9,10,11]
 			@bowlingposition = [1,2,3,4,5,6,7,8,9,10,11]
 			@venue = Venue.find_all_by_id(@match.venuekey)
@@ -251,17 +250,15 @@ class ScorecardsController < ApplicationController
 			@bowlingendkey = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? 1:Scorecard.find_by_id(@maxid).bowlingendkey	
 			@battingend = []
 			
-			
 			@battingend << (@battingendkey ==0? {'value'=> @battingendkey, 'name'=> @venue[0].endone}:{'value'=> @battingendkey, 'name'=> @venue[0].endtwo} )
 			@battingend << (@bowlingendkey==1?  {'value'=>@bowlingendkey, 'name'=>@venue[0].endtwo}:{'value'=>@bowlingendkey, 'name'=>@venue[0].endone})
 
-			
 			@battingendname = @battingend[@battingendkey]
 			@bowlingendname = @battingend[@bowlingendkey]
 			
 			#if it is an over and the last runs taken is not one or three or five and it is not zero ball with some wides or noballs, 
 			#then swap the striker and non striker, and swap the batting end and bowling end
-			if ballsdelivered%6!=0 and (@lastrun%2==1 or @lastbye == 1 or @lastlbye == 1)
+			if ballsdelivered%6!=0 and (@lastrun%2==1 or @lastbye%2== 1 or @lastlbye%2 == 1)
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
@@ -269,19 +266,20 @@ class ScorecardsController < ApplicationController
 				temp1 = @battingendkey
 				@battingendkey = @bowlingendkey
 				@bowlingendkey = temp1
-			elsif ballsdelivered%6!=0 and (@lastrun%2==0 or @lastbye == 0 or @lastlbye == 0)
+			elsif ballsdelivered%6!=0 and (@lastrun%2==0 and @lastbye%2 == 0 and @lastlbye%2 == 0)
 				@currentstrikerkey = @currentstrikerkey
 				@currentnonstrikerkey = @currentnonstrikerkey
-			elsif ballsdelivered%6==0 and (@lastrun%2==1 or @lastbye == 1 or @lastlbye == 1)
+			elsif ballsdelivered%6==0 and ((@lastnoball == 0 and (@lastrun%2==1 or @lastbye%2 == 1 or @lastlbye%2 == 1)) or (@lastwide%2==1 or @lastwide==4) or (@lastnoball==1 and (@lastbye%2==0 and @lastlbye%2==0 and @lastrun%2==0)))
 				@currentstrikerkey = @currentstrikerkey
 				@currentnonstrikerkey = @currentnonstrikerkey
-			elsif ballsdelivered%6==0 and (@lastrun%2==0 or @lastbye == 0 or @lastlbye == 0)
+			elsif ballsdelivered%6==0 and ((@lastnoball>0 and (@lastbye%2==1 or @lastlbye%2==1 or @lastrun%2==1)) or (@lastnoball == 0 and (@lastrun%2==0 and @lastbye%2== 0 and @lastlbye%2 == 0)) or (@lastwide%2==0 and (@lastwide != 1 or @lastwide!=4)))
+				
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
 			end	
 			
-			if ballsdelivered%6 == 0
+			if ballsdelivered%6==0 and (@lastwide==0 and @lastnoball ==0)
 				temp1 = @battingendkey
 				@battingendkey = @bowlingendkey
 				@bowlingendkey = temp1
@@ -335,14 +333,12 @@ class ScorecardsController < ApplicationController
 				dbk = playerlastentry.nil? ? -2:playerlastentry[:dismissedbatsmankey]
 				dbk1 = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:dismissedbatsmankey]
 				
-				
 				if dbk == b
 					outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
 					wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
 					fielderkey = playerlastentry.nil? ? -2:playerlastentry[:fielderkey]
 					disabled = outtypekey<=0? false : true				
 				elsif dbk1==b
-
 					outtypekey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:outtypekey]
 					fielderkey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:fielderkey]
 					wktakingbowlerkey = -2
@@ -352,8 +348,6 @@ class ScorecardsController < ApplicationController
 					#of the select tag where as empty is the first element of the select tag for wktakingbowlerkey
 					outtypekey = -2
 				end
-				
-					
 				
 				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, 
 							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
@@ -399,7 +393,7 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs)/(sum(ballsdelivered)/6.0) end as economy') 
+				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs+byes+legbyes)/(sum(ballsdelivered)/6.0) end as economy') 
 				
 				hilite = ''
 				otw = ''
@@ -420,6 +414,7 @@ class ScorecardsController < ApplicationController
 				@fieldingside << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :playertype=> player.playertype,
 								 :bowlingposition=>playerlastentry.nil? ? nil:playerlastentry[:bowlingposition], 
 								 :runs=> stats.nil? ? '':stats[0][:runs].nil? ? '':stats[0][:runs],
+								 :spell=> stats.nil? ? '':stats[0][:spell].nil? ? 0:stats[0][:spell],
 								 :overs=>  stats.nil? ? '':stats[0][:ballsdelivered].nil? ? '':stats[0][:ballsdelivered]/6 + stats[0][:ballsdelivered]%6/10.0,
 								 :maidens=> stats.nil? ? '':stats[0][:maidens].nil? ? '':stats[0][:maidens],
 								 :zeros=>  stats.nil? ? '':stats[0][:zeros].nil? ? '':stats[0][:zeros],
@@ -459,7 +454,12 @@ class ScorecardsController < ApplicationController
 		else 
 			redirect_to signin_path
 		end	
-	
+	rescue => e
+		 @message = e.message 
+		 @client = current_user
+		 @caught_at = 'scorecards#match_scorecard_one'
+		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
+	end
   end
   
   
@@ -467,8 +467,9 @@ class ScorecardsController < ApplicationController
 	begin
 		if signed_in?
 			@current_client = current_user.username
-			@match = Match.find_by_id(params[:id])
-		
+			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
+			@teams = Team.find_by_sql('select distinct teamid, teamname from teams where teamid in ('+@match.teamidone.to_s+','+@match.teamidtwo.to_s+')')
+
 			@target = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
 			#redirect_to scorecard_first_inning_path({:id=>@match.id})
 			#####common entry for all records
@@ -545,6 +546,7 @@ class ScorecardsController < ApplicationController
 			@currentbowlingside = Scorecard.where('matchkey=? and inning = ? and currentbowlerkey=?', params[:id], @inning, @currentbowlerkey).first.nil? ? -2:Scorecard.find_by_id(@maxid).side			
 			@lastrun = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).runs
 			@lastnoball = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).noballs
+			@lastwide = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).wides
 
 			@battingposition = [1,2,3,4,5,6,7,8,9,10,11]
 			@bowlingposition = [1,2,3,4,5,6,7,8,9,10,11]
@@ -561,10 +563,10 @@ class ScorecardsController < ApplicationController
 			@battingendname = @battingend[@battingendkey]
 			@bowlingendname = @battingend[@bowlingendkey]			
 
-			
+	
 			#if it is an over and the last runs taken is not one or three or five and it is not zero ball with some wides or noballs, 
 			#then swap the striker and non striker, and swap the batting end and bowling end
-			if ballsdelivered%6!=0 and (@lastrun%2==1 or @lastbye == 1 or @lastlbye == 1)
+			if ballsdelivered%6!=0 and (@lastrun%2==1 or @lastbye%2== 1 or @lastlbye%2 == 1)
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
@@ -572,13 +574,14 @@ class ScorecardsController < ApplicationController
 				temp1 = @battingendkey
 				@battingendkey = @bowlingendkey
 				@bowlingendkey = temp1
-			elsif ballsdelivered%6!=0 and (@lastrun%2==0 or @lastbye == 0 or @lastlbye == 0)
+			elsif ballsdelivered%6!=0 and (@lastrun%2==0 and @lastbye%2 == 0 and @lastlbye%2 == 0)
 				@currentstrikerkey = @currentstrikerkey
 				@currentnonstrikerkey = @currentnonstrikerkey
-			elsif ballsdelivered%6==0 and (@lastrun%2==1 or @lastbye == 1 or @lastlbye == 1)
+			elsif ballsdelivered%6==0 and ((@lastnoball == 0 and (@lastrun%2==1 or @lastbye%2 == 1 or @lastlbye%2 == 1)) or (@lastwide%2==1 or @lastwide==4) or (@lastnoball==1 and (@lastbye%2==0 and @lastlbye%2==0 and @lastrun%2==0)))
 				@currentstrikerkey = @currentstrikerkey
 				@currentnonstrikerkey = @currentnonstrikerkey
-			elsif ballsdelivered%6==0 and (@lastrun%2==0 or @lastbye == 0 or @lastlbye == 0)
+			elsif ballsdelivered%6==0 and ((@lastnoball>0 and (@lastbye%2==1 or @lastlbye%2==1 or @lastrun%2==1)) or (@lastnoball == 0 and (@lastrun%2==0 and @lastbye%2== 0 and @lastlbye%2 == 0)) or (@lastwide%2==0 and (@lastwide != 1 or @lastwide!=4)))
+				
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
@@ -677,7 +680,7 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs)/(sum(ballsdelivered)/6.0) end as economy') 
+				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs+byes+legbyes)/(sum(ballsdelivered)/6.0) end as economy') 
 				
 				hilite = ''
 				otw = ''
@@ -698,6 +701,7 @@ class ScorecardsController < ApplicationController
 				@fieldingside << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :playertype=> player.playertype,
 								 :bowlingposition=>playerlastentry.nil? ? nil:playerlastentry[:bowlingposition], 
 								 :runs=> stats.nil? ? '':stats[0][:runs].nil? ? '':stats[0][:runs],
+								 :spell=> stats.nil? ? '':stats[0][:spell].nil? ? 0:stats[0][:spell],								 
 								 :overs=>  stats.nil? ? '':stats[0][:ballsdelivered].nil? ? '':stats[0][:ballsdelivered]/6 + stats[0][:ballsdelivered]%6/10.0,
 								 :maidens=> stats.nil? ? '':stats[0][:maidens].nil? ? '':stats[0][:maidens],
 								 :zeros=>  stats.nil? ? '':stats[0][:zeros].nil? ? '':stats[0][:zeros],
@@ -740,11 +744,11 @@ class ScorecardsController < ApplicationController
 			redirect_to signin_path
 		end	
 	rescue => e
-		 @message = e.message
+		 @message = e.message 
 		 @client = current_user
 		 @caught_at = 'scorecards#match_scorecard_two'
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end		
+	end
   end
 
 

@@ -1,103 +1,105 @@
 <div id="pdf_page">
-		<div><%= @match.matchdate %></div>
-		<div><%= @tournament.name %></div>
-		<div><%= @teamone.teamname %> vs <%= @teamtwo.teamname %></div>
-		<div><%= @formatarr[0] %> @ <%= @venue[0].venuename %></div>
-		<div>Score:<%= @runs %>/<%= @wickets %><br/>Overs:<%= @overs %></div>
+		<div style="text-align:center"><%= @match.matchdate %></div>
+		<div style="text-align:center"><%= @tournament.name %></div>
+		<div style="text-align:center"><%= @teamone.teamname %> vs <%= @teamtwo.teamname %></div>
+		<div style="text-align:center"><%= @formatarr[0] %> @ <%= @venue[0].venuename %></div>
+		<div >Score:<%= @runs %>/<%= @wickets %><br/>Overs:<%= @overs %></div>
 		<br/>
 		<div>First Inning</div>
 		<div id="inning_one">
 
 				<div>
 					<table class="pdf_scorecard">
-						<th>Batsman</th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th>Runs</th>
-						<th>Balls Faced</th>
-						<th>Strike Rate</th>
-						<th>4's</th>
-						<th>6's</th>
+						<th width="120px">Batsman</th>
+						<th width="60px"></th>
+						<th width="120px"></th>
+						<th width="120px"></th>
+						<th width="50px">Runs</th>
+						<th width="50px">Balls Faced</th>
+						<th width="50px">Strike Rate</th>
+						<th width="50px">4's</th>
+						<th width="50px">6's</th>
 						<% @batsmen.each do |b| %>
 							<tr>
-								<td><%= b[:name] %></td>
-								<td><%= @dismissals[b[:outtypekey]] %></td>
-								<td><%= @fielders[b[:fielderkey]] %></td>
-								<td><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
-								<td><%= b[:runs] %></td>	
-								<td><%= b[:ballsfaced] %></td>
-								<td><%= number_with_precision(b[:strikerate], :precision => 1) %></td>
-								<td><%= b[:fours] %></td>
-								<td><%= b[:sixes] %></td>
+								<td style="border-bottom:1px solid black"><%= b[:name] %></td>
+								<td style="border-bottom:1px solid black"><%= @dismissals[b[:outtypekey]] %></td>
+								<td style="border-bottom:1px solid black"><%= @fielders[b[:fielderkey]] %></td>
+								<td style="border-bottom:1px solid black"><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
+								<td style="border-bottom:1px solid black" b[:runs] %></td>	
+								<td style="border-bottom:1px solid black"><%= b[:ballsfaced] %></td>
+								<td style="border-bottom:1px solid black"><%= number_with_precision(b[:strikerate], :precision => 1) %></td>
+								<td style="border-bottom:1px solid black"><%= b[:fours] %></td>
+								<td style="border-bottom:1px solid black"><%= b[:sixes] %></td>
 							</tr>
 						<% end %>
 					</table>
 				</div>
 
-
+				<br/>
 				<div>
 					<table class="pdf_scorecard">
-						<th>Bowlers</th>
-						<th>Overs</th>
-						<th>Runs</th>
-						<th>Maidens</th>
-						<th>Wickets</th>
-						<th>Economy</th>
-						<th>4's</th>
-						<th>6's</th>
+						<th width="120px">Bowlers</th>
+						<th width="50px">Overs</th>
+						<th width="50px">Runs</th>
+						<th width="50px">Maidens</th>
+						<th width="50px">Wickets</th>
+						<th width="50px">Economy</th>
+						<th width="50px">4's</th>
+						<th width="50px">6's</th>
 
 						
 						<% @bowlers.each do |b| %>
 							<% if b[:name] != '' %>
 								<tr>
-									<td><%= b[:name] %></td>
-									<td><%= b[:overs] %></td>
-									<td><%= b[:runs] %></td>
-									<td><%= b[:maidens] %></td>
-									<td><%= b[:wickets] %></td>
-									<td><%= number_with_precision(b[:economy], :precision => 1) %></td>
-									<td><%= b[:fours] %></td>
-									<td><%= b[:sixes] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:name] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:overs] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:runs] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:maidens] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:wickets] %></td>
+									<td style="border-bottom:1px solid black"><%= number_with_precision(b[:economy], :precision => 1) %></td>
+									<td style="border-bottom:1px solid black"><%= b[:fours] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:sixes] %></td>
 								</tr>
 							<% end %>
 						<% end %>
 					</table>
 				</div>
 		</div>
-
+		<br/>
+		<br/>		
+		--------------------------------------------------------------------------------------------------------------------------------------------------------------	
 		<br/>
 		<br/>
-		<div>Score:<%= @runs1 %>/<%= @wickets1 %><br/>Overs:<%= @overs1 %></div>
+		<div>Score:<%= @runs1 %>/<%= @wickets1 %><br/>Overs:<%= @overs1 %></br>Target:<%= @runs %></div>
 		<br/>
 		<div>Second Inning</div>
 		<div id="inning_two">
 				<div>
 					<table class="pdf_scorecard">
 						<tr>
-							<th>Batsman</th>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th>Runs</th>
-							<th>Balls Faced</th>
-							<th>Strike Rate</th>
-							<th>4's</th>
-							<th>6's</th>
+							<th width="120px">Batsman</th>
+							<th width="60px"></th>
+							<th width="120px"></th>
+							<th width="120px"></th>
+							<th width="50px">Runs</th>
+							<th width="50px">Balls Faced</th>
+							<th width="50px">Strike Rate</th>
+							<th width="50px">4's</th>
+							<th width="50px">6's</th>
 						</tr>
 
 						
 						<% @batsmen1.each do |b| %>
 							<tr>
-								<td><%= b[:name] %></td>
-								<td><%= @dismissals[b[:outtypekey]] %></td>
-								<td><%= @fielders[b[:fielderkey]] %></td>
-								<td><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
-								<td><%= b[:runs] %></td>	
-								<td><%= b[:ballsfaced] %></td>
-								<td><%= number_with_precision(b[:strikerate], :precision => 1) %></td>
-								<td><%= b[:fours] %></td>
-								<td><%= b[:sixes] %></td>
+								<td style="border-bottom:1px solid black"><%= b[:name] %></td>
+								<td style="border-bottom:1px solid black"><%= @dismissals[b[:outtypekey]] %></td>
+								<td style="border-bottom:1px solid black"><%= @fielders[b[:fielderkey]] %></td>
+								<td style="border-bottom:1px solid black"><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
+								<td style="border-bottom:1px solid black"><%= b[:runs] %></td>	
+								<td style="border-bottom:1px solid black"><%= b[:ballsfaced] %></td>
+								<td style="border-bottom:1px solid black"><%= number_with_precision(b[:strikerate], :precision => 1) %></td>
+								<td style="border-bottom:1px solid black"><%= b[:fours] %></td>
+								<td style="border-bottom:1px solid black"><%= b[:sixes] %></td>
 							</tr>
 						<% end %>
 					</table>
@@ -106,27 +108,27 @@
 
 				<div>
 					<table class="pdf_scorecard">
-						<th>Bowlers</th>
-						<th>Overs</th>
-						<th>Runs</th>
-						<th>Maidens</th>
-						<th>Wickets</th>
-						<th>Economy</th>
-						<th>4's</th>
-						<th>6's</th>
+						<th width="120px">Bowlers</th>
+						<th width="50px">Overs</th>
+						<th width="50px">Runs</th>
+						<th width="50px">Maidens</th>
+						<th width="50px">Wickets</th>
+						<th width="50px">Economy</th>
+						<th width="50px">4's</th>
+						<th width="50px">6's</th>
 
 						
 						<% @bowlers1.each do |b| %>
 							<% if b[:name] != '' %>
 								<tr>
-									<td><%= b[:name] %></td>
-									<td><%= b[:overs] %></td>
-									<td><%= b[:runs] %></td>
-									<td><%= b[:maidens] %></td>
-									<td><%= b[:wickets] %></td>
-									<td><%= number_with_precision(b[:economy], :precision => 1) %></td>
-									<td><%= b[:fours] %></td>
-									<td><%= b[:sixes] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:name] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:overs] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:runs] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:maidens] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:wickets] %></td>
+									<td style="border-bottom:1px solid black"><%= number_with_precision(b[:economy], :precision => 1) %></td>
+									<td style="border-bottom:1px solid black"><%= b[:fours] %></td>
+									<td style="border-bottom:1px solid black"><%= b[:sixes] %></td>
 								</tr>
 							<% end %>
 						<% end %>

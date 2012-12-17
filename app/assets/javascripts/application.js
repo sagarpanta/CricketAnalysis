@@ -18,6 +18,10 @@ $(document).ready(function(){
 	
 	var pretty = $('.pretty').html();
 	
+	var accounttype1 = $('#accounttype').html();
+	if (accounttype1 != 'Temp'){
+		$('#trial').hide();
+	}
 	/*
 	if (pretty != undefined){
 		$('.pretty').tooltip({ 
@@ -44,6 +48,8 @@ $(document).ready(function(){
 	var w = $('ul').width();
 	 $('#position').html("X Axis : " + e.pageX + " Y Axis : " + e.pageY +'  width:'+w+' center: '+w/2+'  vwidth:'+bodywidth+' bcenter: '+bodywidth/2);
 	});
+	
+	
 	
 	$('#centralnav').fadeTo(0,0);
 	
@@ -86,8 +92,8 @@ $(document).ready(function(){
 	var analysis_img = $('#analysis_img').html();
 	if (analysis_img != undefined){
 		if (bodywidth>=1250 && bodywidth<1400){
-			$('#analysis_img').css('left', bodywidth/2-150).css('top', bodyheight/2);
-			$('#analysis_img').children('img').css('width','300px').css('height', '300px');
+			$('#analysis_img').css('left', bodywidth/2-175).css('top', bodyheight/2);
+			$('#analysis_img').children('img').css('width','250px').css('height', '250px');
 		}
 		else if (bodywidth>=800 && bodywidth<1000){
 			$('#analysis_img').css('left', bodywidth/2-120).css('top', bodyheight/2);
@@ -95,15 +101,11 @@ $(document).ready(function(){
 			$('.identifier').css('font-weight', 'normal');
 		}
 		else if (bodywidth>=1400){
-			$('#analysis_img').css('left', bodywidth/2-200).css('top', bodyheight/2-50);
-			$('#analysis_img').children('img').css('width','400px').css('height', '400px');
+			$('#analysis_img').css('left', bodywidth/2-150).css('top', bodyheight/2-50);
+			$('#analysis_img').children('img').css('width','300px').css('height', '300px');
 		}
-		
-	
 	}
 	
-	
-
 	var json = '';
 	var playerkey = new Array();
 	var playerid = new Array();

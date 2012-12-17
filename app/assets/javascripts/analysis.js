@@ -22,9 +22,10 @@ $(document).ready(function(){
 	var bowlingposition = [''];
 	var inningkey = [''];
 	var shottypekey = [''];
-	
+	var shotdirectionkey = [''];
 	
 	///////////////
+	
 	var countrykey1 = [''];
 	var formatkey1 = [''];
 	var tournamentkey1 = [''];
@@ -48,6 +49,7 @@ $(document).ready(function(){
 	var linekey1 = [''];
 	var lengthkey1 = [''];
 	var sidekey1 = [''];
+	var spellkey1 = [''];
 	////////////////
 	
 	var metric = '';
@@ -235,7 +237,7 @@ $(document).ready(function(){
         var options = {};
 		options['dataMode'] = 'regions';
 		options['magnifyingGlass'] = {enable:true, zoomFactor:7.5};
-		options['height'] = 350;
+		options['height'] = 375;
 
         var chart = new google.visualization.GeoChart(document.getElementById('container'));
         chart.draw(data, options);
@@ -256,7 +258,7 @@ $(document).ready(function(){
 		  titleTextStyle:  {color: 'darkgray', fontName: 'verdana', fontSize: 10},
           vAxis: {title: metric, titleTextStyle: {fontSize: 10}},
           hAxis: {title: group, textStyle: {fontSize: 8}, titleTextStyle: {fontSize: 10}},
-		  height: 350,
+		  height: 375,
           seriesType: charttype,
           series: {1000: {type: "line"}}
         };
@@ -600,6 +602,10 @@ $(document).ready(function(){
 	$('#st_stkey').change(function() {
 		shottypekey =  $(this).val() || [''];
 	});
+
+	$('#sd_sdkey').change(function() {
+		shotdirectionkey =  $(this).val() || [''];
+	});
 	
 	
 
@@ -746,6 +752,10 @@ $(document).ready(function(){
 	
 	$('#side_sidekey1').change(function() {
 		sidekey1 =  $(this).val() || [''];
+	});
+	
+	$('#spell_spellkey1').change(function() {
+		spellkey1 =  $(this).val() || [''];
 	});
 
 	
@@ -1057,7 +1067,7 @@ $(document).ready(function(){
 		//console.log('metric: ' +metricclickcount + '   group: '+ groupclickcount);
 
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, group1:group1, group2:group2, metric:metric, lxm:lastXmatches}};
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey:spellkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches}};
 			console.log(jsonObj);
 			$.ajax({
 				url: '/generate.json',
@@ -1119,7 +1129,7 @@ $(document).ready(function(){
 			lastXmatches = parseInt(temp);
 		}
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, group1:group1, group2:group2, metric:metric, lxm:lastXmatches}};
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey:spellkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches}};
 
 			$.ajax({
 				url: '/generate.json',

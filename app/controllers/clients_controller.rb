@@ -12,7 +12,6 @@ class ClientsController < ApplicationController
 	else
 		redirect_to signin_path
 	end
-
   end
 
   # GET /clients/1
@@ -36,6 +35,7 @@ class ClientsController < ApplicationController
 		else
 			redirect_to home_path
 		end
+		@actype = ''
 	else
 		redirect_to signin_path
 	end
@@ -48,7 +48,7 @@ class ClientsController < ApplicationController
 		@current_client = current_user.username
 		if current_user.username == 'admin'
 			@client = Client.find(params[:id])
-			
+			@actype = @client.actype
 		else
 			redirect_to home_path
 		end
@@ -73,17 +73,19 @@ class ClientsController < ApplicationController
         format.json { render json: @client.errors, status: :unprocessable_entity }
       end
     end
-	
   end
 
   # PUT /clients/1
   # PUT /clients/1.json
   def update
 	if signed_in?
+		if params[:client][:encrypted_password_confirmation].blank?
+			params[:client].delete("encrypted_password")
+			params[:client].delete("encrypted_password_confirmation")
+		end
 		@current_client = current_user.username
 		if current_user.username == 'admin'
 			@client = Client.find(params[:id])
-			
 		else
 			redirect_to home_path
 		end
@@ -147,7 +149,7 @@ class ClientsController < ApplicationController
   def new_session
 	begin
 		client = Client.find_by_username(params[:client][:username])
-		if client && Client.authenticate(params[:client][:username], params[:client][:password])
+		if client && Client.authenticate(params[:client][:username], params[:client][:password]) && ((client.actype == 'Temp' && ((Time.now - client.created_at)/3600/24)<=60) or client.actype!= 'Temp')
 			#sign in user and redirect to user's show page.
 			sign_in client
 			flash[:error] = ''
@@ -248,5 +250,31 @@ class ClientsController < ApplicationController
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end	  
   end
+  
+  
+  def updateAccount
+	if signed_in? and current_user.username =='admin'
+		@current_client = current_user.username
+		@client = Client.find(params[:id])
+	else
+		redirect_to home_path
+	end
+  end
+  
+  def updatedAccount
+	binding.pry
+	if signed_in? and current_user.username =='admin'
+		@client = Client.find_by_id(params[:client][:id])
+		attributes = {:username => params[:client][:username],:email => params[:client][:email],:actype=>params[:client][:actype]}
+		@client.update_attributes(attributes)
+		@client.save
+		redirect_to clients_path
+	else
+		redirect_to updateAccount_path
+	end
+  end
+  
+  
+  
  
 end

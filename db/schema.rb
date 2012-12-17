@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121209071049) do
+ActiveRecord::Schema.define(:version => 20121216005219) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -125,6 +125,7 @@ ActiveRecord::Schema.define(:version => 20121209071049) do
     t.string   "temppass"
     t.string   "name"
     t.date     "expiry"
+    t.string   "actype"
   end
 
   create_table "coaches", :force => true do |t|
@@ -334,6 +335,8 @@ ActiveRecord::Schema.define(:version => 20121209071049) do
     t.datetime "updated_at",           :null => false
     t.integer  "batsmanid"
     t.integer  "currentbowlerid"
+    t.string   "direction"
+    t.integer  "spell"
   end
 
   add_index "scorecards", ["id", "clientkey", "ballnum", "formatkey", "tournamentkey", "venuekey", "inning", "matchkey", "outtypekey", "batsmankey", "currentnonstrikerkey", "currentbowlerkey", "battingposition", "bowlingposition", "cr", "dismissedbatsmankey"], :name => "UIX_Scorecards_Evrythng", :unique => true
