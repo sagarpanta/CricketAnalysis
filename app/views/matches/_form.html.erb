@@ -58,19 +58,7 @@
 	<tr>
 		<td class="caption">Day or D/N?</td>
 		<td class="fields"><%= f.select :dayandnite, [['', -2], ['Day', 1], ['D/N',0]] %></td>
-	</tr>	
-	<tr>
-		<td class="caption">Match Won or Tied</td>
-		<td class="fields"><%= f.select :matchwonortied, [['', -2], ['Won', 1], ['Tied',0]] %></td>
-	</tr>
-	<tr>
-		<td class="caption">Winner</td>
-		<td class="fields"><%= f.select :winnerkey, @teams %></td>
-	</tr>
-	<tr>
-		<td class="caption">Details</td>
-		<td class="fields"><%= f.text_field :details %></td>
-	</tr>	
+	</tr>		
   </table>
 
   <div id="success_message"></div>
