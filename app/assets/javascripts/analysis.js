@@ -56,6 +56,7 @@ $(document).ready(function(){
 	var group1 = '';
 	var group2 = '';
 	var lastXmatches = -2;
+	var lastXballs = -2;
 	
 	var keys = [];
 	var values = [];
@@ -1064,10 +1065,18 @@ $(document).ready(function(){
 			lastXmatches = parseInt(temp);
 		}
 		
+		var temp1 = $('#lastXballs').val();
+		if (temp1 == ''){
+			lastXballs = -2;		
+		}
+		else {
+			lastXballs = parseInt(temp1);
+		}
+		
 		//console.log('metric: ' +metricclickcount + '   group: '+ groupclickcount);
 
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey:spellkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches}};
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey:spellkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs}};
 			console.log(jsonObj);
 			$.ajax({
 				url: '/generate.json',
@@ -1128,8 +1137,17 @@ $(document).ready(function(){
 		else {
 			lastXmatches = parseInt(temp);
 		}
+		
+		var temp1 = $('#lastXballs').val();
+		if (temp1 == ''){
+			lastXballs = -2;		
+		}
+		else {
+			lastXballs = parseInt(temp1);
+		}
+		
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey:spellkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches}};
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey:spellkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs}};
 
 			$.ajax({
 				url: '/generate.json',

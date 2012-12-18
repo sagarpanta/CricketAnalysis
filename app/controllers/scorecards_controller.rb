@@ -464,7 +464,7 @@ class ScorecardsController < ApplicationController
   
   
    def match_scorecard_two
-	begin
+	
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
@@ -528,9 +528,13 @@ class ScorecardsController < ApplicationController
 			#####Score calculation
 			@runs = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? 0:Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).select('sum(runs+wides+noballs+legbyes+byes) as scores')[0][:scores]
 			ballsdelivered = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).sum(:ballsdelivered)
+			@lastball = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).maximum(:ballnum)
+			@lastball = @lastball.nil? ? 0:@lastball
 			@overs = ballsdelivered/6 + ballsdelivered%6/10.0
 			@wickets =  Scorecard.where('matchkey=? and inning= ?', params[:id], @inning).sum(:wicket)
-
+			@overballnum = (ballsdelivered%6 == 0 and ballsdelivered>0)? 6:ballsdelivered%6  #-ve 1 because to use in between in the next sql
+			@runsthisover = Scorecard.where('matchkey=? and inning = ? and ballnum between ? and ?', params[:id], @inning, @lastball==0? 0:@lastball-@overballnum+1, @lastball).select('sum(runs+noballs+byes+legbyes+wides) as runs')[0].runs
+			@runsthisover = @runsthisover.nil? ? 0:@runsthisover
 			#batting side players
 			@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerkey}
 			
@@ -545,9 +549,11 @@ class ScorecardsController < ApplicationController
 			@currentbowlerkey = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).currentbowlerkey
 			@currentbowlingside = Scorecard.where('matchkey=? and inning = ? and currentbowlerkey=?', params[:id], @inning, @currentbowlerkey).first.nil? ? -2:Scorecard.find_by_id(@maxid).side			
 			@lastrun = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).runs
+			@lastbye = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).byes
+			@lastlbye = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).legbyes
 			@lastnoball = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).noballs
 			@lastwide = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).wides
-
+			
 			@battingposition = [1,2,3,4,5,6,7,8,9,10,11]
 			@bowlingposition = [1,2,3,4,5,6,7,8,9,10,11]
 			@venue = Venue.find_all_by_id(@match.venuekey)
@@ -743,12 +749,7 @@ class ScorecardsController < ApplicationController
 		else 
 			redirect_to signin_path
 		end	
-	rescue => e
-		 @message = e.message 
-		 @client = current_user
-		 @caught_at = 'scorecards#match_scorecard_two'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
+
   end
 
 

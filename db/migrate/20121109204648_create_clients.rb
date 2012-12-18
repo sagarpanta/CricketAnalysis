@@ -6,7 +6,7 @@ class CreateClients < ActiveRecord::Migration
       t.string :encrypted_password_confirmation
       t.string :remember_token
 	  t.string :country
-
+	  t.string :actype
 
       t.timestamps
     end

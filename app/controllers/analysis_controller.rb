@@ -113,11 +113,23 @@ class AnalysisController < ApplicationController
 
   def generate 
 		lastXmatches = params[:filters][:lxm].to_i
+		
 		if lastXmatches == -2
 			topmatchkeys = Scorecard.select('matchkey').uniq
 		else
 			topmatchkeys = Scorecard.limit(lastXmatches).select('matchkey').order('matchkey desc').uniq
 		end
+		
+		lastXballs = params[:filters][:lxb].to_i
+		
+		if lastXballs == -2
+			scorecards = ' scorecards '
+			ballnumber_betn = '0 and 300'
+		else
+			scorecards = ' (select ballnum = rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum desc), clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction from scorecards) '
+			ballnumber_betn = '0 and '+lastXballs.to_s
+		end
+		
 		min_of_top_matchkeys = topmatchkeys.min_by(&:matchkey).matchkey
 		
 		analysiskey = params[:filters][:akey]
@@ -334,11 +346,14 @@ class AnalysisController < ApplicationController
 			_group1['dismissal'] = 'dismissaltype'
 			_group1['cr'] = 'cr'
 			_group1['pship'] = "case when currentstrikerkey<currentnonstrikerkey then p.fullname+'-'+p2.fullname else p2.fullname+'-'+p.fullname end"
-			_group1['match'] = 's.matchkey'
+			#_group1['match'] = 's.matchkey'
+			_group1['match'] = "'vs '+tm1.teamname"
 			_group1['shottype'] = 'st.shottype'
 			_group1['line'] = 'l.line'
 			_group1['length'] = 'ln.length'
 			_group1['side'] = "case when s.side=0 then 'RTW' ELSE 'OTW' END"
+			_group1['direction'] = 's.direction'
+			_group1['spell'] = 's.spell'
 		
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -363,11 +378,14 @@ class AnalysisController < ApplicationController
 			_group2['dismissal'] = ',dismissaltype'
 			_group2['cr'] = ',cr'
 			_group2['pship'] = ",case when currentstrikerkey<currentnonstrikerkey then p.fullname+'-'+p2.fullname else p2.fullname+'-'+p.fullname end"
-			_group2['match'] = ',s.matchkey'
+			#_group2['match'] = ',s.matchkey'
+			_group2['match'] = ",'vs '+tm1.teamname"
 			_group2['shottype'] = ',st.shottype'
 			_group2['line'] = ',l.line'
 			_group2['length'] = ',ln.length'
 			_group2['side'] = ",case when s.side=0 then 'RTW' ELSE 'OTW' END"
+			_group2['direction'] = ',s.direction'
+			_group2['spell'] = ',s.spell'
 			
 			
 			batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey '
@@ -439,7 +457,7 @@ class AnalysisController < ApplicationController
 		   where_bowlingsidekeys1 = ' and s.side '+bowlingsidekeys1
 		   where_spellkeys1 = ' and s.spell '+spellkeys1
 		   
-		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and s.matchkey >= '+ min_of_top_matchkeys.to_s		
+		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and s.matchkey >= '+ min_of_top_matchkeys.to_s + ' and ballnum between ' + ballnumber_betn		
 
 			build_query = ''
 			build_query_match = ''
@@ -449,17 +467,15 @@ class AnalysisController < ApplicationController
 			against_group = ['bowler' , 'bls' , 'bowlingposition' , 'bowlingtype' , 'teamagainst' , 'countryagainst']
 			
 			#followings are the groups/filters...when applied, players p table need to be joined with scorecards s  so that team, country and so on can then join
-			batsman_group = ['batsman', 'bts', 'team', 'venue', 'matchtype', 'country', 'match','teamtype' , 'coach', 'manager', 'cr', 'pship']
+			batsman_group = ['batsman', 'bts', 'team', 'venue', 'matchtype', 'country','teamtype' , 'coach', 'manager', 'cr', 'pship']
 			
 			#follwings are the pure bowler group which are used to monitor filters in the bowling side. 
 			#such as when country is selected on the right hand side and one of the groups is in the group, then the filter will apply to the bowling group rather than the batting group
-			bowler_group = ['bowler' , 'bls' , 'bowlingposition' , 'bowlingtype', 'side']	
+			bowler_group = ['bowler' , 'bls' , 'bowlingposition' , 'bowlingtype', 'side', 'match']	
 
-			pure_batting_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype', 'match','teamtype' , 'tournament', 'coach', 'battingposition', 'direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length']
+			pure_batting_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length']
 			#the followings are the part of batting group, but they are not requirement for adding batting_part...ie if they belong to group2
 			not_required = ['matchtype', 'venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell']
-			
-			
 			
 			#the match won and match lost queries require players and teams table no matter what
 			#the teams table come with coaches managers and teamtypes table
@@ -485,8 +501,6 @@ class AnalysisController < ApplicationController
 						build_query += batsman_part
 						checked = 1
 					end
-					
-
 				end
 			end
 			
@@ -543,19 +557,24 @@ class AnalysisController < ApplicationController
 					end
 				end
 			end
+			if (group1['teamagainst'].nil? or group2['teamagainst'].nil?) and (!group1['match'].nil? or !group2['match'].nil?)
+				build_query+= teamagainst_part 
+				build_query_match += teamagainst_part
+			end
 			if ((!group1['team'].nil? and group1['teamagainst'].nil?) or (!group2['team'].nil? and group2['teamagainst'].nil?) or !group1['teamtype'].nil? or !group2['teamtype'].nil? or !group1['coach'].nil? or !group2['coach'].nil? or !group1['manager'].nil? or !group2['manager'].nil? or  teamkey[0] != '' or teamtypekey[0] != '' or coachkey[0] != '' or managerkey[0] != '')
 				build_query += team_part + teamtype_part + coach_part + manager_part
 			end
 			#check only for teams, coaches, managers and teamtypes from the right hand side, because the bowler filter has added the necessary joins before the current filter adds the team against joins
-			if !group1['teamagainst'].nil? or !group2['teamagainst'].nil? or teamkey1[0] != '' or managerkey1[0] != '' or coachkey1[0] != '' or teamtypekey1[0] != ''
+			if (group1['match'].nil? and group2['match'].nil?)and (!group1['teamagainst'].nil? or !group2['teamagainst'].nil? or teamkey1[0] != '' or managerkey1[0] != '' or coachkey1[0] != '' or teamtypekey1[0] != '')
 				build_query += teamagainst_part + teamtypeagainst_part + coachagainst_part + manageragainst_part
 			end
 			#check only for country from the right hand side, because the bowler filter has added the necessary joins before the current filter adds the country against joins
 			if  !group1['countryagainst'].nil? or !group2['countryagainst'].nil?  or countrykey1[0] != ''
 				build_query += countryagainst_part
 				build_query_match += countryagainst_part
-			end	
+			end			
 
+			
 			build_query_match += bowler_part + teamagainst_part
 			if teamtypekey1[0] != '' or coachkey1[0] != '' or managerkey1[0] != ''
 				build_query_match += teamtypeagainst_part + coachagainst_part + manageragainst_part
@@ -724,7 +743,8 @@ class AnalysisController < ApplicationController
 			_group1['dismissal'] = 'dismissaltype'
 			_group1['cr'] = 'cr'
 			_group1['pship'] = "case when currentstrikerkey<currentnonstrikerkey then p.fullname+'-'+p2.fullname else p2.fullname+'-'+p.fullname end"
-			_group1['match'] = 's.matchkey'
+			#_group1['match'] = 's.matchkey'
+			_group1['match'] = '"vs "+teamname'
 			_group1['shottype'] = 'st.shottype'
 			_group1['line'] = 'l.line'
 			_group1['length'] = 'ln.length'
@@ -753,7 +773,8 @@ class AnalysisController < ApplicationController
 			_group2['dismissal'] = ',dismissaltype'
 			_group2['cr'] = ',cr'
 			_group2['pship'] = ",case when currentstrikerkey<currentnonstrikerkey then p.fullname+'-'+p2.fullname else p2.fullname+'-'+p.fullname end"
-			_group2['match'] = ',s.matchkey'
+			#_group2['match'] = ',s.matchkey'
+			_group2['match'] = ',"vs "+teamname'
 			_group2['shottype'] = ',st.shottype'
 			_group2['line'] = ',l.line'
 			_group2['length'] = ',ln.length'
@@ -805,7 +826,6 @@ class AnalysisController < ApplicationController
 			teamtype_part = ' inner join team_types tt1 on tm1.teamtypekey = tt1.id '
 			coach_part= ' inner join coaches c1 on tm1.coachkey = c1.id	and tm1.clientkey = c1.clientkey '
 			manager_part= ' inner join managers m1 on tm1.managerkey = m1.id and tm1.clientkey = m1.clientkey '
-			match_part =' inner join matches mat on mat.id = s.matchkey and mat.clientkey = s.clientkey '
 			matchtype_part = ' inner join match_types mt	on mt.id = mat.matchtypekey '
 			format_part = ' inner join formats f1	on f1.id = s.formatkey '
 			
@@ -825,8 +845,6 @@ class AnalysisController < ApplicationController
 			line_part = ' inner join lines l on s.line = l.id '
 			length_part = ' inner join lengths ln on s.length = ln.id '
 
-			
-		  
 		   where_bowlerkeys1 =' and s.currentbowlerkey '+bowlerkeys1
 		   where_countrykeys1 = ' and p1.countrykey ' + countrykeys1
 		   where_bowlingstylekeys1 = ' and p1.bowlingstyle '+bowlingstylekeys1
@@ -946,6 +964,10 @@ class AnalysisController < ApplicationController
 			if !group1['length'].nil? or !group2['length'].nil? or lengthkey1[0] != ''
 				build_query+= length_part
 				build_query_match+= length_part
+			end
+			if !group1['match'].nil? or !group2['match'].nil?
+				build_query+= match_part
+				build_query_match += match_part
 			end
 			if !group1['matchtype'].nil? or !group2['matchtype'].nil? or !group2['countryagainst'].nil?  or matchtypekey1[0] != ''
 				build_query += match_part+' '+matchtype_part
@@ -1212,7 +1234,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from scorecards s '+ _join + '
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + '
 					)A
 					where runs = 0
 				),
@@ -1238,7 +1260,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from scorecards s '+ _join + '
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + '
 					)A
 					where runs > 0
 				),
@@ -1298,7 +1320,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', fours, sixes, runs from scorecards s '+ _join + '
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', fours, sixes, runs from '+scorecards+' s '+ _join + '
 					)A
 					where fours +sixes = 0
 				),
@@ -1324,7 +1346,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', fours, sixes, runs from scorecards s '+ _join + '
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', fours, sixes, runs from '+scorecards+' s '+ _join + '
 					)A
 					where fours > 0 or sixes >0 
 				),
@@ -1383,7 +1405,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', wides+noballs+byes+legbyes as extras, runs from scorecards s '+ _join + '
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', wides+noballs+byes+legbyes as extras, runs from '+scorecards+' s '+ _join + '
 					)A
 					where extras = 0
 				),
@@ -1409,7 +1431,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', wides+noballs+byes+legbyes as extras, runs from scorecards s '+ _join + '
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', wides+noballs+byes+legbyes as extras, runs from '+scorecards+' s '+ _join + '
 					)A
 					where extras >0
 				),
@@ -1466,7 +1488,7 @@ class AnalysisController < ApplicationController
 		if metric == 'runs'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:runs)
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group('battingposition, bowlingposition').sum(:runs)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 
 			#logger.info bbr
 		elsif metric == 'avg'
@@ -1475,7 +1497,7 @@ class AnalysisController < ApplicationController
 			#@avgbybts.each do |a|
 			#	@chartdata[a.grp] = a.avg	
 			#end
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 
 		elsif metric == 'sr'
 			#@srbybts = Scorecard.joins(_joins[group]['join']).select('case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as sr, '+_joins[group]['group']+' as grp').group(_joins[group]['group'])
@@ -1483,10 +1505,10 @@ class AnalysisController < ApplicationController
 			#@srbybts.each do |a|
 			#	@chartdata[a.grp] = a.sr
 			#end
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'dsmsl'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:wicket)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wicket) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wicket) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'bbh'
 			#@bbhbybts = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).select('case when count(ballsbeforerun)=0 then 0 else sum(ballsbeforerun)/(count(ballsbeforerun)*1.0) end as bbh,'+_joins[group]['group']+' as grp')
 			#@chartdata = {}
@@ -1505,75 +1527,75 @@ class AnalysisController < ApplicationController
 			@chartdata = Scorecard.find_by_sql(dbx)
 		elsif metric == 'inns'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).count('distinct matchkey')	
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct matchkey) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct matchkey) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'zero'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:zeros)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(zeros) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(zeros) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		elsif metric == 'one'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:ones)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ones) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ones) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 
 		elsif metric == 'two'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:twos)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(twos) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(twos) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		elsif metric == 'three'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:threes)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(threes) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(threes) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		elsif metric == 'four'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:fours)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(fours) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(fours) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		
 		elsif metric == 'six'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:sixes)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(sixes) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(sixes) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		elsif metric == 'wides'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:wides)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wides) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wides) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		elsif metric == 'noballs'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:noballs)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(noballs) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(noballs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		elsif metric == 'byes'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:byes)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(byes) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(byes) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		elsif metric == 'legbyes'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:legbyes)
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(legbyes) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(legbyes) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		
 		elsif metric == 'extras'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum('wides+noballs+byes+legbyes')		
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wides+noballs+byes+legbyes) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wides+noballs+byes+legbyes) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'econ'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum('wides+noballs+byes+legbyes')		
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wides+noballs+byes+legbyes+runs)/(SUM(ballsdelivered)/6+SUM(ballsdelivered)%6/6.0) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wides+noballs+byes+legbyes+runs)/(SUM(ballsdelivered)/6+SUM(ballsdelivered)%6/6.0) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'bavg'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum('wides+noballs+byes+legbyes')		
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wides+noballs+byes+legbyes+runs)/(1.0*SUM(wicket)) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))		
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wides+noballs+byes+legbyes+runs)/(1.0*SUM(wicket)) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))		
 		elsif metric == 'fifties'
 			if group1=='batsman' or group2=='batsman'
 				#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum('wides+noballs+byes+legbyes')		
-				@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', s.matchkey, case when sum(runs)>=50 and sum(runs)<100 then 1 end as val from scorecards s '+ _join + ' group by s.matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':''))
+				@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', s.matchkey, case when sum(runs)>=50 and sum(runs)<100 then 1 end as val from '+scorecards+' s '+ _join + ' group by s.matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':''))
 			end
 		elsif metric == 'hundreds'
 			if group1=='batsman' or group2=='batsman'
 				#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum('wides+noballs+byes+legbyes')		
-				@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', s.matchkey, case when sum(runs)>=100 then 1 end as val from scorecards s '+ _join + ' group by s.matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':''))
+				@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', s.matchkey, case when sum(runs)>=100 then 1 end as val from '+scorecards+' s '+ _join + ' group by s.matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':''))
 			end
 		elsif metric == 'mtchwon'
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from scorecards s '+ build_query_match+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'mtchlost'
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from scorecards s '+ build_query_match_lost+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match_lost+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'noofdels'
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ballsdelivered) as val from scorecards s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ballsdelivered) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'noofshots'
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ballsdelivered) as val from scorecards s '+ _join + ' and runs>0  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ballsdelivered) as val from '+scorecards+' s '+ _join + ' and runs>0  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		end
 		
 		@chartdata = @chartdata == []? nil:@chartdata

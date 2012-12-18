@@ -5,6 +5,7 @@ class AddShottypesToShottype < ActiveRecord::Migration
 		{:shottype => 'Backfoot Glance'},
 		{:shottype => 'Backfoot On Drive'},
 		{:shottype => 'Backfoot Straight Drive'},
+		{:shottype => 'Beaten'},
 		{:shottype => 'Cover Drive'},
 		{:shottype => 'Dancing Down The Wicket'},
 		{:shottype => 'Defence'},

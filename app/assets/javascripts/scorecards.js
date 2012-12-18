@@ -47,7 +47,6 @@ $(document).ready(function(){
 		var wicket = 0;
 		var dismissaltypekey = -2, teamoneid = -2, teamtwoid =-2, venuekey = -2;
 		var inningballcounter = 0;
-		var maidenovercounter = 0;
 		var scoring_number_clicked = 0;
 		var rclicked = 0, wclicked = 0, nclicked = 0, bclicked =0, lbclicked=0;
 		var line = 0, length= 0, shottype = 0, directionkey = 0, spell=0;
@@ -157,47 +156,38 @@ $(document).ready(function(){
 			case "0":
 				runs = 0;
 				zeros=1;
-				maidenovercounter = maidenovercounter+ 1;
 				break;
 			case "1":
 				runs = 1;
 				ones = 1;
-				maidenovercounter = -99;
 				break;
 			case "2":
 				runs = 2;
 				twos = 1;	
-				maidenovercounter = -99;
 				break;
 			case "3":
 				runs = 3;
-				threes = 1;
-				maidenovercounter = -99;				
+				threes = 1;			
 				break;
 			case "4":
 				runs = 4;
 				fours = 1;
-				maidenovercounter = -99;
 				break;
 			case "5":
 				runs = 5;
 				fives = 1;
-				maidenovercounter = -99;
 				break;
 			case "6":
 				runs = 6;
 				sixes = 1;
-				maidenovercounter = -99;
 				break;
 			case "7":
 				runs = 7;
 				sevens = 1;
-				maidenovercounter = -99;
 				break;
 			case "8":
 				runs = 8;
 				eights = 1;
-				maidenovercounter = -99;
 				break;
 		}
 		if (noballs==1){
@@ -261,7 +251,6 @@ $(document).ready(function(){
 				sixes = 0;
 				break;
 		}
-		maidenovercounter = -99;
 	});
 	
 	$('#noballs').live('mouseover', function(){
@@ -292,7 +281,6 @@ $(document).ready(function(){
 		noballs = 1
 		ballsfaced = 1
 		ballsdelivered = 0;
-		maidenovercounter = -99;
 		//$( "#dialog-form" ).dialog( "open" ); 
 	});
 	
@@ -325,27 +313,21 @@ $(document).ready(function(){
 		switch(runs_string){
 			case "1":
 				byes = 1;
-				ones = 1;
 				break;
 			case "2":
 				byes = 2;
-				twos = 1;
 				break;
 			case "3":
 				byes = 3;
-				threes = 1;
 				break;
 			case "4":
 				byes = 4;
-				fours = 1;
 				break;
 			case "5":
 				byes = 5;
-				fives = 1;
 				break;
 			case "6":
 				byes = 6;
-				sixes = 1;
 				break;
 		}
 		if (noballs==1){
@@ -355,7 +337,8 @@ $(document).ready(function(){
 			ballsdelivered = 1;
 		}
 		ballsfaced = 1
-		maidenovercounter = -99;
+		ones = twos = threes = fours = fives = sixes = sevens = 0;
+		zeros = 1;
 	});
 	
 	$('#legbyes a').live('mouseover', function(){
@@ -386,27 +369,21 @@ $(document).ready(function(){
 		switch(runs_string){
 			case "1":
 				legbyes = 1;
-				ones = 1
 				break;
 			case "2":
 				legbyes = 2;
-				twos = 1;
 				break;
 			case "3":
 				legbyes = 3;
-				threes = 1;
 				break;
 			case "4":
 				legbyes = 4;
-				fours = 1;
 				break;
 			case "5":
 				legbyes = 5;
-				fives = 1;
 				break;
 			case "6":
 				legbyes = 6;
-				sixes = 1;
 				break;
 		}
 		if (noballs==1){
@@ -416,7 +393,8 @@ $(document).ready(function(){
 			ballsdelivered = 1;
 		}
 		ballsfaced = 1
-		maidenovercounter = -99;
+		ones = twos = threes = fours = fives = sixes = sevens = 0;
+		zeros = 1;
 	});
 	
 	$('.Dismissaltype').change(function() {
@@ -467,9 +445,7 @@ $(document).ready(function(){
 		
 		/*battingendkey = newend;
 		bowlingendkey = oldend;*/
-		
-
-		
+	
 	});
 	
 	$('#end_bowlingend').change(function(){
@@ -552,14 +528,60 @@ $(document).ready(function(){
 			bowlerkey = currentbowlerkey
 		}
 		
-		overs = inningballcounter/6 + inningballcounter%6/10.0
-		if (maidenovercounter == 6) {
-			maiden = 1;
+		var bd = 0;
+		var newover = 0.0;
+		overs = $('#overs').html();
+
+		if (wides == 0 && noballs ==0 && parseFloat(overs) == 0){	
+			inningballcounter = parseInt(parseInt(overs)*6 + (parseFloat(overs)-parseInt(overs)+1));
+			newover = parseFloat(parseInt(inningballcounter/6) + parseFloat(inningballcounter%6/10));
 		}
-		else {
-			maiden = 0;
+		else if (wides == 0 && noballs ==0 && parseFloat(overs) > 0){
+			inningballcounter = parseInt(parseInt(overs)*6 + Math.round((parseFloat(overs)-parseInt(overs))*10)+1);
+			newover = parseFloat(parseInt(inningballcounter/6) + parseFloat(inningballcounter%6/10));
 		}
-	
+		else if (wides>0 || noballs>0){
+			newover = parseFloat(overs);
+		}
+
+		$('#overs').html(newover);
+		
+		scores = $('#totalscore').html();
+		totalscore = parseInt(scores)+runs+wides+noballs+legbyes+byes;
+		wickets = $('#wicket').html();
+		totalwickets = parseInt(wickets) + wicket;
+		$('#scores').html('Score:'+totalscore+'/'+totalwickets+'<br/>Overs:'+newover);
+		$('#totalscore').html(totalscore);
+		$('#wicket').html(totalwickets);
+		
+		var runsthisover = parseInt($('#runsthisover').html());
+		console.log('runsthisover before ' + $('#runsthisover').html());
+		$('#runsthisover').html(runsthisover+runs+wides+noballs+byes+legbyes);
+		console.log('runsthisover after' + $('#runsthisover').html());
+		if (inningballcounter%6 == 0 && inningballcounter>0 && noballs+wides ==0){
+			var runsthisover = parseInt($('#runsthisover').html());
+			
+			if (runsthisover == 0) {maiden = 1;}
+			else {maiden = 0;}
+			$('#runsthisover').html('0');
+		}
+		
+		//ballsdelievered is counted one for every run hit, but if 
+		//it is hit in a noball, the ball should not be counted
+		if (runs>0 && noballs>0){
+			ballsdelivered = 0
+		}
+		
+		directionkey = $('#directionkey').html();
+		var over = 0;
+		if ((newover == Math.ceil(newover)) && (wides>0 || noballs >0)) {
+			over = parseInt(Math.ceil(newover))+1
+		}
+		else{
+			over = parseInt(Math.ceil(newover))
+		}
+		
+			
 		var totalones = 0;
 		var totaltwos = 0;
 		var totalthrees = 0;
@@ -602,24 +624,14 @@ $(document).ready(function(){
 		var totalfives = fives + parseInt(currentbatsmanfives);
 		var totalsixes = sixes + parseInt(currentbatsmansixes);
 		
-		if (legbyes+byes >0) {
-			var totalzeros = 1+parseInt(currentbatsmanzeros);
-			var totalones = parseInt(currentbatsmanones);
-			var totaltwos = parseInt(currentbatsmantwos);
-			var totalthrees = parseInt(currentbatsmanthrees);
-			var totalfours = parseInt(currentbatsmanfours);
-			var totalfives = parseInt(currentbatsmanfives);
-			var totalsixes = parseInt(currentbatsmansixes);	
-		} 
-		else {
-			var totalzeros = zeros+parseInt(currentbatsmanzeros);
-			var totalones = ones+parseInt(currentbatsmanones);
-			var totaltwos = twos+parseInt(currentbatsmantwos);
-			var totalthrees = threes+parseInt(currentbatsmanthrees);
-			var totalfours = fours + parseInt(currentbatsmanfours);
-			var totalfives = fives + parseInt(currentbatsmanfives);
-			var totalsixes = sixes + parseInt(currentbatsmansixes);
-		}
+
+		var totalzeros = zeros+parseInt(currentbatsmanzeros);
+		var totalones = ones+parseInt(currentbatsmanones);
+		var totaltwos = twos+parseInt(currentbatsmantwos);
+		var totalthrees = threes+parseInt(currentbatsmanthrees);
+		var totalfours = fours + parseInt(currentbatsmanfours);
+		var totalfives = fives + parseInt(currentbatsmanfives);
+		var totalsixes = sixes + parseInt(currentbatsmansixes);
 
 	
 		$('.Batsman.hilite').parent().children('.batsman_runs').html(totalruns);
@@ -727,46 +739,7 @@ $(document).ready(function(){
 		}
 	
 	
-		var bd = 0;
-		var newover = 0.0;
-		overs = $('#overs').html();
-
-		if (wides == 0 && noballs ==0 && parseFloat(overs) == 0){	
-			inningballcounter = parseInt(parseInt(overs)*6 + (parseFloat(overs)-parseInt(overs)+1));
-			newover = parseFloat(parseInt(inningballcounter/6) + parseFloat(inningballcounter%6/10));
-		}
-		else if (wides == 0 && noballs ==0 && parseFloat(overs) > 0){
-			inningballcounter = parseInt(parseInt(overs)*6 + Math.round((parseFloat(overs)-parseInt(overs))*10)+1);
-			newover = parseFloat(parseInt(inningballcounter/6) + parseFloat(inningballcounter%6/10));
-		}
-		else if (wides>0 || noballs>0){
-			newover = parseFloat(overs);
-		}
-
-		$('#overs').html(newover);
 		
-		scores = $('#totalscore').html();
-		totalscore = parseInt(scores)+runs+wides+noballs+legbyes+byes;
-		wickets = $('#wicket').html();
-		totalwickets = parseInt(wickets) + wicket;
-		$('#scores').html('Score:'+totalscore+'/'+totalwickets+'<br/>Overs:'+newover);
-		$('#totalscore').html(totalscore);
-		$('#wicket').html(totalwickets);
-		
-		//ballsdelievered is counted one for every run hit, but if 
-		//it is hit in a noball, the should not be counted
-		if (runs>0 && noballs>0){
-			ballsdelivered = 0
-		}
-		
-		directionkey = $('#directionkey').html();
-		var over = 0;
-		if ((newover == Math.ceil(newover)) && (wides>0 || noballs >0)) {
-			over = parseInt(Math.ceil(newover))+1
-		}
-		else{
-			over = parseInt(Math.ceil(newover))
-		}
 		jsonObj = {clientkey:clientkey,  ballsdelivered:ballsdelivered, ballsfaced:ballsfaced, batsmankey:batsmankey, batsmanid:batsmanid, battingendkey:battingendkey, battingposition:battingposition, bowlerkey:bowlerkey, bowlingendkey:bowlingendkey, bowlingposition:bowlingposition, byes:byes, currentbowlerkey:currentbowlerkey,  currentbowlerid:currentbowlerid, currentnonstrikerkey:currentnonstrikerkey, currentstrikerkey:currentstrikerkey, dismissedbatsmankey:dismissedbatsmankey, eights:eights, fielderkey:fielderkey, fives:fives, formatkey:formatkey, fours:fours, inning:inning, legbyes:legbyes, maiden:maiden, matchkey:matchkey, noballs:noballs, ones:ones, others:others, outbywk:outbywk, outtypekey:dismissaltypekey, runs:runs, sevens:sevens, sixes:sixes, teamidone:teamoneid, teamtwoid:teamtwoid, threes:threes, tournamentkey:tournamentkey, twos:twos, venuekey:venuekey, wicket:wicket, wides:wides, zeros:zeros, line:line, length:length, shottype:shottype, side:bowling_side, direction:directionkey, spell:spell, ballnum:inningballcounter, over:over};
 		
 		$.ajax({
@@ -807,7 +780,7 @@ $(document).ready(function(){
 		 	ballsbeforeboundary = 0;
 		 }
 		 
-		 if ((inningballcounter%6==0 && (runs%2==1 || byes%2==1 || legbyes%2==1 || (wides%2==0 && wides>0 && wides!=4))) || (inningballcounter%6 == 0 && inningballcounter!= 0 && runs%2 ==0) || (inningballcounter%6 != 0 && inningballcounter!= 0 &&(runs%2==1 || byes%2 == 1 || legbyes%2 == 1)) || (inningballcounter!= 0 && (wides==2 || (wides==4 && fours==1))) ){
+		 if (((inningballcounter==0 || inningballcounter%6==0) && ((noballs>0 && (runs%2==1 || byes%2==1 || legbyes%2==1)) || (wides%2==0 && wides>0 && wides!=4))) || (inningballcounter%6 == 0 && inningballcounter!= 0 && runs%2 ==0) || (inningballcounter%6 != 0  && (runs%2==1 || byes%2 == 1 || legbyes%2 == 1 || (wides%2==0 && wides>0 && wides!=4)))) {
 			var striker = $('.Batsman.hilite');
 			var nonstriker = $('.Batsman.hilite-nonstriker');
 

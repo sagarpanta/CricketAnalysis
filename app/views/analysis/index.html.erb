@@ -159,7 +159,7 @@
 		<td class="slct"></td>
 		<td class="middle"></td>
 		<td class="identifier1">Bowl Spell:</td>
-		<td class="slct1"><%= select 'spell' , 'spellkey1', @sides.collect {|s| [s['side'], s['val']]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Spell', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="slct1"><%= select 'spell' , 'spellkey1', [1,2,3,4,5,6,7,8,9,10] ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Spell', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 	</tr>
 
 </table>
@@ -173,9 +173,9 @@
 		<td></td>
 		<td></td>
 		<td></td>
-		<td></td>
-		<td></td>
-		<td id="last">Last</td>
+		<td id="xballs">Last Balls</td>
+		<td><%= text_field_tag 'lastXballs' %></td>
+		<td id="last">Last Matches</td>
 		<td><%= text_field_tag 'lastXmatches' %></td>
 		
 	</tr>
