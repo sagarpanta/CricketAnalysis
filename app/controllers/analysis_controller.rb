@@ -89,8 +89,8 @@ class AnalysisController < ApplicationController
 				inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey 
 				inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey 
 
-				LEFT join matches mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
-				LEFT join matches mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
+				LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
+				LEFT join (select * from matches where winnerkey<>-2) mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
 				inner join clients cl on tm.clientkey = cl.id
 				inner join countries c on c.country = cl.country and tm.countrykey = c.id
 				inner join countries c1 on c1.id = tm1.countrykey
@@ -587,12 +587,12 @@ class AnalysisController < ApplicationController
 			
 			build_query_match_lost = ''
 			if  pure_batting_group.include? group1
-				build_query_match_lost = build_query_match + ' LEFT join matches mat on tm.clientkey = mat.clientkey and tm.teamid <> mat.winnerkey and tm1.teamid = mat.teamidtwo ' + where_always				
-				build_query_match += ' LEFT join matches mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo ' + where_always
+				build_query_match_lost = build_query_match + ' LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid <> mat.winnerkey and tm1.teamid = mat.teamidtwo ' + where_always				
+				build_query_match += ' LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo ' + where_always
 			else
 				#build query match lost is before than build query match because bqml uses bqm without where clause
-				build_query_match_lost = build_query_match + ' LEFT join matches mat on tm1.clientkey = mat.clientkey and tm1.teamid <> mat.winnerkey and tm1.teamid = mat.teamidtwo ' + where_always	
-				build_query_match += ' LEFT join matches mat on tm1.clientkey = mat.clientkey and tm1.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo ' + where_always
+				build_query_match_lost = build_query_match + ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid <> mat.winnerkey and tm1.teamid = mat.teamidtwo ' + where_always	
+				build_query_match += ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo ' + where_always
 			end
 			
 			
@@ -749,6 +749,8 @@ class AnalysisController < ApplicationController
 			_group1['line'] = 'l.line'
 			_group1['length'] = 'ln.length'
 			_group1['side'] = "case when s.side=0 then 'RTW' ELSE 'OTW' END"
+			_group1['direction'] = 's.direction'
+			_group1['spell'] = 's.spell'
 		
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -779,6 +781,8 @@ class AnalysisController < ApplicationController
 			_group2['line'] = ',l.line'
 			_group2['length'] = ',ln.length'
 			_group2['side'] = ",case when s.side=0 then 'RTW' ELSE 'OTW' END"
+			_group1['direction'] = ',s.direction'
+			_group1['spell'] = ',s.spell'
 			
 
 =begin	
@@ -826,6 +830,7 @@ class AnalysisController < ApplicationController
 			teamtype_part = ' inner join team_types tt1 on tm1.teamtypekey = tt1.id '
 			coach_part= ' inner join coaches c1 on tm1.coachkey = c1.id	and tm1.clientkey = c1.clientkey '
 			manager_part= ' inner join managers m1 on tm1.managerkey = m1.id and tm1.clientkey = m1.clientkey '
+			match_part =' inner join matches mat1 on mat1.id = s.matchkey and mat1.clientkey = s.clientkey '
 			matchtype_part = ' inner join match_types mt	on mt.id = mat.matchtypekey '
 			format_part = ' inner join formats f1	on f1.id = s.formatkey '
 			
@@ -991,11 +996,15 @@ class AnalysisController < ApplicationController
 					end
 				end
 			end
+			if (group1['teamagainst'].nil? or group2['teamagainst'].nil?) and (!group1['match'].nil? or !group2['match'].nil?)
+				build_query+= teamagainst_part 
+				build_query_match += teamagainst_part
+			end
 			if !group1['pship'].nil? or !group2['pship'].nil? 
 				build_query += pship_part
 				build_query_match+= pship_part
 			end	
-			if !group1['teamagainst'].nil? or !group2['teamagainst'].nil? or teamkey[0] != '' or managerkey[0] != '' or coachkey[0] != '' or teamtypekey[0] != ''
+			if (group1['match'].nil? and group2['match'].nil?)and (!group1['teamagainst'].nil? or !group2['teamagainst'].nil? or teamkey[0] != '' or managerkey[0] != '' or coachkey[0] != '' or teamtypekey[0] != '')
 				build_query += teamagainst_part + teamtypeagainst_part + coachagainst_part + manageragainst_part
 			end
 			if  !group1['countryagainst'].nil? or !group2['countryagainst'].nil?  or countrykey[0]!=''
@@ -1096,12 +1105,12 @@ class AnalysisController < ApplicationController
 			
 			build_query_match_lost = ''
 			if  pure_bowling_group.include? group1
-				build_query_match_lost = build_query_match + ' inner join matches mat on tm1.clientkey = mat.clientkey and tm1.teamid <> mat.winnerkey ' + where_always				
-				build_query_match += ' inner join matches mat on tm1.clientkey = mat.clientkey and tm1.teamid = mat.winnerkey ' + where_always
+				build_query_match_lost = build_query_match + ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid <> mat.winnerkey ' + where_always				
+				build_query_match += ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid = mat.winnerkey ' + where_always
 			else
 				#build query match lost is before than build query match because bqml uses bqm without where clause
-				build_query_match_lost = build_query_match + ' inner join matches mat on tm.clientkey = mat.clientkey and tm.teamid <> mat.winnerkey ' + where_always	
-				build_query_match += ' inner join matches mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey ' + where_always
+				build_query_match_lost = build_query_match + ' LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid <> mat.winnerkey ' + where_always	
+				build_query_match += ' LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey ' + where_always
 			end			
 			
 			
