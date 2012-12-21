@@ -888,7 +888,6 @@ class ScorecardsController < ApplicationController
 							 :sixes=>  stats.nil? ? '':stats[0][:sixes]}
 				counter= counter + 1
 				pos+=1
-				
 			end
 			
 			@batsmen = @batsmen.sort_by{|b| b[:battingposition]}
@@ -1040,6 +1039,7 @@ class ScorecardsController < ApplicationController
 				counter= counter + 1
 				pos+=1
 				
+				
 			end
 			@batsmen1 = @batsmen1.sort_by{|b| b[:battingposition]}
 
@@ -1104,7 +1104,7 @@ class ScorecardsController < ApplicationController
 		else 
 			redirect_to signin_path
 		end	
-		
+				
 		respond_to do |format| 
 		  format.html {render :layout => false}
 		end
