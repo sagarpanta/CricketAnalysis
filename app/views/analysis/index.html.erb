@@ -134,7 +134,7 @@
 	</tr>
 	<tr>
 		<td class="identifier">Shot Direction:</td>
-		<td class="slct"><%= select 'sd' , 'sdkey', @shottypes.collect {|s| [s.shottype, s.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Shot Direction', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="slct"><%= select 'sd' , 'sdkey', @directions.collect {|d| [d.direction, d.direction ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Shot Direction/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		<td class="middle"></td>
 		<td class="identifier1">Line:</td>	
 		<td class="slct1"><%= select 'line' , 'linekey1', @lines.collect {|l| [l.line, l.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Line/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>

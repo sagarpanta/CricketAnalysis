@@ -71,6 +71,7 @@ class AnalysisController < ApplicationController
 			@lengths = Length.all
 			@shottypes = Shottype.all
 			@sides = [{'side'=>'RTW', 'val'=>0}, {'side'=>'OTW', 'val'=>1}]
+			@directions = Scorecard.where('clientkey=?', current_user.id).select('distinct direction')
 		else 
 			redirect_to signin_path
 		end
