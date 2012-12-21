@@ -137,7 +137,7 @@ class AnalysisController < ApplicationController
 			scorecards = ' scorecards '
 			ballnumber_betn = '0 and 300'
 		else
-			scorecards = ' (select ballnum = rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum desc), clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, [over], line, length, shottype, side, spell, direction from scorecards) '
+			scorecards = ' (select ballnum = rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum desc), clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction from scorecards) '
 			ballnumber_betn = '0 and '+lastXballs.to_s
 		end
 	
@@ -622,8 +622,8 @@ class AnalysisController < ApplicationController
 
 	
 			#build_query += where_always
-			matchkeys = Scorecard.find_by_sql('select distinct top '+matchcount.to_s+' matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc')
-		
+			#matchkeys = Scorecard.find_by_sql('select distinct top '+matchcount.to_s+' matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc')
+		    matchkeys = Scorecard.find_by_sql('select distinct matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc limit '+matchcount.to_s) 
 			where_matchkeys = ' and s.matchkey in (' 
 			matchkeys.each do |m| 
 				where_matchkeys += m.matchkey.to_s + ','
@@ -1003,8 +1003,9 @@ class AnalysisController < ApplicationController
 		
 						
 			#build_query += where_always
-			matchkeys = Scorecard.find_by_sql('select distinct top '+matchcount.to_s+' matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc')
-		
+			#matchkeys = Scorecard.find_by_sql('select distinct '+matchcount.to_s+' matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc')
+			matchkeys = Scorecard.find_by_sql('select distinct matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc limit '+matchcount.to_s)
+
 			where_matchkeys = ' and s.matchkey in (' 
 			matchkeys.each do |m| 
 				where_matchkeys += m.matchkey.to_s + ','
