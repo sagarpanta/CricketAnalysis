@@ -58,6 +58,6 @@ class CreateScorecards < ActiveRecord::Migration
     end
 	add_index(:scorecards, [:id, :clientkey], :unique=>true)
 	add_index(:scorecards, [:id, :clientkey, :ballnum, :formatkey, :tournamentkey, :venuekey, :inning, :matchkey, :outtypekey, :batsmankey, :currentnonstrikerkey,:currentbowlerkey, :battingposition, :bowlingposition, :cr , :dismissedbatsmankey ], {:unique=>true, :name=> 'UIX_Scorecards_Evrythng'} ) 
-	add_index(:scorecards, [:id, :line, :length, :shottype, spell, direction], {:unique=>true, :name=> 'UIX_Scorecards_LineLenghtShottype'} ) 
+	add_index(:scorecards, [:id, :line, :length, :shottype, :spell, :direction], {:unique=>true, :name=> 'UIX_Scorecards_LineLenghtShottype'} ) 
   end
 end
