@@ -14,9 +14,7 @@
 //= require jquery_ujs
 //= require_tree .
 $(document).ready(function(){
-	$(".chzn-select").chosen();
-	$('.mac-dock img').resizeOnApproach();
-	
+	$(".chzn-select").chosen();	
 	var pretty = $('.pretty').html();
 	
 	var accounttype1 = $('#accounttype').html();
