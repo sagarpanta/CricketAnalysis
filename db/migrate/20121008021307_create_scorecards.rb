@@ -50,6 +50,8 @@ class CreateScorecards < ActiveRecord::Migration
 	  t.integer :side
 	  t.integer :over
 	  t.integer :ballnum
+	  t.integer :spell
+	  t.string  :direction
 
 
       t.timestamps
