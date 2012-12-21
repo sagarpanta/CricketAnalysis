@@ -389,7 +389,7 @@ class AnalysisController < ApplicationController
 			_group2['manager'] = ',m.name'	
 			_group2['bowlingtype'] = ',p.bowlingtype'
 			#_group2['year'] = ',datepart(yy, s.created_at)'
-			_group2['year'] = = ',cast(extract(year from s.created_at) as integer)'
+			_group2['year'] = ',cast(extract(year from s.created_at) as integer)'
 			_group2['inning'] = ',inning'	
 			_group2['format'] = ',f.name'
 			_group2['country'] = ',cn.country'	
@@ -778,7 +778,7 @@ class AnalysisController < ApplicationController
 			_group1['manager'] = 'm1.name'	
 			_group1['bowlingtype'] = 'p1.bowlingtype'
 			#_group1['year'] = 'datepart(yy, s.created_at)'
-			_group1['year'] = = 'cast(extract(year from s.created_at) as integer)'
+			_group1['year'] = 'cast(extract(year from s.created_at) as integer)'
 			_group1['inning'] = 'inning'	
 			_group1['format'] = 'f1.name'
 			_group1['country'] = 'cn1.country'	
@@ -812,7 +812,7 @@ class AnalysisController < ApplicationController
 			_group2['manager'] = ',m1.name'	
 			_group2['bowlingtype'] = ',p1.bowlingtype'
 			#_group2['year'] = ',datepart(yy, s.created_at)'
-			_group2['year'] = = ',cast(extract(year from s.created_at) as integer)'
+			_group2['year'] = ',cast(extract(year from s.created_at) as integer)'
 			_group2['inning'] = ',inning'	
 			_group2['format'] = ',f1.name'
 			_group2['country'] = ',cn1.country'	
@@ -1525,7 +1525,7 @@ class AnalysisController < ApplicationController
 			#	@chartdata[a.grp] = a.bbh
 			#end
 			@chartdata = Scorecard.find_by_sql(bbr)
-			logger.info bbr
+			ClientMailer.Error_Delivery(bbr, @client, 'bbh').deliver
 		elsif metric == 'bbb'
 			#@bbbbybts = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).select('case when count(ballsbeforeboundary)=0 then 0 else sum(ballsbeforeboundary)/(count(ballsbeforeboundary)*1.0) end as bbb,'+_joins[group]['group']+' as grp')
 			#@chartdata = {}
