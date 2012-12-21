@@ -15,6 +15,7 @@
 //= require_tree .
 $(document).ready(function(){
 	$(".chzn-select").chosen();
+	$('.mac-dock img').resizeOnApproach();
 	
 	var pretty = $('.pretty').html();
 	
