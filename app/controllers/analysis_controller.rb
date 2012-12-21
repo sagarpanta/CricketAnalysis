@@ -623,7 +623,7 @@ class AnalysisController < ApplicationController
 	
 			#build_query += where_always
 			#matchkeys = Scorecard.find_by_sql('select distinct top '+matchcount.to_s+' matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc')
-		    matchkeys = Scorecard.find_by_sql('select distinct matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc limit '+matchcount.to_s) 
+		    matchkeys = Scorecard.find_by_sql('select distinct s.matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc limit '+matchcount.to_s) 
 			where_matchkeys = ' and s.matchkey in (' 
 			matchkeys.each do |m| 
 				where_matchkeys += m.matchkey.to_s + ','
@@ -1004,7 +1004,7 @@ class AnalysisController < ApplicationController
 						
 			#build_query += where_always
 			#matchkeys = Scorecard.find_by_sql('select distinct '+matchcount.to_s+' matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc')
-			matchkeys = Scorecard.find_by_sql('select distinct matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc limit '+matchcount.to_s)
+			matchkeys = Scorecard.find_by_sql('select distinct s.matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc limit '+matchcount.to_s)
 
 			where_matchkeys = ' and s.matchkey in (' 
 			matchkeys.each do |m| 
