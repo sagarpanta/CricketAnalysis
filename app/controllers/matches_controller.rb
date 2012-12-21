@@ -44,11 +44,12 @@ class MatchesController < ApplicationController
   # GET /matches/new
   # GET /matches/new.json
   def new
-    begin
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.new
-
+			
+			@matches = Match.all
+			
 			@countryorder = 'links'
 			@tournamentorder = 'links'
 			@playerorder = 'links'
@@ -87,13 +88,20 @@ class MatchesController < ApplicationController
 		else 
 			redirect_to signin_path
 		end
-	rescue => e
-		 @message = e.message
-		 @client = current_user
-		 @caught_at = 'matches#new'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
+  end
+  
+  def pitchconditions
+	@matches = Match.where('clientkey = ?', current_user.id).select(:pitchcondition).uniq
+	@pitchconditions = []
+	@matches.each do |m|
+		@pitchconditions << m.pitchcondition
+	end
+	respond_to do |format|
+		format.json { render json: @pitchconditions}
 	end
   end
+  
+  
 
   # GET /matches/1/edit
   def edit

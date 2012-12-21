@@ -241,6 +241,7 @@
 <div id="details_values" data-matchid=<%= @match.id %>>
 	<div id="matchwinner"><%= select 'mw', 'mwkey' , @teams.collect {|t| [t.teamname, t.teamid]} %></div>
 	<div id="winnerremarks"><%= text_field_tag 'Remarks' %></div>
+	<div id="success_message"></div>
 	<div id="matchupdate"><%= image_tag '/assets/button.png', :width=>100 , :height=>30 %></div>
 </div>
 

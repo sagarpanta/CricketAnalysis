@@ -103,6 +103,7 @@ h3{
 
 .tab_item {
 	width:100px;
+	font-family:Arial;
 }
 
 
@@ -142,6 +143,7 @@ width:500px;
 
 .user_item{
 	width:130px;
+	font-family:Arial;
 }
 
 .user_item:hover{

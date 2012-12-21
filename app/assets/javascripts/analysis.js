@@ -23,6 +23,7 @@ $(document).ready(function(){
 	var inningkey = [''];
 	var shottypekey = [''];
 	var shotdirectionkey = [''];
+	var pitchconditionkey = [''];
 	
 	///////////////
 	
@@ -50,6 +51,8 @@ $(document).ready(function(){
 	var lengthkey1 = [''];
 	var sidekey1 = [''];
 	var spellkey1 = [''];
+	var pitchconditionkey1 = [''];
+	
 	////////////////
 	
 	var metric = '';
@@ -91,126 +94,6 @@ $(document).ready(function(){
 						return result;
 					};
 					
-	
-	
-	/*
-	var chart;
-	var charttype = 'Column';
-	var chart_function = function(keys, values, metric){
-		console.log(charttype);
-		if (charttype == 'Column' || charttype== 'Line'){
-			chart = new Highcharts.Chart({
-				chart: {
-					renderTo: 'container',
-					type: charttype.toLowerCase(),
-					marginRight: 130,
-					marginBottom: 25
-				},
-				title: {
-					text: '',
-					x: -20 //center
-				},
-				subtitle: {
-					text: '',
-					x: -20
-				},
-				xAxis: {
-					categories: keys
-				},
-				yAxis: {
-					title: {
-						text:  metric //'Runs'
-					},
-					plotLines: [{
-						value: 0,
-						width: 1,
-						color: '#808080'
-					}]
-				},
-				plotOptions: {
-					line: {
-						allowPointSelect: true,
-						cursor: 'pointer',
-						dataLabels: {
-							enabled: true,
-							color: '#000000',
-							connectorColor: '#000000',
-							formatter: function() {
-								return '<b>'+ this.series.name +'</b>: '+ this.y;
-							}
-						}
-					},
-					column: {
-						allowPointSelect: true,
-						cursor: 'pointer',
-						dataLabels: {
-							enabled: true,
-							color: '#000000',
-							connectorColor: '#000000',
-							formatter: function() {
-								return '<b>'+ this.series.name +'</b>: '+ this.y;
-							}
-						}
-					}
-				},
-				tooltip: {
-					formatter: function() {
-							return '<b>'+ this.series.name +'</b><br/>'+
-							this.x +': '+ this.y;
-					}
-				},
-				legend: {
-					layout: 'vertical',
-					align: 'right',
-					verticalAlign: 'top',
-					x: 0,
-					y: 100,
-					borderWidth: 0
-				},
-				series: [{
-					name: metric, //'Runs',
-					data: values
-				}]
-			});
-		}
-		else if (charttype == 'Pie'){
-			chart = new Highcharts.Chart({
-				chart: {
-					renderTo: 'container',
-					plotBackgroundColor: null,
-					plotBorderWidth: null,
-					plotShadow: false
-				},
-				tooltip: {
-					pointFormat: '{series.name}: <b>{point.percentage}%</b>',
-					percentageDecimals: 1
-				},
-				plotOptions: {
-					pie: {
-						allowPointSelect: true,
-						cursor: 'pointer',
-						dataLabels: {
-							enabled: true,
-							color: '#000000',
-							connectorColor: '#000000',
-							formatter: function() {
-								return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(2) +' %';
-							}
-						}
-					}
-				},
-				series: [{
-					type: 'pie',
-					name: metric,
-					data: values
-				}]
-			});
-		}
-		return chart;
-	};
-	
-	*/
-	
 	
 	
 	
@@ -256,9 +139,10 @@ $(document).ready(function(){
 		
         var options = {
           title : metric.toUpperCase()+' GROUPED BY '+group1.toUpperCase() + ' BY ' + group2.toUpperCase(),
-		  titleTextStyle:  {color: 'darkgray', fontName: 'verdana', fontSize: 10},
-          vAxis: {title: metric, titleTextStyle: {fontSize: 10}},
-          hAxis: {title: group, textStyle: {fontSize: 8}, titleTextStyle: {fontSize: 10}},
+		  titleTextStyle:  {color: 'darkgray', fontName: 'verdana', fontSize: 8},
+          vAxis: {title: metric, titleTextStyle: {fontSize: 8}},
+          hAxis: {title: group, textStyle: {fontSize: 8}, titleTextStyle: {fontSize: 8}},
+		  legend: {position: 'right', textStyle: {fontSize: 10}},
 		  height: 375,
           seriesType: charttype,
           series: {1000: {type: "line"}}
@@ -608,6 +492,10 @@ $(document).ready(function(){
 		shotdirectionkey =  $(this).val() || [''];
 	});
 	
+	$('#pc_pckey').change(function() {
+		pitchconditionkey =  $(this).val() || [''];
+	});
+	
 	
 
 
@@ -759,6 +647,10 @@ $(document).ready(function(){
 		spellkey1 =  $(this).val() || [''];
 	});
 
+	$('#pc_pckey1').change(function() {
+		pitchconditionkey1 =  $(this).val() || [''];
+	});
+		
 	
 	$('#playertype_playertypekey1').change(function() {
 		playertypename1 = $(this).val() || [''];
@@ -956,82 +848,6 @@ $(document).ready(function(){
 	
 
 
-
-	/*
-	$('.enable').live('click', function(){
-		metric =$(this).attr('data-metric');
-		var temp = $('#lastXmatches').val();
-		if (temp == ''){
-			lastXmatches = -2;		
-		}
-		else {
-			lastXmatches = parseInt(temp);
-		}
-		$(this).css('background-color', 'steelblue');
-		chartclickcount = chartclickcount + 1;
-		if (chartclickcount==4){
-			$('.groups, .metric').css('background-color', '#383838');
-			chartclickcount = 1;
-			$(this).css('background-color', 'steelblue');
-		}	
-		console.log(chartclickcount);
-		if (chartclickcount == 3){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bls:bowlingstylename, btn:bowlingtypename, bp:battingposition, blp:bowlingposition,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1, group:group, metric:metric, lxm:lastXmatches}};
-			//console.log(jsonObj);
-			$.ajax({
-				url: '/generate.json',
-				type: 'get',
-				data: jsonObj,
-				cache: false,
-				success: function(data, textStatus, jqXHR ) { 
-					console.log('successful');
-					console.log(data);
-					google_chart_function(data);
-					keys = [];
-					values = [];
-					temp = [];
-					//for (key in data){
-					//	if (charttype == 'Column' || charttype== 'Line'){
-					//		keys.push(key);
-					//		values.push(parseFloat(parseFloat(data[key]).toFixed(2)));
-					//	}
-					//	else if (charttype == 'Pie'){
-					//		values.push([key, parseFloat(parseFloat(data[key]).toFixed(2))]);
-					//	}
-						
-					
-					//console.log(keys);
-					//console.log(values);
-					//chartdata = data;
-					$('#groupbybattingstyle').attr('src','/assets/battingstyle.png');
-					$('#groupbybowlingtype').attr('src','/assets/battingstyle.png');
-					$('#groupbybowlingstyle').attr('src','/assets/battingstyle.png');
-					$('#groupbybattingposition').attr('src','/assets/battingstyle.png');
-					$('#groupbybowlingposition').attr('src','/assets/battingstyle.png');
-					$('#groupbyteam').attr('src','/assets/battingstyle.png');
-					$('#chartruns').attr('src','/assets/Runs.png');
-					
-					//chart_function(keys, values, metric);
-					$('#container').show();
-					
-					
-					
-					
-				},
-				error: function(jqXHR, textStatus, errorThrown){ 
-					console.log('unsuccessful');
-					alert('Too many filters. Reloading page...');
-					//location.reload();
-					$('#groupbybattingstyle').attr('src','/assets/battingstyle.png');
-					$('#chartruns').attr('src','/assets/Runs.png');
-				}
-			});
-		}
-	});
-	
-*/
-	
-
 	var metricclickcount = 0;
 	var groupclickcount = 0;
 
@@ -1073,10 +889,9 @@ $(document).ready(function(){
 			lastXballs = parseInt(temp1);
 		}
 		
-		//console.log('metric: ' +metricclickcount + '   group: '+ groupclickcount);
 
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey:spellkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs}};
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,pckey:pitchconditionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey1:spellkey1, pckey1:pitchconditionkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs}};
 			console.log(jsonObj);
 			$.ajax({
 				url: '/generate.json',
@@ -1102,7 +917,6 @@ $(document).ready(function(){
 	$('.groups').live('click', function(){
 		groupclickcount = groupclickcount + 1;
 		group = $(this).attr('data-group');
-		//console.log('groupclickcount  ' + groupclickcount+'    metricclickcount  '+ metricclickcount);
 		
 		if(groupclickcount == 1) {
 			$(this).css('background-color', 'steelblue');
@@ -1126,9 +940,6 @@ $(document).ready(function(){
 			metricclickcount = 0;
 			group1 = group
 		}
-		//console.log('group1 ' + group1 + '  group2  '+ group2);
-		//console.log('groupclickcount  ' + groupclickcount+'    metricclickcount  '+ metricclickcount);
-		
 
 		var temp = $('#lastXmatches').val();
 		if (temp == ''){
@@ -1147,8 +958,7 @@ $(document).ready(function(){
 		}
 		
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey:spellkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs}};
-
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,pckey:pitchconditionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey1:spellkey1, pckey1:pitchconditionkey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs}};
 			$.ajax({
 				url: '/generate.json',
 				type: 'get',
@@ -1164,64 +974,11 @@ $(document).ready(function(){
 				error: function(jqXHR, textStatus, errorThrown){ 
 					console.log('unsuccessful');
 					alert('Too many filters. Reloading page...');
-					location.reload();
 				}
 			});
 		}
 	});
 	
-	/*
-	
-	$('.groups').live('click', function(){
-		group = $(this).attr('data-group');
-		if chartclickcount(
-		$(this).css('background-color', 'steelblue');
-		var temp = $('#lastXmatches').val();
-		if (temp == ''){
-			lastXmatches = -2;		
-		}
-		else {
-			lastXmatches = parseInt(temp);
-		}
-		chartclickcount = chartclickcount + 1;
-		if (chartclickcount==4){
-			$('.groups, .metric').css('background-color', '#383838');
-			chartclickcount = 1;
-			$(this).css('background-color', 'steelblue');
-		}
-		console.log(chartclickcount);
-		if (chartclickcount == 3){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bls:bowlingstylename, btn:bowlingtypename, bp:battingposition, blp:bowlingposition,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1, group:group, metric:metric, lxm:lastXmatches}};
-			$.ajax({
-				url: '/generate.json',
-				type: 'get',
-				data: jsonObj,
-				cache: false,
-				success: function(data, textStatus, jqXHR ) { 
-					console.log('successful');	
-					
-					keys = [];
-					values = [];
-					for (key in data){
-						keys.push(key);
-						values.push(parseFloat(parseFloat(data[key]).toFixed(2)));
-					}
-					console.log(keys);
-					console.log(values);
-		
-					chart_function(keys, values, metric);
-					$('#container').show();
-					
-				},
-				error: function(jqXHR, textStatus, errorThrown){ 
-					console.log('unsuccessful');
-					alert('Too many filters. Reloading page...');
-					location.reload();
-				}
-			});
-		}
-	});
-	*/
 		
 });
 

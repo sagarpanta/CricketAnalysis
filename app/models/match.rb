@@ -1,5 +1,5 @@
 class Match < ActiveRecord::Base
-  attr_accessible :clientkey, :details, :matchtied, :matchtypekey, :tosswon, :matchwon, :matchwonortied, :teamidone, :teamidtwo, :tournamentkey, :venuekey, :winnerkey, :formatkey, :matchovers, :dayandnite, :matchdate, :electedto
+  attr_accessible :clientkey, :details, :matchtied, :matchtypekey, :tosswon, :matchwon, :matchwonortied, :teamidone, :teamidtwo, :tournamentkey, :venuekey, :winnerkey, :formatkey, :matchovers, :dayandnite, :matchdate, :electedto, :pitchcondition
   
   def matchwonortied=(matchwonortied)
 	write_attribute(:matchwonortied, matchwonortied)
@@ -13,6 +13,13 @@ class Match < ActiveRecord::Base
 		self.matchwon = 0
 		self.matchtied = 0
 	end
+  end
+  
+  
+  
+  def pitchcondition=(pitchcondition)
+	write_attribute(:pitchcondition, pitchcondition.downcase)
+	self.winnerkey = -2
   end
   
   

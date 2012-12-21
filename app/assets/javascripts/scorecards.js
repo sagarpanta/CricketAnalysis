@@ -14,11 +14,8 @@ $(document).ready(function(){
 			$(this).addClass('hilite-nonstriker');
 		}
 		dblclicked = dblclicked+1;
-		
 	});
 	
-	
-
 	$('.Bowler').live('click', function(event){
 		$('.Bowler').removeClass('hilite');
 		$(this).addClass('hilite');
@@ -837,10 +834,12 @@ $(document).ready(function(){
 			success: function(data, textStatus, jqXHR ) { 
 				console.log('successful');
 				$('#matchupdate img').attr('src','/assets/button.png');
+				$('#success_message').html("Winner's details updated");
 			},
 			error: function(jqXHR, textStatus, errorThrown){ 
 				console.log('unsuccessful');
 				$('#matchupdate img').attr('src','/assets/button.png');
+				$('#success_message').html("Winner's details failed to update")
 			}
 		});	
 	});

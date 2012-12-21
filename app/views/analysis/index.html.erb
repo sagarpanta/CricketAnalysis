@@ -140,12 +140,18 @@
 		<td class="slct1"><%= select 'line' , 'linekey1', @lines.collect {|l| [l.line, l.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Line/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 	</tr>
 	<tr>
+		<td class="identifier">Pitch Condition:</td>
+		<td class="slct"><%= select 'pc' , 'pckey', @pitchconditions.collect {|p| [p.pitchcondition, p.pitchcondition ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Pitch Condition/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="middle"></td>
+		<td class="identifier1">Pitch Condition:</td>
+		<td class="slct1"><%= select 'pc' , 'pckey1', @pitchconditions.collect {|p| [p.pitchcondition, p.pitchcondition ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Pitch Condition/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>	
+	</tr>
+	<tr>
 		<td class="identifier"></td>
 		<td class="slct"></td>
 		<td class="middle"></td>
 		<td class="identifier1">Length:</td>
-		<td class="slct1"><%= select 'length' , 'lengthkey1', @lengths.collect {|l| [l.length, l.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Length/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
-	 	
+		<td class="slct1"><%= select 'length' , 'lengthkey1', @lengths.collect {|l| [l.length, l.id ]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Length/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>	
 	</tr>
 	<tr>
 		<td class="identifier"></td>
@@ -207,8 +213,8 @@
 	</tr>
 	<tr>
 		<td></td>
-		<td></td>
-		<td></td>
+		<td class="metric" data-metric="c_nonstrike">c. non-strike</td>
+		<td class="metric" data-metric="c_strike">c. strike</td>
 		<td class="metric" data-metric="noofdels" >#deliveries</td>
 		<td class="metric" data-metric="noofshots" >#shots</td>
 		<td class="metric" data-metric="econ" >Econ</td>
@@ -216,9 +222,10 @@
 		<td class="metric" data-metric="fifties" >50s</td>
 		<td class="metric" data-metric="hundreds" >100s</td>
 		<td class="metric" data-metric="dsmsl" >Dsmsl</td>
+		<td></td>
 	</tr>
 
-	<tr><td class="groups" id="groupbybattingstyle" data-group="bts">Bat Style</td><td rowspan="15" colspan="16" id="container" style="width: 400px; max-height: 200px; margin: 0 auto" ></td>
+	<tr><td class="groups" id="groupbybattingstyle" data-group="bts">Bat Style</td><td rowspan="15" colspan="17" id="container" style="width: 400px; max-height: 200px; margin: 0 auto" ></td>
 		<td class="groups" id="groupbybowlingtype" data-group="bls">Bowl Style</td></tr>
 	<tr><td class="groups" id="groupbyteam" data-group="team">Team</td>
 		<td class="groups" id="groupbyteamagainst" data-group="teamagainst">Team Against</td></tr>
@@ -226,18 +233,18 @@
 		<td class="groups" id="groupbybowlingposition" data-group="bowlingposition">Bowl Position</td></tr>
 	<tr><td class="groups" id="groupbyteamtype" data-group="teamtype">Team Type</td>
 		<td class="groups" id="groupbymatchtype" data-group="matchtype">Match Type</td></tr>
-	<tr><td class="groups" id="groupbyformat" data-group="format">Format</td>
-		<td class="groups" id="groupbycountry" data-group="country">Country</td></tr>
-	<tr><td class="groups" id="groupbybowlingtype" data-group="bowlingtype">Bowl Type</td>
-		<td class="groups" id="groupbybatsman" data-group="batsman">Batsman</td></tr>
-	<tr><td class="groups" id="groupbydismissal" data-group="dismissal">Dismissal</td></td>
+	<tr><td class="groups" id="groupbycountry" data-group="country">Country</td>
+		<td class="groups" id="groupbycountryagainst" data-group="countryagainst">Country Against</td></tr>
+	<tr><td class="groups" id="groupbybatsman" data-group="batsman">Batsman</td>
+		<td class="groups" id="groupbybowlingtype" data-group="bowlingtype">Bowl Type</td></tr>
+	<tr><td class="groups" id="groupbydismissal" data-group="dismissal">Dismissal</td>
 		<td class="groups" id="groupbytournament" data-group="tournament">Tournament</td></tr>
 	<tr><td class="groups" id="groupbymanager" data-group="manager">Manager</td>
 		<td class="groups" id="groupbycoach" data-group="coach">Coach</td></tr>
 	<tr><td class="groups" id="groupbyvenue" data-group="venue">Venue</td>
 		<td class="groups" id="groupbyinning" data-group="inning">Inning</td></tr>
 	<tr><td class="groups" id="groupbyyear" data-group="year">year</td>
-		<td class="groups" id="groupbycountryagainst" data-group="countryagainst">Country Against</td></tr>
+		<td class="groups" id="groupbyformat" data-group="format">Format</td></tr>
 	<tr><td class="groups" id="groupbybowler" data-group="bowler">Bowler</td>
 		<td class="groups" id="groupbypship" data-group="pship">Partnership</td></tr>
 	<tr><td class="groups" id="groupbycr" data-group="cr">CR</td>
@@ -248,6 +255,8 @@
 		<td class="groups" id="groupbylength" data-group="length">Length</td></tr>
 	<tr><td class="groups" id="groupbydirection" data-group="direction">Direction</td>
 		<td class="groups" id="groupbyspell" data-group="spell">Spell</td></tr>
+	<tr><td class="groups" id="groupbycondition" data-group="condition">Condition</td>
+		<td></td></tr>
 </table>
 
 

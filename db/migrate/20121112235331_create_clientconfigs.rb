@@ -31,6 +31,8 @@ class CreateClientconfigs < ActiveRecord::Migration
 	  t.integer :hundreds
 	  t.integer :noofdels
 	  t.integer :noofshots
+	  t.integer :c_strike
+	  t.integer :c_nonstrike
 
 
 

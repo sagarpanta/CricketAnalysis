@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121217090210) do
+ActiveRecord::Schema.define(:version => 20121221000726) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -108,6 +108,8 @@ ActiveRecord::Schema.define(:version => 20121217090210) do
     t.integer  "hundreds"
     t.integer  "noofdels"
     t.integer  "noofshots"
+    t.integer  "c_strike"
+    t.integer  "c_nonstrike"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
@@ -213,7 +215,11 @@ ActiveRecord::Schema.define(:version => 20121217090210) do
     t.date     "matchdate"
     t.integer  "dayandnite"
     t.string   "electedto"
+    t.string   "pitchcondition"
   end
+
+  add_index "matches", ["id", "clientkey", "matchdate", "matchtypekey", "pitchcondition", "electedto"], :name => "index_matches_on_id_and_clientkey_and_matchdate_and_matchtypekey_and_pitchcondition_and_electedto", :unique => true
+  add_index "matches", ["id", "clientkey", "teamidone", "teamidtwo", "winnerkey"], :name => "index_matches_on_id_and_clientkey_and_teamidone_and_teamidtwo_and_winnerkey", :unique => true
 
   create_table "player_stats", :force => true do |t|
     t.integer  "playerid"
@@ -341,6 +347,7 @@ ActiveRecord::Schema.define(:version => 20121217090210) do
   end
 
   add_index "scorecards", ["id", "clientkey", "ballnum", "formatkey", "tournamentkey", "venuekey", "inning", "matchkey", "outtypekey", "batsmankey", "currentnonstrikerkey", "currentbowlerkey", "battingposition", "bowlingposition", "cr", "dismissedbatsmankey"], :name => "UIX_Scorecards_Evrythng", :unique => true
+  add_index "scorecards", ["id", "clientkey", "spell", "direction"], :name => "index_scorecards_on_id_and_clientkey_and_spell_and_direction", :unique => true
   add_index "scorecards", ["id", "clientkey"], :name => "index_scorecards_on_id_and_clientkey", :unique => true
   add_index "scorecards", ["id", "line", "length", "shottype"], :name => "UIX_Scorecards_LineLenghtShottype", :unique => true
 

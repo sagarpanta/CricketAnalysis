@@ -60,8 +60,6 @@ $(document).ready(function(){
 		var height = $(window).height();
 		var pos = $("#holder").position();
 		var pos_of_shot = $('.dialog_td3').position();
-		console.log(pos_of_shot.top);
-		console.log(height/2);
 		
 		Raphael("holder", 400, 400).pieChart(200,200, 60, values, labels, "#fff");
 		$('#holder').offset({ top: pos_of_shot.top+80, left: width/2-200});		

@@ -45,6 +45,8 @@ $(document).ready(function(){
 				if (data["dbx"]==1) {$('[data-metric="dbx"]').addClass('enable');}
 				if (data["noofdels"]==1) {$('[data-metric="noofdels"]').addClass('enable');}
 				if (data["noofshots"]==1) {$('[data-metric="noofshots"]').addClass('enable');}
+				if (data["c_strike"]==1) {$('[data-metric="c_strike"]').addClass('enable');}
+				if (data["c_nonstrike"]==1) {$('[data-metric="c_nonstrike"]').addClass('enable');}
 				
 				
 			},

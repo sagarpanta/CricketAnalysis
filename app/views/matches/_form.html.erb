@@ -58,7 +58,15 @@
 	<tr>
 		<td class="caption">Day or D/N?</td>
 		<td class="fields"><%= f.select :dayandnite, [['', -2], ['Day', 1], ['D/N',0]] %></td>
-	</tr>		
+	</tr>	
+	<tr>
+		<td class="caption">Pitch Condition</td>
+		<td class="fields"><%= f.text_field :pitchcondition %></td>
+	</tr>	
+	<tr>
+		<td class="caption"></td>
+		<td class="fields pitchcondition"></td>
+	</tr>
   </table>
 
   <div id="success_message"></div>

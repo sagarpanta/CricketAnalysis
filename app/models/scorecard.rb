@@ -34,7 +34,7 @@ class Scorecard < ActiveRecord::Base
 	else
 		_data = [[group1.to_s, metric]]
 		chartdata.each do |d|
-			_data << [d.grp1.to_s, d.val.to_f]
+			_data << [d.grp1.to_s, d.val.to_f.round(2)]
 		end
 	end
 	return _data
@@ -57,7 +57,7 @@ class Scorecard < ActiveRecord::Base
 	filteredData.each do |f|
 		if columns.include? f.grp2 
 			pos = columns.index(f.grp2)
-			_data[pos+1]  = f.val.to_f
+			_data[pos+1]  = f.val.to_f.round(2)
 		end
 	end
 	_data[0] = _data[0].to_s

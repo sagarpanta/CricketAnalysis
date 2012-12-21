@@ -123,6 +123,46 @@ $(document).ready(function(){
 		$('#projected').html(projectedScore);
 	 
 	 
-	 });  
-	  
+	 }); 
+
+	var pitchcondition_array = new Array();
+	var match_form = $('.pitchcondition').html();
+	if (match_form != undefined){
+		$.ajax({
+			url: '/pitchconditions',
+			type: 'get',
+			cache: false,
+			success: function(data, textStatus, jqXHR ) { 
+				console.log('successful');
+				pitchcondition_array = data;
+			},
+			error: function(jqXHR, textStatus, errorThrown){ 
+				console.log('unsuccessful');
+			}
+		});
+	}
+	var pitch_clicked = 0;
+	$('#match_pitchcondition').live('click', function(){
+		pitch_clicked = pitch_clicked+1;
+		if (pitch_clicked==1){
+			$('.pitchcondition').slideDown('slow', function() {
+				console.log(typeof pitchcondition_array);
+				var i;
+				$(this).append('<ul class="ul_pitch">');
+				for(i=0; i<pitchcondition_array.length;i++){
+					if (pitchcondition_array[i] != null){
+						$(this).append('<li class="li_pitch">'+pitchcondition_array[i]+'</li>');
+					}
+				}
+				$(this).append('</ul>');
+				$('.ul_pitch').css('margin-top', -10);
+				$('.li_pitch').css('display', 'block').css('color','white');
+			});
+		}
+	}); 
+	$('#match_pitchcondition').live('mouseout', function(){
+		$('.pitchcondition').html('');
+		pitch_clicked = 0;
+		console.log('hellow hou are you');
+	});	
 });
