@@ -1525,8 +1525,8 @@ class AnalysisController < ApplicationController
 			#	@chartdata[a.grp] = a.bbh
 			#end
 			@chartdata = Scorecard.find_by_sql(bbr)
-			@client = current_user
-			ClientMailer.Error_Delivery(bbr, @client, 'bbh').deliver
+			#@client = current_user
+			#ClientMailer.Error_Delivery(bbr, @client, 'bbh').deliver
 		elsif metric == 'bbb'
 			#@bbbbybts = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).select('case when count(ballsbeforeboundary)=0 then 0 else sum(ballsbeforeboundary)/(count(ballsbeforeboundary)*1.0) end as bbb,'+_joins[group]['group']+' as grp')
 			#@chartdata = {}
