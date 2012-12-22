@@ -4,12 +4,10 @@
 		<div style="text-align:center"><%= @teamone.teamname %> vs <%= @teamtwo.teamname %></div>
 		<div style="text-align:center"><%= @formatarr[0] %> @ <%= @venue[0].venuename %></div>
 		<div >Score:<%= @runs %>/<%= @wickets %><br/>Overs:<%= @overs %></div>
-		<br/>
 		<div>First Inning</div>
 		<div id="inning_one">
-
 				<div>
-					<table class="pdf_scorecard" style="font-weight:10px">
+					<table class="pdf_scorecard">
 						<th width="120px">Batsman</th>
 						<th width="60px"></th>
 						<th width="120px"></th>
@@ -21,7 +19,7 @@
 						<th width="50px">6's</th>
 						<% @batsmen.each do |b| %>
 							<tr>
-								<td style="border-bottom:1px solid black"><%= b[:name] %></td>
+								<td style="border-bottom:1px solid black" ><%= b[:name] %></td>
 								<td style="border-bottom:1px solid black"><%= b[:outtypekey]==-2? '':@dismissals[b[:outtypekey]].dismissaltype %></td>
 								<td style="border-bottom:1px solid black"><%= @fielders[b[:fielderkey]] %></td>
 								<td style="border-bottom:1px solid black"><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
@@ -35,9 +33,8 @@
 					</table>
 				</div>
 
-				<br/>
 				<div>
-					<table class="pdf_scorecard" style="font-weight:10px">
+					<table class="pdf_scorecard">
 						<th width="120px">Bowlers</th>
 						<th width="50px">Overs</th>
 						<th width="50px">Runs</th>
@@ -46,7 +43,6 @@
 						<th width="50px">Economy</th>
 						<th width="50px">4's</th>
 						<th width="50px">6's</th>
-
 						
 						<% @bowlers.each do |b| %>
 							<% if b[:name] != '' %>
@@ -64,18 +60,14 @@
 						<% end %>
 					</table>
 				</div>
-		</div>
-		<br/>
-		<br/>		
-		--------------------------------------------------------------------------------------------------------------------------------------------------------------	
-		<br/>
-		<br/>
+		</div>		
+		-----------------------------------------------------------------------------------------------------------------------------
 		<div>Score:<%= @runs1 %>/<%= @wickets1 %><br/>Overs:<%= @overs1 %></br>Target:<%= @runs %></div>
 		<br/>
 		<div>Second Inning</div>
 		<div id="inning_two">
 				<div>
-					<table class="pdf_scorecard" style="font-weight:10px">
+					<table class="pdf_scorecard">
 						<tr>
 							<th width="120px">Batsman</th>
 							<th width="60px"></th>
@@ -87,8 +79,6 @@
 							<th width="50px">4's</th>
 							<th width="50px">6's</th>
 						</tr>
-
-						
 						<% @batsmen1.each do |b| %>
 							<tr>
 								<td style="border-bottom:1px solid black"><%= b[:name] %></td>
@@ -104,10 +94,8 @@
 						<% end %>
 					</table>
 				</div>
-
-
 				<div>
-					<table class="pdf_scorecard" style="font-weight:10px">
+					<table class="pdf_scorecard">
 						<th width="120px">Bowlers</th>
 						<th width="50px">Overs</th>
 						<th width="50px">Runs</th>
