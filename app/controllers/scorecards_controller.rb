@@ -612,7 +612,8 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				#this is the last entry id of the bastman b
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).maximum(:id)
-
+				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', params[:id],@inning,b).maximum(:id)
+				
 				#get the stats of batsman b so far.
 				stats_query = 'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced,  case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
 								from
@@ -641,9 +642,27 @@ class ScorecardsController < ApplicationController
 				
 				#get the last entry of the batsman b and get his information
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
-				wktakingbowlerkey = outtypekey!=1? -2:playerlastentry[:bowlerkey]
-				disabled = outtypekey<=0? false : true
+				playerlastentry_as_NS = Scorecard.find_by_id(playerlastentry_id_as_nonstriker)
+				
+				dbk = playerlastentry.nil? ? -2:playerlastentry[:dismissedbatsmankey]
+				dbk1 = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:dismissedbatsmankey]
+				
+				if dbk == b
+					outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
+					wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+					fielderkey = playerlastentry.nil? ? -2:playerlastentry[:fielderkey]
+					disabled = outtypekey<=0? false : true				
+				elsif dbk1==b
+					outtypekey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:outtypekey]
+					fielderkey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:fielderkey]
+					wktakingbowlerkey = -2
+					disabled = outtypekey<=0? false : true							
+				else
+					#outtypekey is set to -2 but not others like wktakingbowlerkey because bold is the first element
+					#of the select tag where as empty is the first element of the select tag for wktakingbowlerkey
+					outtypekey = -2
+				end
+				
 				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, 
 							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
@@ -730,8 +749,6 @@ class ScorecardsController < ApplicationController
 				counter = counter + 1
 			end
 			
-			
-				
 			@bowlers = []
 			@wktakingbowlers = [['', -2]]
 			counter = 1
@@ -766,7 +783,7 @@ class ScorecardsController < ApplicationController
 	begin
 		if signed_in?
 			@current_client = current_user.username
-			@match = Match.find_by_id(params[:id])
+			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
 		
 			################################ First Inning ##########################################3
 			
@@ -848,6 +865,9 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				#this is the last entry id of the bastman b
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).maximum(:id)
+				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', params[:id],@inning,b).maximum(:id)
+				
+				
 				stats_query = 'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced,  case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
 				from
 				(
@@ -865,13 +885,32 @@ class ScorecardsController < ApplicationController
 				)A
 				'
 				stats = Scorecard.find_by_sql(stats_query)
+				
 				#get the last entry of the batsman b and get his information
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
-				wktakingbowlerkey = outtypekey!=1? -2:playerlastentry[:bowlerkey]
-				disabled = outtypekey<=0? false : true
+				playerlastentry_as_NS = Scorecard.find_by_id(playerlastentry_id_as_nonstriker)
+				
+				dbk = playerlastentry.nil? ? -2:playerlastentry[:dismissedbatsmankey]
+				dbk1 = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:dismissedbatsmankey]
+				
+				if dbk == b
+					outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
+					wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+					fielderkey = playerlastentry.nil? ? -2:playerlastentry[:fielderkey]
+					disabled = outtypekey<=0? false : true				
+				elsif dbk1==b
+					outtypekey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:outtypekey]
+					fielderkey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:fielderkey]
+					wktakingbowlerkey = -2
+					disabled = outtypekey<=0? false : true							
+				else
+					#outtypekey is set to -2 but not others like wktakingbowlerkey because bold is the first element
+					#of the select tag where as empty is the first element of the select tag for wktakingbowlerkey
+					outtypekey = -2
+				end
+
 				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :counter=>counter, 
-							 :battingposition=>playerlastentry.nil? ? counter:playerlastentry[:battingposition], 
+							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :outtypekey=> playerlastentry.nil? ? -2:playerlastentry[:outtypekey], 
 							 :fielderkey =>playerlastentry.nil? ? -2:playerlastentry[:fielderkey], 
 							 :bowlerkey=>playerlastentry.nil? ? -2:playerlastentry[:bowlerkey], 
@@ -890,13 +929,18 @@ class ScorecardsController < ApplicationController
 				pos+=1
 			end
 			
-			@batsmen = @batsmen.sort_by{|b| b[:battingposition]}
 
+			
+			@batsmen = @batsmen.sort_by{|b| b[:battingposition]}
 			#types of dismissals. Add -2 to the entry, which is the default value 
 			#i.e. the batsman has not played yet or is still no out.
 			#same with the fielder and wicket taking bowlers
 			@dismissals = Dismissal.all
-			@dismissals[-2] = ''
+			@outs = {}
+			@outs[-2] = ''
+			@dismissals.each do |d|
+				@outs[d.id] = d.dismissaltype			
+			end
 			
 			@fielders = {}
 			@fielders[-2] = ''
@@ -941,16 +985,17 @@ class ScorecardsController < ApplicationController
 			counter = 0
 			@fieldingside.each do |b|
 				if b[:playertype] == 'Bowler' or b[:playertype] == 'All Rounder'
-					temp = b[:bowlingposition].nil? ? counter:b[:bowlingposition]
+					temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
 					b[:bowlingposition] = temp
 					@bowlers << b
-					@wktakingbowlers[b[:playerkey]] = [b[:name]]
+					@wktakingbowlers[b[:playerkey]] = b[:name]
 					counter= counter + 1
 				end
 			end
 			
 			@bowlers = @bowlers.sort_by{|b| b[:bowlingposition]}
 			
+	
 			
 			################################ Second Inning ##########################################3
 			
@@ -996,6 +1041,8 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				#this is the last entry id of the bastman b
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).maximum(:id)
+				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', params[:id],@inning,b).maximum(:id)
+								
 				stats_query = 'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced,  case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
 				from
 				(
@@ -1016,11 +1063,28 @@ class ScorecardsController < ApplicationController
 				
 				#get the last entry of the batsman b and get his information
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
-				wktakingbowlerkey = outtypekey!=1? -2:playerlastentry[:bowlerkey]
-				disabled = outtypekey<=0? false : true
+				playerlastentry_as_NS = Scorecard.find_by_id(playerlastentry_id_as_nonstriker)
+				
+				dbk = playerlastentry.nil? ? -2:playerlastentry[:dismissedbatsmankey]
+				dbk1 = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:dismissedbatsmankey]
+				
+				if dbk == b
+					outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
+					wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+					fielderkey = playerlastentry.nil? ? -2:playerlastentry[:fielderkey]
+					disabled = outtypekey<=0? false : true				
+				elsif dbk1==b
+					outtypekey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:outtypekey]
+					fielderkey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:fielderkey]
+					wktakingbowlerkey = -2
+					disabled = outtypekey<=0? false : true							
+				else
+					#outtypekey is set to -2 but not others like wktakingbowlerkey because bold is the first element
+					#of the select tag where as empty is the first element of the select tag for wktakingbowlerkey
+					outtypekey = -2
+				end
 				@batsmen1 << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :counter=>counter, 
-							 :battingposition=>playerlastentry.nil? ? counter:playerlastentry[:battingposition], 
+							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :outtypekey=> playerlastentry.nil? ? -2:playerlastentry[:outtypekey], 
 							 :fielderkey =>playerlastentry.nil? ? -2:playerlastentry[:fielderkey], 
 							 :bowlerkey=>playerlastentry.nil? ? -2:playerlastentry[:bowlerkey], 
@@ -1046,7 +1110,11 @@ class ScorecardsController < ApplicationController
 			#i.e. the batsman has not played yet or is still no out.
 			#same with the fielder and wicket taking bowlers
 			@dismissals1 = Dismissal.all
-			@dismissals1[-2] = ''
+			@outs = {}
+			@outs[-2] = ''
+			@dismissals.each do |d|
+				@outs[d.id] = d.dismissaltype			
+			end
 			
 			@fielders1 = {}
 			@fielders1[-2] = ''
@@ -1092,7 +1160,7 @@ class ScorecardsController < ApplicationController
 			counter = 0
 			@fieldingside1.each do |b|
 				if b[:playertype] == 'Bowler' or b[:playertype] == 'All Rounder'
-					temp = b[:bowlingposition].nil? ? counter:b[:bowlingposition]
+					temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
 					b[:bowlingposition] = temp
 					@bowlers1 << b
 					@wktakingbowlers1[b[:playerkey]] = [b[:name]]

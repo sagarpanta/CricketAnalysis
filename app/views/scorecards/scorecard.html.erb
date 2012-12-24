@@ -20,7 +20,7 @@
 						<% @batsmen.each do |b| %>
 							<tr>
 								<td style="border-bottom:1px solid black" ><%= b[:name] %></td>
-								<td style="border-bottom:1px solid black"><%= b[:outtypekey]==-2? '':@dismissals[b[:outtypekey]].dismissaltype %></td>
+								<td style="border-bottom:1px solid black"><%= b[:outtypekey]==-2? '':@outs[b[:outtypekey]] %></td>
 								<td style="border-bottom:1px solid black"><%= @fielders[b[:fielderkey]] %></td>
 								<td style="border-bottom:1px solid black"><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
 								<td style="border-bottom:1px solid black" b[:runs] %></td>	
@@ -81,7 +81,7 @@
 						<% @batsmen1.each do |b| %>
 							<tr>
 								<td style="border-bottom:1px solid black"><%= b[:name] %></td>
-								<td style="border-bottom:1px solid black"><%= b[:outtypekey]==-2? '':@dismissals[b[:outtypekey]].dismissaltype %></td>
+								<td style="border-bottom:1px solid black"><%= b[:outtypekey]==-2? '':@outs[b[:outtypekey]] %></td>
 								<td style="border-bottom:1px solid black"><%= @fielders[b[:fielderkey]] %></td>
 								<td style="border-bottom:1px solid black"><%= @wktakingbowlers[b[:wktakingbowlerkey]] %></td>
 								<td style="border-bottom:1px solid black"><%= b[:runs] %></td>	

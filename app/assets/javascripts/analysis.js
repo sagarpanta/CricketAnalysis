@@ -130,6 +130,12 @@ $(document).ready(function(){
 			zoomIn(e['region'], chartdata);
 		});
     }
+
+	var google_table_function =  function drawVisualization(chartdata) {
+        var data = google.visualization.arrayToDataTable(chartdata);
+        var table = new google.visualization.Table(document.getElementById('myModal'));
+        table.draw(data, {showRowNumber: true});
+      }	
 	
 	
 	var google_chart_function =  function drawVisualization(chartdata) {
@@ -158,6 +164,8 @@ $(document).ready(function(){
         chart.draw(data, options);
       }
 	  
+	  
+
 	
 	var visible = $('#container').css('display');
 	console.log(visible);
@@ -846,7 +854,24 @@ $(document).ready(function(){
 		$(this).css('opacity', '0.7');
 	});
 	
-
+	
+	$('.tabletype a').live('click', function(){
+		$('.tabletype a').css('opacity', '0.9');
+		$(this).css('opacity', '0.7');
+	});
+	
+	
+	$('.tabletype a').live('mouseover', function(){
+		//no color change
+		$('.tabletype a').css('background-color', '#19197D');
+	});
+	
+	$('.tabletype a').live('mouseout', function(){
+		//
+		$('.tabletype a').css('background-color', '#19197D');
+		$('.tabletype a').css('opacity', '0.9');
+	});
+	
 
 	var metricclickcount = 0;
 	var groupclickcount = 0;
@@ -901,7 +926,9 @@ $(document).ready(function(){
 				success: function(data, textStatus, jqXHR ) { 
 					console.log('successful');
 					google_chart_function(data);
+					google_table_function(data);
 					$('#container').show();
+					$('#table_div').show();
 				},
 				error: function(jqXHR, textStatus, errorThrown){ 
 					console.log('unsuccessful');
@@ -968,7 +995,9 @@ $(document).ready(function(){
 					console.log('successful');	
 
 					google_chart_function(data);
+					google_table_function(data);
 					$('#container').show();
+					$('#table_div').show();
 					
 				},
 				error: function(jqXHR, textStatus, errorThrown){ 
