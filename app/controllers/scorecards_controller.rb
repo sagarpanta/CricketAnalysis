@@ -911,6 +911,7 @@ class ScorecardsController < ApplicationController
 
 				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :counter=>counter, 
 							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
+							 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :outtypekey=> playerlastentry.nil? ? -2:playerlastentry[:outtypekey], 
 							 :fielderkey =>playerlastentry.nil? ? -2:playerlastentry[:fielderkey], 
 							 :bowlerkey=>playerlastentry.nil? ? -2:playerlastentry[:bowlerkey], 
@@ -1085,6 +1086,7 @@ class ScorecardsController < ApplicationController
 				end
 				@batsmen1 << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :counter=>counter, 
 							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
+							 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :outtypekey=> playerlastentry.nil? ? -2:playerlastentry[:outtypekey], 
 							 :fielderkey =>playerlastentry.nil? ? -2:playerlastentry[:fielderkey], 
 							 :bowlerkey=>playerlastentry.nil? ? -2:playerlastentry[:bowlerkey], 
