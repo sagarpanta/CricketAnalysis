@@ -138,7 +138,7 @@ class AnalysisController < ApplicationController
 			scorecards = ' scorecards '
 			ballnumber_betn = '0 and 300'
 		else
-			scorecards = ' (select ballnum = rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum desc), clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction from scorecards) '
+			scorecards = ' (select (rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum desc)) as ballnum, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction from scorecards) '
 			ballnumber_betn = '0 and '+lastXballs.to_s
 		end
 	
@@ -365,7 +365,7 @@ class AnalysisController < ApplicationController
 			_group1['batsman'] = 'p.fullname'
 			_group1['dismissal'] = 'dismissaltype'
 			_group1['cr'] = 'cr'
-			_group1['pship'] = "case when currentstrikerkey<currentnonstrikerkey then p.fullname+'-'+p2.fullname else p2.fullname+'-'+p.fullname end"
+			_group1['pship'] = "case when currentstrikerkey<currentnonstrikerkey then p.fullname||'-'||p2.fullname else p2.fullname||'-'||p.fullname end"
 			#_group1['match'] = 's.matchkey'
 			_group1['match'] = "'vs '||tm1.teamname"
 			_group1['shottype'] = 'st.shottype'
@@ -399,7 +399,7 @@ class AnalysisController < ApplicationController
 			_group2['batsman'] = ',p.fullname'
 			_group2['dismissal'] = ',dismissaltype'
 			_group2['cr'] = ',cr'
-			_group2['pship'] = ",case when currentstrikerkey<currentnonstrikerkey then p.fullname+'-'+p2.fullname else p2.fullname+'-'+p.fullname end"
+			_group2['pship'] = ",case when currentstrikerkey<currentnonstrikerkey then p.fullname||'-'||p2.fullname else p2.fullname||'-'||p.fullname end"
 			#_group2['match'] = ',s.matchkey'
 			_group2['match'] = ",'vs '||tm1.teamname"
 			_group2['shottype'] = ',st.shottype'
@@ -788,7 +788,7 @@ class AnalysisController < ApplicationController
 			_group1['batsman'] = 'p.fullname'
 			_group1['dismissal'] = 'dismissaltype'
 			_group1['cr'] = 'cr'
-			_group1['pship'] = "case when currentstrikerkey<currentnonstrikerkey then p.fullname+'-'+p2.fullname else p2.fullname+'-'+p.fullname end"
+			_group1['pship'] = "case when currentstrikerkey<currentnonstrikerkey then p.fullname||'-'||p2.fullname else p2.fullname||'-'||p.fullname end"
 			#_group1['match'] = 's.matchkey'
 			_group1['match'] = "'vs '||tm.teamname"
 			_group1['shottype'] = 'st.shottype'
@@ -822,7 +822,7 @@ class AnalysisController < ApplicationController
 			_group2['batsman'] = ',p.fullname'
 			_group2['dismissal'] = ',dismissaltype'
 			_group2['cr'] = ',cr'
-			_group2['pship'] = ",case when currentstrikerkey<currentnonstrikerkey then p.fullname+'-'+p2.fullname else p2.fullname+'-'+p.fullname end"
+			_group2['pship'] = ",case when currentstrikerkey<currentnonstrikerkey then p.fullname||'-'||p2.fullname else p2.fullname||'-'||p.fullname end"
 			#_group2['match'] = ',s.matchkey'
 			_group2['match'] = ",'vs '||tm.teamname"
 			_group2['shottype'] = ',st.shottype'
@@ -1526,8 +1526,8 @@ class AnalysisController < ApplicationController
 			#	@chartdata[a.grp] = a.bbh
 			#end
 			@chartdata = Scorecard.find_by_sql(bbr)
-			#@client = current_user
-			#ClientMailer.Error_Delivery(bbr, @client, 'bbh').deliver
+			@client = current_user
+			ClientMailer.Error_Delivery(bbr, @client, 'bbh').deliver
 		elsif metric == 'bbb'
 			#@bbbbybts = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).select('case when count(ballsbeforeboundary)=0 then 0 else sum(ballsbeforeboundary)/(count(ballsbeforeboundary)*1.0) end as bbb,'+_joins[group]['group']+' as grp')
 			#@chartdata = {}
