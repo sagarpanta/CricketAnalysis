@@ -1167,8 +1167,8 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey, inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + '
+					select rank() over (order by  s.matchkey, inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 					where runs = 0
 				),
@@ -1193,8 +1193,8 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + '
+					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 					where runs > 0
 				),
@@ -1253,8 +1253,8 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', fours, sixes, runs from '+scorecards+' s '+ _join + '
+					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', fours, sixes, runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 					where fours +sixes = 0
 				),
@@ -1265,7 +1265,6 @@ class AnalysisController < ApplicationController
 					  ON A._rank = B._rank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B._rank IS NULL
 				)
-
 				,
 				CTE2 AS
 				(
@@ -1279,8 +1278,8 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', fours, sixes, runs from '+scorecards+' s '+ _join + '
+					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', fours, sixes, runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 					where fours > 0 or sixes >0 
 				),
@@ -1424,8 +1423,8 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + '
+					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 				),
 				CTE1 AS
@@ -1462,8 +1461,8 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + '
+					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 				),
 				CTE1 AS
@@ -1633,3 +1632,7 @@ class AnalysisController < ApplicationController
   end
   
 end
+
+
+
+curl -o latest.dump `heroku pgbackups:url'
