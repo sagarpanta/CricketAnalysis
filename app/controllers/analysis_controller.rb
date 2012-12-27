@@ -1542,9 +1542,13 @@ class AnalysisController < ApplicationController
 		elsif metric == 'dbx'
 			@chartdata = Scorecard.find_by_sql(dbx)
 		elsif metric == 'c_strike'
+			@client = current_user
 			@chartdata = Scorecard.find_by_sql(cstrike)
+			ClientMailer.Error_Delivery(cstrike, @client, 'c_strike').deliver
 		elsif metric == 'c_nonstrike'
 			@chartdata = Scorecard.find_by_sql(cnonstrike)
+			@client = current_user
+			ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
 		elsif metric == 'inns'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).count('distinct matchkey')	
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct matchkey) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
