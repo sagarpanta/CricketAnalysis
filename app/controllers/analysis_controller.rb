@@ -449,7 +449,6 @@ class AnalysisController < ApplicationController
 		   else
 				where_batsmankeys =  ' and s.batsmankey '+batsmankeys
 		   end	
-		   where_batsmankeys =  ' and s.batsmankey '+batsmankeys
 		   where_countrykeys = ' and p.countrykey ' + countrykeys
 		   where_battingstylekeys = ' and p.battingstyle '+battingstylekeys
 		   where_playertypekeys = ' and p.playertype '+playertypekeys
@@ -886,7 +885,11 @@ class AnalysisController < ApplicationController
 		   where_bowlingsidekeys1 = ' and s.side '+bowlingsidekeys1
 		   where_pitchconditionkeys1 = ' and mat1.pitchcondition '+pitchconditionkeys1
 
-		   where_batsmankeys =  ' and s.batsmankey '+batsmankeys
+		   if metric == 'c_nonstrike'
+				where_batsmankeys =  ' and s.currentnonstrikerkey '+batsmankeys
+		   else
+				where_batsmankeys =  ' and s.batsmankey '+batsmankeys
+		   end
 		   where_countrykeys = ' and p.countrykey ' + countrykeys
 		   where_batpositionkeys =' and s.battingposition '+batpositionkeys
 		   where_battingstylekeys = ' and p.battingstyle '+battingstylekeys
@@ -1436,7 +1439,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
-						   ballrank, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
+						   ballrank, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+sc+' s '+ _join + ' and wides=0
 					)A order by grp1, ballrank
 				),
 				CTE1 AS
@@ -1473,7 +1476,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
-						   ballrank,'+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
+						   ballrank,'+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+sc+' s '+ _join + ' and wides=0
 					)A order by grp1, ballrank
 				),
 				CTE1 AS
