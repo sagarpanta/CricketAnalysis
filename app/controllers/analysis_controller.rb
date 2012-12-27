@@ -1632,7 +1632,3 @@ class AnalysisController < ApplicationController
   end
   
 end
-
-
-
-curl -o latest.dump `heroku pgbackups:url'
