@@ -1244,6 +1244,7 @@ class AnalysisController < ApplicationController
 					group by a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+'
 				)y 
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
+				order by X.grp1
 			'	
 
 			bbb = '
@@ -1329,6 +1330,7 @@ class AnalysisController < ApplicationController
 					group by a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+'
 				)y 
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
+				order by X.grp1
 			'	
 			dbx = '
 				WITH 
@@ -1414,6 +1416,7 @@ class AnalysisController < ApplicationController
 					group by a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+'
 				)y 
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
+				order by X.grp1
 			'
 
 			cnonstrike = '
@@ -1452,6 +1455,7 @@ class AnalysisController < ApplicationController
 				inner join CTE1 t1 on t2._order = t1._order
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
+				order by X.grp1
 			'	
 
 			cstrike = '
@@ -1490,6 +1494,7 @@ class AnalysisController < ApplicationController
 				inner join CTE1 t1 on t2._order = t1._order
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
+				order by X.grp1
 			'			
 		############################################### end of variable definitions #####################################################3	
 	

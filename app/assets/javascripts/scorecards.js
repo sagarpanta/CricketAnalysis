@@ -519,10 +519,13 @@ $(document).ready(function(){
 		
 		tournamentkey = $('#tournamentkey').html();
 		matchkey = $('#matchkey').html();
-		
+		//i dont know why I checked for dismissaltypekey>0
 		if (dismissaltypekey > 0 && (dismissaltypekey == 1 || dismissaltypekey == 2 || dismissaltypekey == 3 || dismissaltypekey == 8 )){
 			wicket = 1
 			bowlerkey = currentbowlerkey
+		}
+		else if (dismissaltypekey>0 && dismissaltypekey==4){
+			wicket = 1
 		}
 		
 		var bd = 0;
@@ -723,9 +726,6 @@ $(document).ready(function(){
 		$('.Bowler.hilite').parent().children('.bowler_noballs').html(totalnoballs);
 		$('.Bowler.hilite').parent().children('.bowler_others').html(totalothers);
 		
-		
-		console.log('totalruns '+totalruns);
-		console.log('totaldeli '+totaldeliveries);
 		
 		var val = $('.Bowler.hilite').parent().children('.bowling_side').children('ul').children('.side').html();
 		if (val == 'RTW'){
