@@ -444,7 +444,11 @@ class AnalysisController < ApplicationController
 			line_part = ' inner join lines l on s.line = l.id '
 			length_part = ' inner join lengths ln on s.length = ln.id '
 
-			
+		   if metric == 'c_nonstrike'
+				where_batsmankeys =  ' and s.currentnonstrikerkey '+batsmankeys
+		   else
+				where_batsmankeys =  ' and s.batsmankey '+batsmankeys
+		   end	
 		   where_batsmankeys =  ' and s.batsmankey '+batsmankeys
 		   where_countrykeys = ' and p.countrykey ' + countrykeys
 		   where_battingstylekeys = ' and p.battingstyle '+battingstylekeys
