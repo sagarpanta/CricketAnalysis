@@ -413,9 +413,9 @@ class AnalysisController < ApplicationController
 			
 			if metric == 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.currentnonstrikerkey '
-			elsif metric == 'runouts'
+			elsif metric == 'dsmsl'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.dismissedbatsmankey '
-			elsif metric != 'runouts' and metric != 'c_nonstrike'
+			elsif metric != 'dsmsl' and metric != 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey '
 			end 
 			nonstriker_part = ' inner join players p2 on p2.id = s.currentbowlerkey and p2.clientkey = s.clientkey '
@@ -450,9 +450,9 @@ class AnalysisController < ApplicationController
 
 			if metric == 'c_nonstrike'
 				where_batsmankeys =  ' and s.currentnonstrikerkey '+batsmankeys
-			elsif metric == 'runouts'
+			elsif metric == 'dsmsl'
 				where_batsmankeys =  ' and s.dismissedbatsmankey '+batsmankeys
-			elsif metric != 'runouts' and metric != 'c_nonstrike'
+			elsif metric != 'dsmsl' and metric != 'c_nonstrike'
 				where_batsmankeys =  ' and s.batsmankey '+batsmankeys
 			end 
 		   where_countrykeys = ' and p.countrykey ' + countrykeys
@@ -844,9 +844,9 @@ class AnalysisController < ApplicationController
 			
 			if metric == 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.currentnonstrikerkey '
-			elsif metric == 'runouts'
+			elsif metric == 'dsmsl'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.dismissedbatsmankey '
-			elsif metric != 'runouts' and metric != 'c_nonstrike'
+			elsif metric != 'dsmsl' and metric != 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey '
 			end 
 			batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey '
@@ -900,9 +900,9 @@ class AnalysisController < ApplicationController
 
 			if metric == 'c_nonstrike'
 				where_batsmankeys =  ' and s.currentnonstrikerkey '+batsmankeys
-			elsif metric == 'runouts'
+			elsif metric == 'dsmsl'
 				where_batsmankeys =  ' and s.dismissedbatsmankey '+batsmankeys
-			elsif metric != 'runouts' and metric != 'c_nonstrike'
+			elsif metric != 'dsmsl' and metric != 'c_nonstrike'
 				where_batsmankeys =  ' and s.batsmankey '+batsmankeys
 			end 
 		   where_countrykeys = ' and p.countrykey ' + countrykeys
