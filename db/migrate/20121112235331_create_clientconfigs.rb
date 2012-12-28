@@ -33,6 +33,7 @@ class CreateClientconfigs < ActiveRecord::Migration
 	  t.integer :noofshots
 	  t.integer :c_strike
 	  t.integer :c_nonstrike
+	  t.integer :runouts
 
       t.timestamps
     end

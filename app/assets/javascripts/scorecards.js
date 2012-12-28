@@ -527,10 +527,7 @@ $(document).ready(function(){
 		else if (dismissaltypekey>0 && dismissaltypekey==4){
 			wicket = 1
 		}
-		
-		console.log('bowlerkey ' + bowlerkey);
-		console.log('dismissaltype ' + dismissaltypekey);
-		
+				
 		var bd = 0;
 		var newover = 0.0;
 		overs = $('#overs').html();
