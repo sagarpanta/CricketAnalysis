@@ -330,12 +330,17 @@ class ScorecardsController < ApplicationController
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
 				playerlastentry_as_NS = Scorecard.find_by_id(playerlastentry_id_as_nonstriker)
 				
+				#dismissed batsman key (dbk)
 				dbk = playerlastentry.nil? ? -2:playerlastentry[:dismissedbatsmankey]
 				dbk1 = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:dismissedbatsmankey]
 				
 				if dbk == b
 					outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
-					wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+					if ![4,5,6,7].include? outtypekey
+						wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+					else
+						wktakingbowlerkey = -2
+					end
 					fielderkey = playerlastentry.nil? ? -2:playerlastentry[:fielderkey]
 					disabled = outtypekey<=0? false : true				
 				elsif dbk1==b
@@ -650,6 +655,11 @@ class ScorecardsController < ApplicationController
 				if dbk == b
 					outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
 					wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+					if ![4,5,6,7].include? outtypekey
+						wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+					else
+						wktakingbowlerkey = -2
+					end
 					fielderkey = playerlastentry.nil? ? -2:playerlastentry[:fielderkey]
 					disabled = outtypekey<=0? false : true				
 				elsif dbk1==b
