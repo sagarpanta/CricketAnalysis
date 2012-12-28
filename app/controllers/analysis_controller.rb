@@ -1535,7 +1535,10 @@ class AnalysisController < ApplicationController
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'dsmsl'
 			#@chartdata = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).sum(:wicket)
+			sql = 'Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wicket) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wicket) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
+			@client = current_user
+			ClientMailer.Error_Delivery(sql, @client, 'dsmsl').deliver
 		elsif metric == 'bbh'
 			#@bbhbybts = Scorecard.joins(_joins[group]['join']).group(_joins[group]['group']).select('case when count(ballsbeforerun)=0 then 0 else sum(ballsbeforerun)/(count(ballsbeforerun)*1.0) end as bbh,'+_joins[group]['group']+' as grp')
 			#@chartdata = {}
