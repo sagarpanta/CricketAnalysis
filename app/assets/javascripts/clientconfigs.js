@@ -47,6 +47,7 @@ $(document).ready(function(){
 				if (data["noofshots"]==1) {$('[data-metric="noofshots"]').addClass('enable');}
 				if (data["c_strike"]==1) {$('[data-metric="c_strike"]').addClass('enable');}
 				if (data["c_nonstrike"]==1) {$('[data-metric="c_nonstrike"]').addClass('enable');}
+				if (data["runouts"]==1) {$('[data-metric="runouts"]').addClass('enable');}
 				
 				
 			},
