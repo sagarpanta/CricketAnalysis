@@ -364,7 +364,7 @@ class MatchesController < ApplicationController
 			@ti = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('count(distinct inning) as c_inning')
 			@totalinnings = @ti.nil? ? 0:@ti[0].c_inning
 			@currentinning = Scorecard.where('clientkey=? and matchkey=?', current_user.id, @matchid).select('max(inning) as inning')
-			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max("over"*1.0)) as runrate, max("over") as currentover, sum(runs) as score, max(ballnum) as currball')
+			@current = Scorecard.where('clientkey=? and matchkey=? and inning=?', current_user.id, @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max("over"*1.0)) as runrate, max("over") as currentover, sum(runs+wides+noballs+legbyes+byes) as score, max(ballnum) as currball')
 
 			@five = @current[0].currentover.nil? ? 0:@current[0].currentover.to_i-4
 			@curr = @current[0].currentover.nil? ? 0:@current[0].currentover
