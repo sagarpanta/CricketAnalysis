@@ -1519,7 +1519,7 @@ class AnalysisController < ApplicationController
 		elsif metric == 'sr'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'dsmsl'
-			if ['batsman', 'bowler']? group1 or ['batsman', 'bowler']? group2
+			if ['batsman', 'bowler'].include? group1 or ['batsman', 'bowler'].include? group2
 				@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(case when outtypekey in (4,5,6,7) then 0 else wicket end) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 			else
 				@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wicket) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
