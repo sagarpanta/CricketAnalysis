@@ -413,9 +413,11 @@ class AnalysisController < ApplicationController
 			
 			if metric == 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.currentnonstrikerkey '
-			else
+			elsif metric == 'runouts'
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.dismissedbatsmankey '
+			elsif metric != 'runouts' and metric != 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey '
-			end
+			end 
 			nonstriker_part = ' inner join players p2 on p2.id = s.currentbowlerkey and p2.clientkey = s.clientkey '
 			country_part = ' inner join countries cn on p.countrykey = cn.id	and p.clientkey = cn.clientkey '
 			tournament_part = ' inner join tournaments t on s.clientkey = t.clientkey and s.tournamentkey = t.id '
@@ -438,17 +440,21 @@ class AnalysisController < ApplicationController
 			teamtypeagainst_part = ' inner join team_types tt1 on tm1.teamtypekey = tt1.id '
 			coachagainst_part= ' inner join coaches c1 on tm1.coachkey = c1.id	and tm1.clientkey = c1.clientkey '
 			manageragainst_part= ' inner join managers m1 on tm1.managerkey = m1.id and tm1.clientkey = m1.clientkey '
-			dismissal_part = ' inner join dismissals d on d.id = s.outtypekey inner join players p3 on s.dismissedbatsmankey = p3.id and s.clientkey = p3.clientkey ' 
+			#dismissal_part = ' inner join dismissals d on d.id = s.outtypekey inner join players p3 on s.dismissedbatsmankey = p3.id and s.clientkey = p3.clientkey ' 
+			dismissal_part = ' inner join dismissals d on d.id = s.outtypekey ' 
 			pship_part = ' inner join players p2 on s.currentnonstrikerkey = p2.id and s.clientkey = p2.clientkey '
 			shottype_part = ' inner join shottypes st on s.shottype = st.id '
 			line_part = ' inner join lines l on s.line = l.id '
 			length_part = ' inner join lengths ln on s.length = ln.id '
 
-		   if metric == 'c_nonstrike'
+
+			if metric == 'c_nonstrike'
 				where_batsmankeys =  ' and s.currentnonstrikerkey '+batsmankeys
-		   else
+			elsif metric == 'runouts'
+				where_batsmankeys =  ' and s.dismissedbatsmankey '+batsmankeys
+			elsif metric != 'runouts' and metric != 'c_nonstrike'
 				where_batsmankeys =  ' and s.batsmankey '+batsmankeys
-		   end	
+			end 
 		   where_countrykeys = ' and p.countrykey ' + countrykeys
 		   where_battingstylekeys = ' and p.battingstyle '+battingstylekeys
 		   where_playertypekeys = ' and p.playertype '+playertypekeys
@@ -836,7 +842,13 @@ class AnalysisController < ApplicationController
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat1.pitchcondition'
 			
-
+			if metric == 'c_nonstrike'
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.currentnonstrikerkey '
+			elsif metric == 'runouts'
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.dismissedbatsmankey '
+			elsif metric != 'runouts' and metric != 'c_nonstrike'
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey '
+			end 
 			batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey '
 			nonstriker_part = ' inner join players p2 on p2.id = s.currentbowlerkey and p2.clientkey = s.clientkey '
 			country_part = ' inner join countries cn1	on p1.countrykey = cn1.id	and p1.clientkey = cn1.clientkey '
@@ -885,11 +897,14 @@ class AnalysisController < ApplicationController
 		   where_bowlingsidekeys1 = ' and s.side '+bowlingsidekeys1
 		   where_pitchconditionkeys1 = ' and mat1.pitchcondition '+pitchconditionkeys1
 
-		   if metric == 'c_nonstrike'
+
+			if metric == 'c_nonstrike'
 				where_batsmankeys =  ' and s.currentnonstrikerkey '+batsmankeys
-		   else
+			elsif metric == 'runouts'
+				where_batsmankeys =  ' and s.dismissedbatsmankey '+batsmankeys
+			elsif metric != 'runouts' and metric != 'c_nonstrike'
 				where_batsmankeys =  ' and s.batsmankey '+batsmankeys
-		   end
+			end 
 		   where_countrykeys = ' and p.countrykey ' + countrykeys
 		   where_batpositionkeys =' and s.battingposition '+batpositionkeys
 		   where_battingstylekeys = ' and p.battingstyle '+battingstylekeys
@@ -1519,11 +1534,7 @@ class AnalysisController < ApplicationController
 		elsif metric == 'sr'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'dsmsl'
-			if ['batsman', 'bowler'].include? group1 or ['batsman', 'bowler'].include? group2
-				@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(case when outtypekey in (4,5,6,7) then 0 else wicket end) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
-			else
-				@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wicket) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
-			end
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wicket) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric== 'runouts'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(case when outtypekey=4 then wicket else 0 end) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'bbh'
