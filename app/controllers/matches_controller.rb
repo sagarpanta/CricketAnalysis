@@ -381,7 +381,8 @@ class MatchesController < ApplicationController
 			@oversremaining = @ballsremaining/6+@ballsremaining%6/6.0
 			
 			@projectedwithCurrRR = @current[0].runrate.nil? ? 0:(@current[0].runrate.to_f * @oversremaining).to_i + @current[0].score.to_i
-			
+			@client = current_user
+			ClientMailer.Error_Delivery(@ballsremaining.to_s +'  '+@oversremaining.to_s+' '+@projectedwithCurrRR.to_s, @client, 'bbh').deliver
 			@projectedwithsix = (6 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score.to_i)
 			@projectedwitheight = (8 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score.to_i)
 			
