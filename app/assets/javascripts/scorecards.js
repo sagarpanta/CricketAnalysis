@@ -48,7 +48,7 @@ $(document).ready(function(){
 		var rclicked = 0, wclicked = 0, nclicked = 0, bclicked =0, lbclicked=0;
 		var line = 0, length= 0, shottype = 0, directionkey = 0, spell=0;
 		var bowling_side = -2;
-		var freehit = 0, area_clicked = 0, hovered_line = 0, hovered_length = 0;
+		var freehit = 0, area_clicked = 0, hovered_line = 0, hovered_length = 0,  angle=-2;
 		var activity = 0;
 		
 
@@ -102,6 +102,26 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('.angle_img').live("click", function(){
+		angle = parseInt($(this).attr('data-angle'));
+		$('.angle_img').css('opacity', '0.8');
+		$(this).css('opacity', '0.6');
+		console.log('angle clicked ' , angle);
+	});
+	
+	$('.angle_img').live("mouseover", function(){
+		var n = parseInt($(this).attr('data-angle'));
+		if (angle != n){
+			$(this).css('opacity', '0.6');
+		}
+	});
+	
+	$('.angle_img').live("mouseout", function(){
+		var n = parseInt($(this).attr('data-angle'));
+		if (angle != n){
+			$(this).css('opacity', '0.8');
+		}
+	});
 			
 	
 	
@@ -737,7 +757,7 @@ $(document).ready(function(){
 	
 	
 		
-		jsonObj = {clientkey:clientkey,  ballsdelivered:ballsdelivered, ballsfaced:ballsfaced, batsmankey:batsmankey, batsmanid:batsmanid, battingendkey:battingendkey, battingposition:battingposition, bowlerkey:bowlerkey, bowlingendkey:bowlingendkey, bowlingposition:bowlingposition, byes:byes, currentbowlerkey:currentbowlerkey,  currentbowlerid:currentbowlerid, currentnonstrikerkey:currentnonstrikerkey, currentstrikerkey:currentstrikerkey, dismissedbatsmankey:dismissedbatsmankey, eights:eights, fielderkey:fielderkey, fives:fives, formatkey:formatkey, fours:fours, inning:inning, legbyes:legbyes, maiden:maiden, matchkey:matchkey, noballs:noballs, ones:ones, others:others, outbywk:outbywk, outtypekey:dismissaltypekey, runs:runs, sevens:sevens, sixes:sixes, teamidone:teamoneid, teamtwoid:teamtwoid, threes:threes, tournamentkey:tournamentkey, twos:twos, venuekey:venuekey, wicket:wicket, wides:wides, zeros:zeros, line:line, length:length, shottype:shottype, side:bowling_side, direction:directionkey, spell:spell, ballnum:inningballcounter, over:over};
+		jsonObj = {clientkey:clientkey,  ballsdelivered:ballsdelivered, ballsfaced:ballsfaced, batsmankey:batsmankey, batsmanid:batsmanid, battingendkey:battingendkey, battingposition:battingposition, bowlerkey:bowlerkey, bowlingendkey:bowlingendkey, bowlingposition:bowlingposition, byes:byes, currentbowlerkey:currentbowlerkey,  currentbowlerid:currentbowlerid, currentnonstrikerkey:currentnonstrikerkey, currentstrikerkey:currentstrikerkey, dismissedbatsmankey:dismissedbatsmankey, eights:eights, fielderkey:fielderkey, fives:fives, formatkey:formatkey, fours:fours, inning:inning, legbyes:legbyes, maiden:maiden, matchkey:matchkey, noballs:noballs, ones:ones, others:others, outbywk:outbywk, outtypekey:dismissaltypekey, runs:runs, sevens:sevens, sixes:sixes, teamidone:teamoneid, teamtwoid:teamtwoid, threes:threes, tournamentkey:tournamentkey, twos:twos, venuekey:venuekey, wicket:wicket, wides:wides, zeros:zeros, line:line, length:length, shottype:shottype, side:bowling_side, direction:directionkey, spell:spell, ballnum:inningballcounter, over:over, angle:angle};
 		
 		$.ajax({
 			url: '/scorecards',
@@ -805,7 +825,7 @@ $(document).ready(function(){
 		outbywk = -2; formatkey = 0; wides = 0; byes=0; noballs = 0;legbyes=0; ballsdelivered = 0; ballsfaced = 0; maiden = 0;
 		fielderkey = -2; currentbowlerkey = -2; currentstrikerkey = -2; bowlerkey = -2, batsmankey = -2; 
 		currentnonstrikerkey = -2; dismissedbatsmankey = -2; wicket = 0; dismissaltypekey = -2; teamoneid = -2; teamtwoid =-2;
-		venuekey = -2; line = 0; length= 0; shottype = 0, spell=0, directionkey=0; activity=0;
+		venuekey = -2; line = 0; length= 0; shottype = 0; spell=0; directionkey=0; activity=0;angle=-2;
 
 	});
 	

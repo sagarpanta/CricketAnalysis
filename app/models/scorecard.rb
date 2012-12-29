@@ -1,5 +1,5 @@
 class Scorecard < ActiveRecord::Base
-  attr_accessible :clientkey, :ballsdelivered, :ballsfaced, :batsmanid, :batsmankey, :battingendkey, :battingposition, :bowlerkey, :bowlingendkey, :bowlingposition, :byes, :currentbowlerid, :currentbowlerkey, :currentnonstrikerkey, :currentstrikerkey, :dismissedbatsmankey, :eights, :fielderkey, :fives, :formatkey, :fours, :inning, :legbyes, :maiden, :matchkey, :noballs, :ones, :others, :outbywk, :outtypekey, :runs, :sevens, :sixes, :teamidone, :teamtwoid, :threes, :tournamentkey, :twos, :venuekey, :wicket, :wides, :zeros, :ballnum, :over, :line, :length, :shottype, :side, :spell, :direction
+  attr_accessible :clientkey, :ballsdelivered, :ballsfaced, :batsmanid, :batsmankey, :battingendkey, :battingposition, :bowlerkey, :bowlingendkey, :bowlingposition, :byes, :currentbowlerid, :currentbowlerkey, :currentnonstrikerkey, :currentstrikerkey, :dismissedbatsmankey, :eights, :fielderkey, :fives, :formatkey, :fours, :inning, :legbyes, :maiden, :matchkey, :noballs, :ones, :others, :outbywk, :outtypekey, :runs, :sevens, :sixes, :teamidone, :teamtwoid, :threes, :tournamentkey, :twos, :venuekey, :wicket, :wides, :zeros, :ballnum, :over, :line, :length, :shottype, :side, :spell, :direction,:angle
 
   
   def self.getChartData(chartdata, group1, group2, metric)

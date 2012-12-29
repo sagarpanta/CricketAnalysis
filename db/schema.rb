@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121221045513) do
+ActiveRecord::Schema.define(:version => 20121229000723) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -344,6 +344,7 @@ ActiveRecord::Schema.define(:version => 20121221045513) do
     t.integer  "currentbowlerid"
     t.string   "direction"
     t.integer  "spell"
+    t.integer  "angle"
   end
 
   add_index "scorecards", ["id", "clientkey", "ballnum", "formatkey", "tournamentkey", "venuekey", "inning", "matchkey", "outtypekey", "batsmankey", "currentnonstrikerkey", "currentbowlerkey", "battingposition", "bowlingposition", "cr", "dismissedbatsmankey"], :name => "UIX_Scorecards_Evrythng", :unique => true

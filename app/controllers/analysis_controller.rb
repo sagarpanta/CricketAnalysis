@@ -71,6 +71,7 @@ class AnalysisController < ApplicationController
 			@lengths = Length.all
 			@shottypes = Shottype.all
 			@sides = [{'side'=>'RTW', 'val'=>0}, {'side'=>'OTW', 'val'=>1}]
+			@angles = [{'angle'=>'AIGA' , 'val'=>0},{'angle'=>'AIGS' , 'val'=>1},{'angle'=>'AIGI' , 'val'=>2},{'angle'=>'ASGA' , 'val'=>3},{'angle'=>'ASGS' , 'val'=>4},{'angle'=>'ASGI' , 'val'=>5},{'angle'=>'AAGA' , 'val'=>6},{'angle'=>'AAGS' , 'val'=>7},{'angle'=>'AAGI' , 'val'=>8}]
 			@directions = Scorecard.where('clientkey=?', current_user.id).select('distinct direction')
 		else 
 			redirect_to signin_path
@@ -187,6 +188,7 @@ class AnalysisController < ApplicationController
 		bowlingsidekey1 = params[:filters][:bskey1]
 		spellkey1 = params[:filters][:spkey1]
 		pitchconditionkey1 = params[:filters][:pckey1]
+		anglekey1 = params[:filters][:ankey1]
 		
 		metric = params[:filters][:metric]
 		group1 = params[:filters][:group1]
@@ -198,16 +200,16 @@ class AnalysisController < ApplicationController
 
 		combination = countrykey.product(formatkey, tournamentkey, venuekey, teamtypekey, teamkey, matchtypekey, coachkey, managerkey, playertypename, batsmankey, endkey, battingstylename, battingposition, inningkey, shottypekey, shotdirectionkey, pitchconditionkey)
 
-		combination1 = countrykey1.product(formatkey1, tournamentkey1, venuekey1, teamtypekey1, teamkey1, matchtypekey1, coachkey1, managerkey1, playertypename1, bowlerkey1, endkey1, bowlingtypename1, bowlingstylename1, bowlingposition1, inningkey1, linekey1, lengthkey1, bowlingsidekey1, spellkey1, pitchconditionkey1)
+		combination1 = countrykey1.product(formatkey1, tournamentkey1, venuekey1, teamtypekey1, teamkey1, matchtypekey1, coachkey1, managerkey1, playertypename1, bowlerkey1, endkey1, bowlingtypename1, bowlingstylename1, bowlingposition1, inningkey1, linekey1, lengthkey1, bowlingsidekey1, spellkey1, pitchconditionkey1, anglekey1)
 
 		countrykeys = formatkeys = tournamentkeys = venuekeys = teamtypekeys = teamkeys = matchtypekeys = coachkeys = managerkeys = playertypekeys = batsmankeys  = endkeys = battingstylekeys  = batpositionkeys  = inningkeys = shottypekeys = shotdirectionkeys=pitchconditionkeys = '('
-		countrykeys1 = formatkeys1 = tournamentkeys1 = venuekeys1 = teamtypekeys1 = teamkeys1 = matchtypekeys1 = coachkeys1 = managerkeys1 = playertypekeys1  = bowlerkeys1 = endkeys1  = bowlingstylekeys1 = bowlingtypekeys1  = bowlpositionkeys1 = inningkeys1 = linekeys1 = lengthkeys1 = bowlingsidekeys1 = spellkeys1 = pitchconditionkeys1='('
+		countrykeys1 = formatkeys1 = tournamentkeys1 = venuekeys1 = teamtypekeys1 = teamkeys1 = matchtypekeys1 = coachkeys1 = managerkeys1 = playertypekeys1  = bowlerkeys1 = endkeys1  = bowlingstylekeys1 = bowlingtypekeys1  = bowlpositionkeys1 = inningkeys1 = linekeys1 = lengthkeys1 = bowlingsidekeys1 = spellkeys1 = pitchconditionkeys1=anglekeys1 = '('
 		
 		iscountryempty = isformatempty = istournamentempty = isvenueempty = isteamtypeempty = isteamempty = ismatchtypeempty = iscoachempty = isshottypekeyempty = isshotdirectionkeyempty = 0
 		ismanagerempty = isplayertypeempty = isbatsmanempty  = isendempty = isbatstyleempty  = isbatposempty  =isinningempty = ispitchconditionkeyempty = 0
 		
 		iscountryempty1 = isformatempty1 = istournamentempty1 = isvenueempty1 = isteamtypeempty1 = isteamempty1 = ismatchtypeempty1 = iscoachempty1 = islinekeyempty1 = isbowlingsidekeyempty1 = isspellkeyempty1 =0
-		ismanagerempty1 = isplayertypeempty1  = isbowlerempty1 = isendempty1  = isbowlstyleempty1 = isbowltypeempty1  = isbowlposempty1 =isinningempty1 = islengthkeyempty1 = ispitchconditionkeyempty1 = 0
+		ismanagerempty1 = isplayertypeempty1  = isbowlerempty1 = isendempty1  = isbowlstyleempty1 = isbowltypeempty1  = isbowlposempty1 =isinningempty1 = islengthkeyempty1 = ispitchconditionkeyempty1 = isanglekeyempty1 = 0
 		
 	
 		for i in 0...combination.length
@@ -291,6 +293,8 @@ class AnalysisController < ApplicationController
 			isspellkeyempty1 = combination1[i][19] == ''? 1:0
 			pitchconditionkeys1 += "'"+combination1[i][20] +"',"
 			ispitchconditionkeyempty1 = combination1[i][20] == ''? 1:0
+			anglekeys1 += combination1[i][21] +','
+			isanglekeyempty1 = combination1[i][21] == ''? 1:0
 			
 		end
 		countrykeys = iscountryempty == 1?  'not in (-2)':'in '+countrykeys[0...-1] + ')'
@@ -334,7 +338,7 @@ class AnalysisController < ApplicationController
 		bowlingsidekeys1  = isbowlingsidekeyempty1==1? 'not in (-2)':'in '+bowlingsidekeys1[0...-1] + ')'			
 		spellkeys1  = isspellkeyempty1==1? 'not in (-2)':'in '+spellkeys1[0...-1] + ')'	
 		pitchconditionkeys1  = ispitchconditionkeyempty1==1? "not in ('n/a')":'in '+pitchconditionkeys1[0...-1] + ')'			
-
+		anglekeys1  = isanglekeyempty1==1? 'not in (-2)':'in '+anglekeys1[0...-1] + ')'	
 		#player_filter = 'countrykey '+countrykeys +' and formatkey '+formatkeys + ' and playertype '+playertypekeys+ ' and id ' +playerkeys+' and battingstyle '+battingstylekeys+' and bowlingstyle '+bowlingstylekeys+' and bowlingtype '+bowlingtypekeys
 		#@players = Player.where(player_filter)
 
@@ -375,6 +379,7 @@ class AnalysisController < ApplicationController
 			_group1['direction'] = 's.direction'
 			_group1['spell'] = 's.spell'
 			_group1['condition'] = 'mat.pitchcondition'
+			_group1['angle'] = "case s.angle when 0  then 'AIGA' when 1  then 'AIGS' when 2  then 'AIGI' when 3  then 'ASGA' when 4  then 'ASGS' when 5  then 'ASGI' when 6  then 'AAGA' when 7  then 'AAGS' when 8  then 'AAGI' end"
 		
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -409,6 +414,8 @@ class AnalysisController < ApplicationController
 			_group2['direction'] = ',s.direction'
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat.pitchcondition'
+			_group2['angle'] = ",case s.angle when 0  then 'AIGA' when 1  then 'AIGS' when 2  then 'AIGI' when 3  then 'ASGA' when 4  then 'ASGS' when 5  then 'ASGI' when 6  then 'AAGA' when 7  then 'AAGS' when 8  then 'AAGI' end"
+
 			
 			
 			if metric == 'c_nonstrike'
@@ -494,6 +501,7 @@ class AnalysisController < ApplicationController
 		   where_bowlingsidekeys1 = ' and s.side '+bowlingsidekeys1
 		   where_spellkeys1 = ' and s.spell '+spellkeys1
 		   where_pitchconditionkeys1 = ' and mat.pitchcondition '+pitchconditionkeys1
+		   where_anglekeys1 = ' and s.angle '+anglekeys1
 		   
 		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn		
 
@@ -511,9 +519,9 @@ class AnalysisController < ApplicationController
 			#such as when country is selected on the right hand side and one of the groups is in the group, then the filter will apply to the bowling group rather than the batting group
 			bowler_group = ['bowler' , 'bls' , 'bowlingposition' , 'bowlingtype', 'side', 'match']	
 
-			pure_batting_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition']
+			pure_batting_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle']
 			#the followings are the part of batting group, but they are not requirement for adding batting_part...ie if they belong to group2
-			not_required = ['matchtype', 'condition','venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell']
+			not_required = ['matchtype', 'condition','venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell', 'angle']
 			
 			#the match won and match lost queries require players and teams table no matter what
 			#the teams table come with coaches managers and teamtypes table
@@ -763,6 +771,9 @@ class AnalysisController < ApplicationController
 			if pitchconditionkey1[0] != ''
 				where_clause += where_pitchconditionkeys1
 			end			
+			if anglekey1[0] != ''
+				where_clause += where_anglekeys1
+			end
 			
 			build_query += where_clause
 			build_query_match += where_clause
@@ -807,7 +818,8 @@ class AnalysisController < ApplicationController
 			_group1['direction'] = 's.direction'
 			_group1['spell'] = 's.spell'
 			_group1['condition'] = 'mat1.pitchcondition'
-		
+			_group1['angle'] = "case s.angle when 0  then 'AIGA' when 1  then 'AIGS' when 2  then 'AIGI' when 3  then 'ASGA' when 4  then 'ASGS' when 5  then 'ASGI' when 6  then 'AAGA' when 7  then 'AAGS' when 8  then 'AAGI' end"
+
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
 			_group2['team'] = ',tm1.teamname'
@@ -841,7 +853,8 @@ class AnalysisController < ApplicationController
 			_group2['direction'] = ',s.direction'
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat1.pitchcondition'
-			
+			_group2['angle'] = ",case s.angle when 0  then 'AIGA' when 1  then 'AIGS' when 2  then 'AIGI' when 3  then 'ASGA' when 4  then 'ASGS' when 5  then 'ASGI' when 6  then 'AAGA' when 7  then 'AAGS' when 8  then 'AAGI' end"
+
 			if metric == 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.currentnonstrikerkey '
 			elsif metric == 'dsmsl'
@@ -896,7 +909,7 @@ class AnalysisController < ApplicationController
 		   where_spellkeys1 = ' and s.spell '+spellkeys1
 		   where_bowlingsidekeys1 = ' and s.side '+bowlingsidekeys1
 		   where_pitchconditionkeys1 = ' and mat1.pitchcondition '+pitchconditionkeys1
-
+		   where_anglekeys1 = ' and s.angle '+anglekeys1
 
 			if metric == 'c_nonstrike'
 				where_batsmankeys =  ' and s.currentnonstrikerkey '+batsmankeys
@@ -939,7 +952,6 @@ class AnalysisController < ApplicationController
 			#the followings are the part of bowling group, but they are not required for adding bowling_part...ie if they belong to group2
 			not_required = ['matchtype',  'condition', 'venue', 'tournament', 'format', 'bowlingposition', 'year', 'shottype' , 'line', 'length' ,'side','direction', 'spell']
 
-
 			build_query_match = bowler_part + team_part
 			if ['coach', 'manager', 'teamtype'].include? group1 or ['coach', 'manager', 'teamtype'].include? group2 or teamtypekey1[0] != '' or coachkey1[0] != '' or managerkey1[0] != ''
 				build_query_match += teamtype_part + coach_part + manager_part
@@ -952,7 +964,6 @@ class AnalysisController < ApplicationController
 					if(bowler_group.include? group1 or bowler_group.include? group2 or !group1[g].nil? or !group2[g].nil? or bowlerkey1[0] != '' or bowlingstylename1[0] != '' or bowlingtypename1[0] != '' or  countrykey1[0] != '' or playertypename[0] != '')
 						build_query += bowler_part
 						checked = 1
-
 					end
 				end
 			end
@@ -1025,8 +1036,6 @@ class AnalysisController < ApplicationController
 				build_query += countryagainst_part
 				build_query_match+= countryagainst_part
 			end
-			
-		
 						
 			#build_query += where_always
 			#matchkeys = Scorecard.find_by_sql('select distinct '+matchcount.to_s+' matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc')
@@ -1111,8 +1120,6 @@ class AnalysisController < ApplicationController
 				where_clause += where_pitchconditionkeys
 			end
 			
-			
-			
 			if bowlerkey1[0] != ''
 				where_clause += where_bowlerkeys1
 			end
@@ -1170,6 +1177,9 @@ class AnalysisController < ApplicationController
 			end
 			if pitchconditionkey1[0] != ''
 				where_clause += where_pitchconditionkeys1
+			end
+			if anglekey1[0] != ''
+				where_clause += where_anglekeys1
 			end
 			
 			build_query += where_clause

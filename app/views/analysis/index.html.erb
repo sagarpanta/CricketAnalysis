@@ -167,6 +167,13 @@
 		<td class="identifier1">Bowl Spell:</td>
 		<td class="slct1"><%= select 'spell' , 'spellkey1', [1,2,3,4,5,6,7,8,9,10] ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Spell', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 	</tr>
+	<tr>
+		<td class="identifier"></td>
+		<td class="slct"></td>
+		<td class="middle"></td>
+		<td class="identifier1">Bowl Angle:</td>
+		<td class="slct1"><%= select 'angle' , 'anglekey1', @angles.collect {|s| [s['angle'], s['val']]} ,{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowling Angle/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+	</tr>
 
 </table>
 
@@ -224,7 +231,7 @@
 		<td></td>
 	</tr>
 	
-	<tr><td class="groups" id="groupbybattingstyle" data-group="bts">Bat Style</td><td rowspan="15" colspan="17" id="container" style="width: 400px; max-height: 200px; margin: 0 auto" ></td>
+	<tr><td class="groups" id="groupbybattingstyle" data-group="bts">Bat Style</td><td rowspan="16" colspan="17" id="container" style="width: 400px; max-height: 200px; margin: 0 auto" ></td>
 		<td class="groups" id="groupbybowlingtype" data-group="bls">Bowl Style</td></tr>
 	<tr><td class="groups" id="groupbyteam" data-group="team">Team</td>
 		<td class="groups" id="groupbyteamagainst" data-group="teamagainst">Team Against</td></tr>
@@ -255,7 +262,7 @@
 	<tr><td class="groups" id="groupbydirection" data-group="direction">Direction</td>
 		<td class="groups" id="groupbyspell" data-group="spell">Spell</td></tr>
 	<tr><td class="groups" id="groupbycondition" data-group="condition">Condition</td>
-		<td></td></tr>
+		<td class="groups" id="groupbyangle" data-group="angle">Angle</td></tr>
 </table>
 <div id="myModal" class="reveal-modal"></div>
 
