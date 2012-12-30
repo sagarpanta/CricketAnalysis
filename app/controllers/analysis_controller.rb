@@ -503,8 +503,12 @@ class AnalysisController < ApplicationController
 		   where_pitchconditionkeys1 = ' and mat.pitchcondition '+pitchconditionkeys1
 		   where_anglekeys1 = ' and s.angle '+anglekeys1
 		   
-		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn + ' and ('+_group1[group1] + ') is not null '		
-
+			if group1 == 'match'
+				where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn
+			else 
+				where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn+ ' and ('+_group1[group1] + ') is not null '	
+			end
+			
 			build_query = ''
 			build_query_match = ''
 			where_clause = ''
@@ -938,8 +942,11 @@ class AnalysisController < ApplicationController
 		   where_shotdirectionkeys = ' and s.direction '+shotdirectionkeys
 		   where_pitchconditionkeys = ' and mat1.pitchcondition '+pitchconditionkeys
 		   
-		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn + ' and ('+_group1[group1] + ') is not null '				
-
+			if group1 == 'match'
+				 where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn				
+			else 
+				where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn + ' and ('+_group1[group1] + ') is not null '				
+			end
 			build_query = ''
 			build_query_match = ''
 			where_clause = ''
