@@ -371,7 +371,7 @@ class AnalysisController < ApplicationController
 			_group1['cr'] = 'cr'
 			_group1['pship'] = "case when currentstrikerkey<currentnonstrikerkey then p.fullname||'-'||p2.fullname else p2.fullname||'-'||p.fullname end"
 			#_group1['match'] = 's.matchkey'
-			_group1['match'] = "'vs '||tm1.teamname, s.matchkey"
+			_group1['match'] = "'vs '||tm1.teamname||s.matchkey"
 			_group1['shottype'] = 'st.shottype'
 			_group1['line'] = 'l.line'
 			_group1['length'] = 'ln.length'
@@ -406,7 +406,7 @@ class AnalysisController < ApplicationController
 			_group2['cr'] = ',cr'
 			_group2['pship'] = ",case when currentstrikerkey<currentnonstrikerkey then p.fullname||'-'||p2.fullname else p2.fullname||'-'||p.fullname end"
 			#_group2['match'] = ',s.matchkey'
-			_group2['match'] = ",'vs '||tm1.teamname, s.matchkey"
+			_group2['match'] = ",'vs '||tm1.teamname||s.matchkey"
 			_group2['shottype'] = ',st.shottype'
 			_group2['line'] = ',l.line'
 			_group2['length'] = ',ln.length'
@@ -814,7 +814,7 @@ class AnalysisController < ApplicationController
 			_group1['cr'] = 'cr'
 			_group1['pship'] = "case when currentstrikerkey<currentnonstrikerkey then p.fullname||'-'||p2.fullname else p2.fullname||'-'||p.fullname end"
 			#_group1['match'] = 's.matchkey'
-			_group1['match'] = "'vs '||tm.teamname, s.matchkey"
+			_group1['match'] = "'vs '||tm1.teamname||s.matchkey"
 			_group1['shottype'] = 'st.shottype'
 			_group1['line'] = 'l.line'
 			_group1['length'] = 'ln.length'
@@ -849,7 +849,7 @@ class AnalysisController < ApplicationController
 			_group2['cr'] = ',cr'
 			_group2['pship'] = ",case when currentstrikerkey<currentnonstrikerkey then p.fullname||'-'||p2.fullname else p2.fullname||'-'||p.fullname end"
 			#_group2['match'] = ',s.matchkey'
-			_group2['match'] = ",'vs '||tm.teamname, s.matchkey"
+			_group2['match'] = ",'vs '||tm1.teamname||s.matchkey"
 			_group2['shottype'] = ',st.shottype'
 			_group2['line'] = ',l.line'
 			_group2['length'] = ',ln.length'
