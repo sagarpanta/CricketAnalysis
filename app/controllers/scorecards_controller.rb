@@ -394,7 +394,7 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs+byes+legbyes)/(sum(ballsdelivered)/6.0) end as economy') 
+				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
 				wickets_stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=? and outtypekey not in (4,5,6,7)', params[:id],@inning,b).select('sum(wicket) as wickets') 
 				
 				hilite = ''
@@ -707,7 +707,7 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs+byes+legbyes)/(sum(ballsdelivered)/6.0) end as economy') 
+				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
 				wickets_stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=? and outtypekey not in (4,5,6,7)', params[:id],@inning,b).select('sum(wicket) as wickets') 
 				
 				hilite = ''
@@ -957,7 +957,7 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs)/(sum(ballsdelivered)/6.0) end as economy') 
+				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
 				wickets_stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=? and outtypekey not in (4,5,6,7)', params[:id],@inning,b).select('sum(wicket) as wickets') 
 				
 				@fieldingside << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :playertype=> player.playertype,
@@ -1133,7 +1133,7 @@ class ScorecardsController < ApplicationController
 				player = Player.find_by_id(b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs+legbyes+byes)/(sum(ballsdelivered)/6.0) end as economy') 
+				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
 				wickets_stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=? and outtypekey not in (4,5,6,7)', params[:id],@inning,b).select('sum(wicket) as wickets') 
 				
 				@fieldingside1 << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :playertype=> player.playertype,

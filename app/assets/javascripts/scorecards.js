@@ -701,11 +701,13 @@ $(document).ready(function(){
 			}		
 		}
 
-		var totalruns = runs+wides+noballs+byes+legbyes+parseInt(currentbowlerrun);
+		var totalruns = runs+wides+noballs+parseInt(currentbowlerrun);
 		var totalmaidens = maiden + parseInt(currentbowlermaidens);
-		var totalwickets = wicket+parseInt(currentbowlerwickets);
 		if (dismissaltypekey !=4 && dismissaltypekey !=5 && dismissaltypekey !=6 && dismissaltypekey !=7) {
 			totalwickets = wicket + parseInt(currentbowlerwickets);
+		}
+		else {
+			totalwickets = parseInt(currentbowlerwickets);
 		}
 		var totalecon = 0;
 		if (totaldeliveries != 0) {totalecon = totalruns/(totaldeliveries/6.0); }
