@@ -379,7 +379,7 @@ class AnalysisController < ApplicationController
 			_group1['direction'] = 's.direction'
 			_group1['spell'] = 's.spell'
 			_group1['condition'] = 'mat.pitchcondition'
-			_group1['angle'] = "case s.angle when 0  then 'AIGA' when 1  then 'AIGS' when 2  then 'AIGI' when 3  then 'ASGA' when 4  then 'ASGS' when 5  then 'ASGI' when 6  then 'AAGA' when 7  then 'AAGS' when 8  then 'AAGI' end"
+			_group1['angle'] = "case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2  then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' end"
 		
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -414,7 +414,7 @@ class AnalysisController < ApplicationController
 			_group2['direction'] = ',s.direction'
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat.pitchcondition'
-			_group2['angle'] = ",case s.angle when 0  then 'AIGA' when 1  then 'AIGS' when 2  then 'AIGI' when 3  then 'ASGA' when 4  then 'ASGS' when 5  then 'ASGI' when 6  then 'AAGA' when 7  then 'AAGS' when 8  then 'AAGI' end"
+			_group2['angle'] = ",case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2  then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' end"
 
 			
 			
@@ -818,7 +818,7 @@ class AnalysisController < ApplicationController
 			_group1['direction'] = 's.direction'
 			_group1['spell'] = 's.spell'
 			_group1['condition'] = 'mat1.pitchcondition'
-			_group1['angle'] = "case s.angle when 0  then 'AIGA' when 1  then 'AIGS' when 2  then 'AIGI' when 3  then 'ASGA' when 4  then 'ASGS' when 5  then 'ASGI' when 6  then 'AAGA' when 7  then 'AAGS' when 8  then 'AAGI' end"
+			_group1['angle'] = "case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2  then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' end"
 
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -853,7 +853,7 @@ class AnalysisController < ApplicationController
 			_group2['direction'] = ',s.direction'
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat1.pitchcondition'
-			_group2['angle'] = ",case s.angle when 0  then 'AIGA' when 1  then 'AIGS' when 2  then 'AIGI' when 3  then 'ASGA' when 4  then 'ASGS' when 5  then 'ASGI' when 6  then 'AAGA' when 7  then 'AAGS' when 8  then 'AAGI' end"
+			_group2['angle'] = ",case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2  then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' end"
 
 			if metric == 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.currentnonstrikerkey '
@@ -1538,7 +1538,10 @@ class AnalysisController < ApplicationController
 	
 		
 		if metric == 'runs'
+			sql = 'Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1]
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1])
+			@client = current_user
+			ClientMailer.Error_Delivery(sql, @client, 'bbh').deliver
 		elsif metric == 'avg'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:''))
 		elsif metric == 'sr'
