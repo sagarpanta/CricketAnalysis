@@ -643,16 +643,6 @@ $(document).ready(function(){
 		var totalfours = fours + parseInt(currentbatsmanfours);
 		var totalfives = fives + parseInt(currentbatsmanfives);
 		var totalsixes = sixes + parseInt(currentbatsmansixes);
-		
-
-		var totalzeros = zeros+parseInt(currentbatsmanzeros);
-		var totalones = ones+parseInt(currentbatsmanones);
-		var totaltwos = twos+parseInt(currentbatsmantwos);
-		var totalthrees = threes+parseInt(currentbatsmanthrees);
-		var totalfours = fours + parseInt(currentbatsmanfours);
-		var totalfives = fives + parseInt(currentbatsmanfives);
-		var totalsixes = sixes + parseInt(currentbatsmansixes);
-
 	
 		$('.Batsman.hilite').parent().children('.batsman_runs').html(totalruns);
 		$('.Batsman.hilite').parent().children('.batsman_balls_faced').html(totalballsfaced);
@@ -710,11 +700,13 @@ $(document).ready(function(){
 				totalovers = parseInt(totalovers);
 			}		
 		}
-		console.log('total overs ' + totalovers);
+
 		var totalruns = runs+wides+noballs+byes+legbyes+parseInt(currentbowlerrun);
 		var totalmaidens = maiden + parseInt(currentbowlermaidens);
-		var totalwickets = 0;
-		if (currentbowlerkey == bowlerkey) { totalwickets = wicket + parseInt(currentbowlerwickets);}
+		var totalwickets = wicket+parseInt(currentbowlerwickets);
+		if (dismissaltypekey !=4 && dismissaltypekey !=5 && dismissaltypekey !=6 && dismissaltypekey !=7) {
+			totalwickets = wicket + parseInt(currentbowlerwickets);
+		}
 		var totalecon = 0;
 		if (totaldeliveries != 0) {totalecon = totalruns/(totaldeliveries/6.0); }
 		
@@ -724,7 +716,7 @@ $(document).ready(function(){
 		var totalthrees = threes+parseInt(currentbowlerthrees);
 		var totalfours = fours + parseInt(currentbowlerfours);
 		var totalfives = fives + parseInt(currentbowlerfives);
-		
+		var totalsixes = sixes + parseInt(currentbowlersixes);
 		var totalwides = wides + parseInt(currentbowlerwides);
 		var totalnoballs = noballs + parseInt(currentbowlernoballs);
 		var totalothers = byes+legbyes + parseInt(currentbowlerothers);
@@ -745,7 +737,6 @@ $(document).ready(function(){
 		$('.Bowler.hilite').parent().children('.bowler_wides').html(totalwides);
 		$('.Bowler.hilite').parent().children('.bowler_noballs').html(totalnoballs);
 		$('.Bowler.hilite').parent().children('.bowler_others').html(totalothers);
-		
 		
 		var val = $('.Bowler.hilite').parent().children('.bowling_side').children('ul').children('.side').html();
 		if (val == 'RTW'){
