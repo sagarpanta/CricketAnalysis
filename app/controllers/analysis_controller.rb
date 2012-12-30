@@ -71,7 +71,7 @@ class AnalysisController < ApplicationController
 			@lengths = Length.all
 			@shottypes = Shottype.all
 			@sides = [{'side'=>'RTW', 'val'=>0}, {'side'=>'OTW', 'val'=>1}]
-			@angles = [{'angle'=>'AIGA' , 'val'=>0},{'angle'=>'AIGS' , 'val'=>1},{'angle'=>'AIGI' , 'val'=>2},{'angle'=>'ASGA' , 'val'=>3},{'angle'=>'ASGS' , 'val'=>4},{'angle'=>'ASGI' , 'val'=>5},{'angle'=>'AAGA' , 'val'=>6},{'angle'=>'AAGS' , 'val'=>7},{'angle'=>'AAGI' , 'val'=>8}]
+			@angles = [{'angle'=>'Rt|Lf' , 'val'=>0},{'angle'=>'Rt|St' , 'val'=>1},{'angle'=>'Rt|Rt' , 'val'=>2},{'angle'=>'St|Lf' , 'val'=>3},{'angle'=>'St|St' , 'val'=>4},{'angle'=>'St|Rt' , 'val'=>5},{'angle'=>'Lf|Lf' , 'val'=>6},{'angle'=>'Lf|St' , 'val'=>7},{'angle'=>'Lf|Rt' , 'val'=>8}]
 			@directions = Scorecard.where('clientkey=?', current_user.id).select('distinct direction')
 		else 
 			redirect_to signin_path
@@ -503,7 +503,7 @@ class AnalysisController < ApplicationController
 		   where_pitchconditionkeys1 = ' and mat.pitchcondition '+pitchconditionkeys1
 		   where_anglekeys1 = ' and s.angle '+anglekeys1
 		   
-		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn + ' and '+_group1[group1] + ' is not null '		
+		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn + ' and ('+_group1[group1] + ') is not null '		
 
 			build_query = ''
 			build_query_match = ''
@@ -938,7 +938,7 @@ class AnalysisController < ApplicationController
 		   where_shotdirectionkeys = ' and s.direction '+shotdirectionkeys
 		   where_pitchconditionkeys = ' and mat1.pitchcondition '+pitchconditionkeys
 		   
-		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn + ' and '+_group1[group1] + ' is not null '				
+		   where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn + ' and ('+_group1[group1] + ') is not null '				
 
 			build_query = ''
 			build_query_match = ''
