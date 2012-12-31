@@ -350,7 +350,7 @@ class ScorecardsController < ApplicationController
 					outtypekey = -2
 				end
 
-				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, 
+				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :bts=>player.battingstyle,
 							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :outtypekey=> outtypekey , 
@@ -665,7 +665,7 @@ class ScorecardsController < ApplicationController
 					outtypekey = -2
 				end
 				
-				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, 
+				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :bts=>player.battingstyle,
 							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
 							 :outtypekey=> playerlastentry.nil? ? -2:playerlastentry[:outtypekey], 

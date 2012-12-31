@@ -1,12 +1,38 @@
 $(document).ready(function(){
 	var dblclicked = 0;
+	var laststriker_bts = $('.Batsman.hilite').attr('data-bts');
+	
+	if (laststriker_bts == 'Left Handed'){
+		$('#myModal table tr').each(function(index, el){
+			$(this).children('td').reverseOrder();
+		});
+		$('#stumps img').css('margin-left', '-46px');	
+	}
 	
 	$('.Batsman').live('click', function(){
 		if (dblclicked%2 == 0){
 			$('.Batsman').removeClass('hilite');
 			$(this).removeClass('hilite-nonstriker');
 			$(this).addClass('hilite');
-			//console.log(this);
+			
+			//switching line/length  map
+			
+			bts = $('.Batsman.hilite').attr('data-bts');
+			if (bts=='Right Handed' && laststriker_bts=='Left Handed'){
+				$('#myModal table tr').each(function(index, el){
+					$(this).children('td').reverseOrder();
+				});	
+				$('#stumps img').css('margin-left', '-26px');
+			}
+			else if (bts=='Left Handed' && (laststriker_bts=='Right Handed' || laststriker_bts==undefined)){
+				$('#myModal table tr').each(function(index, el){
+					$(this).children('td').reverseOrder();
+				});
+				$('#stumps img').css('margin-left', '-46px');	
+			}
+			laststriker_bts = bts;
+			
+			
 		}
 		else {
 			$('.Batsman').removeClass('hilite-nonstriker');
@@ -796,6 +822,23 @@ $(document).ready(function(){
 
 			$(striker).removeClass('hilite').addClass('hilite-nonstriker');
 			$(nonstriker).removeClass('hilite-nonstriker').addClass('hilite');
+			
+			//switching line/length  map
+			
+			bts = $('.Batsman.hilite').attr('data-bts');
+			if (bts=='Right Handed' && laststriker_bts=='Left Handed'){
+				$('#myModal table tr').each(function(index, el){
+					$(this).children('td').reverseOrder();
+				});	
+				$('#stumps img').css('margin-left', '-26px');
+			}
+			else if (bts=='Left Handed' && (laststriker_bts=='Right Handed' || laststriker_bts==undefined)){
+				$('#myModal table tr').each(function(index, el){
+					$(this).children('td').reverseOrder();
+				});
+				$('#stumps img').css('margin-left', '-46px');	
+			}
+			laststriker_bts = bts;
 
 		 }
 		 

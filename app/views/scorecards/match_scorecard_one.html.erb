@@ -88,7 +88,7 @@
 					
 					<% @batsmen.each do |b| %>
 						<tr class="highlight">
-							<td class="Batsman <%= b[:hilite] %>" ><%= b[:name] %></td>
+							<td class="Batsman <%= b[:hilite] %>" data-bts="<%= b[:bts] %>"><%= b[:name] %></td>
 							<td class="batting_position"><%= select 'batsman' , 'battingposition', @battingposition.collect {|p| p} , {:selected=> b[:counter]}, { :disabled=>b[:disabled]} %></td>
 							<td class="Batsmanid" style="display:none"><%= b[:playerid] %></td>
 							<td class="Batsmankey" style="display:none"><%= b[:playerkey] %></td>
@@ -174,10 +174,10 @@
 				<td class="header">Outside Off</td><td class="header">Stumps</td><td class="header">Pads</td><td class="header">Outside Leg</td>
 			</tr>
 			<tr>
-				<td class='area area_t area_of' data-length="6" data-line="1">FT</td><td class='area area_t area_st' data-length="6" data-line="2">FT</td><td class='area area_t area_pd' data-length="6" data-line="3">FT</td><td class='area area_t area_ol' data-length="6" data-line="4">FT</td>
+				<td class='area area_t area_of' data-length="6" data-line="1">FT</td><td class='area area_t area_st' data-length="6" data-line="2" >FT</td><td class='area area_t area_pd' data-length="6" data-line="3" >FT</td><td class='area area_t area_ol' data-length="6" data-line="4" >FT</td>
 			</tr>
 			<tr>
-				<td class='area area_y area_of' data-length="5" data-line="1">Y</td><td class='area area_y area_st' data-length="5" data-line="2">Y</td><td class='area area_y area_pd' data-length="5" data-line="3">Y</td><td class='area area_y area_ol' data-length="5" data-line="4">Y</td>
+				<td class='area area_y area_of' data-length="5" data-line="1">Y</td><td class='area area_y area_st' data-length="5" data-line="2">Y</td><td class='area area_y area_pd' data-length="5" data-line="3" >Y</td><td class='area area_y area_ol' data-length="5" data-line="4">Y</td>
 			</tr>
 			<tr>
 				<td class='area area_f area_of' data-length="4" data-line="1">F</td><td class='area area_f area_st' data-length="4" data-line="2">F</td><td class='area area_f area_pd' data-length="4" data-line="3">F</td><td class='area area_f area_ol' data-length="4" data-line="4">F</td>
