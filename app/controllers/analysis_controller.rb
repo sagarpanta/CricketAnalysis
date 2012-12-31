@@ -1368,7 +1368,7 @@ class AnalysisController < ApplicationController
 					group by a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+'
 				)y 
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
-				order by X.grp1'+ (group2!=''? ',X.grp2'+:'')
+				order by X.grp1'+ (group2!=''? ',X.grp2':'')
 				
 			dbx = '
 				WITH 
