@@ -790,13 +790,13 @@ $(document).ready(function(){
 		 	ballsbeforeboundary = 0;
 		 }
 		 
-		 if (((inningballcounter==0 || inningballcounter%6==0) && ((noballs>0 && (runs%2==1 || byes%2==1 || legbyes%2==1)) || (wides%2==0 && wides>0 && wides!=4))) || (inningballcounter%6 == 0 && inningballcounter!= 0 && runs%2 ==0) || (inningballcounter%6 != 0  && (runs%2==1 || byes%2 == 1 || legbyes%2 == 1 || (wides%2==0 && wides>0 && wides!=4)))) {
+		 if (((inningballcounter==0 || inningballcounter%6==0) && ((noballs>0 && (runs%2==1 || byes%2==1 || legbyes%2==1)) || (wides%2==0 && wides>0 && wides!=4))) || (inningballcounter%6 == 0 && inningballcounter!= 0 && (runs+byes+legbyes)%2 ==0) || (inningballcounter%6 != 0  && (runs%2==1 || byes%2 == 1 || legbyes%2 == 1 || (wides%2==0 && wides>0 && wides!=4)))) {
 			var striker = $('.Batsman.hilite');
 			var nonstriker = $('.Batsman.hilite-nonstriker');
 
 			$(striker).removeClass('hilite').addClass('hilite-nonstriker');
 			$(nonstriker).removeClass('hilite-nonstriker').addClass('hilite');
-	 
+
 		 }
 		 
 		 if (inningballcounter%6 == 0 && inningballcounter!=0){
