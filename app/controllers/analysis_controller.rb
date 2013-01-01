@@ -546,10 +546,7 @@ class AnalysisController < ApplicationController
 			if bowl_group.include? group2 and !bowl_group.include? group1
 				varA += 'currentbowlerkey,'
 			end
-			
-			if varA==','
-				varA=''
-			end
+
 			
 			
 			
