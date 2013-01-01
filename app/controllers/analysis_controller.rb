@@ -527,6 +527,14 @@ class AnalysisController < ApplicationController
 			#the followings are the part of batting group, but they are not requirement for adding batting_part...ie if they belong to group2
 			not_required = ['matchtype', 'condition','venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell', 'angle']
 			
+			
+			if pure_batting_group.include? group1
+				varA = ', currentstrikerkey, currentbowlerkey,'
+			else
+				varA = ', currentbowlerkey,currentstrikerkey,'
+			end
+			
+			
 			#the match won and match lost queries require players and teams table no matter what
 			#the teams table come with coaches managers and teamtypes table
 			#Therefore this is how the following condition work
@@ -958,7 +966,14 @@ class AnalysisController < ApplicationController
 			pure_bowling_group = ['bowler' , 'bls'  , 'bowlingtype', 'team', 'venue', 'dismissal','matchtype', 'match','teamtype' , 'tournament', 'coach', 'bowlingposition', 'manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length','side', 'direction', 'spell', 'condition']
 			#the followings are the part of bowling group, but they are not required for adding bowling_part...ie if they belong to group2
 			not_required = ['matchtype',  'condition', 'venue', 'tournament', 'format', 'bowlingposition', 'year', 'shottype' , 'line', 'length' ,'side','direction', 'spell']
-
+			
+			#this little if section is for bbr bbh.
+			if pure_bowling_group.include? group1
+				varA = ', currentbowlerkey,currentstrikerkey,'
+			else
+				varA= ', currentstrikerkey, currentbowlerkey,'
+			end
+			
 			build_query_match = bowler_part + team_part
 			if ['coach', 'manager', 'teamtype'].include? group1 or ['coach', 'manager', 'teamtype'].include? group2 or teamtypekey1[0] != '' or coachkey1[0] != '' or managerkey1[0] != ''
 				build_query_match += teamtype_part + coach_part + manager_part
@@ -1206,7 +1221,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey, inning,currentstrikerkey, currentbowlerkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+					select rank() over (order by  s.matchkey, inning'+varA+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
 						   ballnum, currentstrikerkey, currentbowlerkey,'+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 					where runs = 0
@@ -1232,7 +1247,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey,inning,currentstrikerkey, currentbowlerkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+					select rank() over (order by  s.matchkey,inning'+varA+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
 						   ballnum, currentstrikerkey, currentbowlerkey,'+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 					where runs > 0
