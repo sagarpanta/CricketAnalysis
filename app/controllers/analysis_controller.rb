@@ -1471,26 +1471,25 @@ class AnalysisController < ApplicationController
 				WITH 
 				CTE AS 
 				(
-					select _rank, ballrank, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
+					select ballrank, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
-						   ballrank, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+sc+' s '+ _join + ' and wides=0
+					select matchkey, ballrank, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+sc+' s '+ _join + ' and wides=0
 					)A order by grp1, ballrank
 				),
 				CTE1 AS
 				(
-					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.ballrank) _order
+					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
-					  ON A.ballrank = B.ballrank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
+					  ON A.ballrank = B.ballrank+1 and a.matchkey= b.matchkey and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
 				)
 				,
 				CTE2 AS
 				(
-					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.ballrank) _order
+					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
-					  ON A.ballrank+1 = B.ballrank and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
+					  ON A.ballrank+1 = B.ballrank and a.matchkey=b.matchkey and a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
 				)
 				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*cnt) as val
@@ -1508,26 +1507,25 @@ class AnalysisController < ApplicationController
 				WITH 
 				CTE AS 
 				(
-					select _rank, ballrank, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
+					select ballrank, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select rank() over (order by  s.matchkey,inning,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
-						   ballrank,'+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+sc+' s '+ _join + ' and wides=0
-					)A order by grp1, ballrank
+					select matchkey, ballrank,'+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+sc+' s '+ _join + ' and wides=0
+					)A order by matchkey,grp1, ballrank
 				),
 				CTE1 AS
 				(
-					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.ballrank) _order
+					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
-					  ON A.ballrank = B.ballrank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
+					  ON A.ballrank = B.ballrank+1 and and a.matchkey=b.matchkey and a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
 				)
 				,
 				CTE2 AS
 				(
-					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.ballrank) _order
+					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
-					  ON A.ballrank+1 = B.ballrank and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
+					  ON A.ballrank+1 = B.ballrank and  a.matchkey= b.matchkey and a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
 				)
 			
