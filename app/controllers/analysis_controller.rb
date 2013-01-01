@@ -528,11 +528,29 @@ class AnalysisController < ApplicationController
 			not_required = ['matchtype', 'condition','venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell', 'angle']
 			
 			
-			if pure_batting_group.include? group1
-				varA = ', currentstrikerkey, currentbowlerkey,'
-			else
-				varA = ', currentbowlerkey,currentstrikerkey,'
+			bat_group=['batsman', 'bts', 'team','teamtype' , 'coach','manager','country' ]
+			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match']
+			varA=','
+			if bat_group.include? group1
+				varA = 'currentstrikerkey,'
 			end
+			
+			if bowl_group.include? group1
+				varA += 'currentbowlerkey,'
+			end
+			
+			if bat_group.include? group2 and !bat_group.include? group1
+				varA = 'currentstrikerkey,'
+			end
+			
+			if bowl_group.include? group2 and !bowl_group.include? group1
+				varA += 'currentbowlerkey,'
+			end
+			
+			if varA==','
+				varA=''
+			end
+			
 			
 			
 			#the match won and match lost queries require players and teams table no matter what
