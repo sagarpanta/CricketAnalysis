@@ -529,9 +529,10 @@ class AnalysisController < ApplicationController
 			
 			###########################################
 			#It is related with build bbh, bbr
-			bat_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
+			bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
 			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'bowlingposition','teamagainst' , 'countryagainst', 'match']
-			
+			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition', 'direction', 'spell', 'year', 'inning', 'format','cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
+
 			varA=','
 			if bat_group.include? group1
 				varA += 'batsmankey,'
@@ -547,6 +548,9 @@ class AnalysisController < ApplicationController
 			
 			if bowl_group.include? group2 and !bowl_group.include? group1
 				varA += 'currentbowlerkey,'
+			end
+			if !bat_group.include? group1 and !bat_group.include? group2 and rest_group.include? group1
+				varA += 'batsmankey,'
 			end
 			################################################
 			
@@ -1236,7 +1240,7 @@ class AnalysisController < ApplicationController
 			if lastXballs == -2
 				scorecards = ' scorecards '
 			else
-				scorecards = ' (select (rank() over (partition by matchkey '+varA+' order by matchkey '+varA+' ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
+				scorecards = ' (select (rank() over (partition by matchkey '+varA+' order by matchkey '+varA[0...-1]+' ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
 			end
 			
 			
