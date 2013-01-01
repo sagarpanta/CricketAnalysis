@@ -529,19 +529,26 @@ class AnalysisController < ApplicationController
 			
 			###########################################
 			#It is related with build bbh, bbr
-			#bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
-			bat_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'bowlingposition','direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
+			bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
+			#bat_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'bowlingposition','direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
 			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match']
 			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition', 'direction', 'spell', 'year', 'inning', 'format','cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
-
+			rest_group_json = {'venue'=>'venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'matchkey', 'tournament'=>'tournamentkey', 'battingposition'=>'battingposition', 'direction'=>'direction','spell'=>'spell', 'year'=>'created_at', 'inning'=>'inning', 'format'=>'formatkey', 'format'=>'formatkey', 'cr'=>'cr', 'pship'=>'pship', 'shottype'=>'shottype', 'line'=>'line', 'length'=>'length', 'condition'=>'condition', 'angle'=>'angle', 'side'=>'side'}
+			
 			varA=','
-			if bat_group.include? group1
-				varA += 'batsmankey,currentbowlerkey,'
+			if bat_group.include? group1 or bat_group.include? group2
+				varA += 'batsmankey,'
+			end
+			if bowl_group.include? group1 or bowl_group.include? group2
+				varA += 'currentbowlerkey,'
+			end
+			if (bat_group.include? group1 or bat_group.include? group2 or bowl_group.include? group1 or bowl_group.include? group2) and (rest_group.include? group1 or rest_group.include? group2)
+				varA += rest_group_json[group1]+','
+			end
+			if (rest_group.include? group1 and group2 =='')
+				varA = 'batsmankey,'+rest_group_json[group1]+','
 			end
 			
-			if bowl_group.include? group1
-				varA += 'currentbowlerkey,batsmankey,'
-			end
 			
 			#if bat_group.include? group2 and !bat_group.include? group1
 			#	varA += 'batsmankey,'
@@ -1240,10 +1247,10 @@ class AnalysisController < ApplicationController
 			
 			if lastXballs == -2
 				scorecards = ' scorecards '
-				varA = ''
+				varB=''
 			else
-				scorecards = ' (select (rank() over (partition by matchkey, batsmankey, currentbowlerkey order by matchkey, batsmankey, currentbowlerkey, ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
-				varA = 'batsmankey, currentbowlerkey,'
+				scorecards = ' (select (rank() over (partition by matchkey, batsmankey '+varA[0...-1]+' order by matchkey '+varA+' ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
+				varB = varA
 			end
 			
 			
@@ -1254,7 +1261,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey, inning,'+varA+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
+					select rank() over (order by  s.matchkey, inning,'+varB+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' , ballnum, noballs) as _rank, 
 						   ballnum,'+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+scorecards+' s '+ _join + ' and wides=0
 					)A
 					where runs = 0
