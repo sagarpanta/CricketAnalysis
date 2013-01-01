@@ -527,12 +527,14 @@ class AnalysisController < ApplicationController
 			#the followings are the part of batting group, but they are not requirement for adding batting_part...ie if they belong to group2
 			not_required = ['matchtype', 'condition','venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell', 'angle']
 			
+			###########################################
+			#It is related with build bbh, bbr
+			bat_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
+			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'bowlingposition','teamagainst' , 'countryagainst', 'match']
 			
-			bat_group=['batsman', 'bts', 'team','teamtype' , 'coach','manager','country' ]
-			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match']
 			varA=','
 			if bat_group.include? group1
-				varA = 'currentstrikerkey,'
+				varA = 'batsmankey,'
 			end
 			
 			if bowl_group.include? group1
@@ -540,13 +542,13 @@ class AnalysisController < ApplicationController
 			end
 			
 			if bat_group.include? group2 and !bat_group.include? group1
-				varA = 'currentstrikerkey,'
+				varA = 'batsmankey,'
 			end
 			
 			if bowl_group.include? group2 and !bowl_group.include? group1
 				varA += 'currentbowlerkey,'
 			end
-
+			################################################
 			
 			
 			
@@ -1229,6 +1231,15 @@ class AnalysisController < ApplicationController
 		
 		
 		###################################   bbr  bbb   dbx dbr dbb sql string variable definitions #############################################	
+			
+			
+			if lastXballs == -2
+				scorecards = ' scorecards '
+			else
+				scorecards = ' (select (rank() over (partition by matchkey, '+varA+' order by matchkey, '+varA+', ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
+			end
+			
+			
 			bbr = '
 				WITH 
 				CTE AS 
