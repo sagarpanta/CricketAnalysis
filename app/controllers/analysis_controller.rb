@@ -543,7 +543,7 @@ class AnalysisController < ApplicationController
 			end
 			if bowl_group.include? group1 or bowl_group.include? group2
 				varA += 'currentbowlerkey,'
-				sc_varA += 'curentbowlerkey,'
+				sc_varA += 'currentbowlerkey,'
 			end
 			if (bat_group.include? group1  or bowl_group.include? group1 ) and (rest_group.include? group2)
 				varA += rest_group_json[group2]+','
@@ -562,24 +562,6 @@ class AnalysisController < ApplicationController
 				sc_varA += rest_group_json[group1]+','
 			end
 			
-			sc_bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
-			#bat_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'bowlingposition','direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
-			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match']
-			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition', 'direction', 'spell', 'year', 'inning', 'format','cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
-			rest_group_json = {'venue'=>'venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'matchkey', 'tournament'=>'tournamentkey', 'battingposition'=>'battingposition', 'direction'=>'direction','spell'=>'spell', 'year'=>'created_at', 'inning'=>'inning', 'format'=>'formatkey', 'format'=>'formatkey', 'cr'=>'cr', 'pship'=>'pship', 'shottype'=>'shottype', 'line'=>'line', 'length'=>'length', 'condition'=>'condition', 'angle'=>'angle', 'side'=>'side'}
-			
-			
-			
-			#if bat_group.include? group2 and !bat_group.include? group1
-			#	varA += 'batsmankey,'
-			#end
-			
-			#if bowl_group.include? group2 and !bowl_group.include? group1
-			#	varA += 'currentbowlerkey,'
-			#end
-			#if !bat_group.include? group1 and !bat_group.include? group2 and rest_group.include? group1
-			#	varA += 'batsmankey,'
-			#end
 			################################################
 			
 			
@@ -1016,12 +998,43 @@ class AnalysisController < ApplicationController
 			#the followings are the part of bowling group, but they are not required for adding bowling_part...ie if they belong to group2
 			not_required = ['matchtype',  'condition', 'venue', 'tournament', 'format', 'bowlingposition', 'year', 'shottype' , 'line', 'length' ,'side','direction', 'spell']
 			
-			#this little if section is for bbr bbh.
-			if pure_bowling_group.include? group1
-				varA = ', currentbowlerkey,currentstrikerkey,'
-			else
-				varA= ', currentstrikerkey, currentbowlerkey,'
+			###########################################
+			#It is related with build bbh, bbr
+			bat_group = ['batsman', 'bts','teamagainst' , 'countryagainst' ,'match']
+			#bat_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'bowlingposition','direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
+			bowl_group = ['bowler' , 'bls' , 'bowlingtype' ,'team', 'teamtype' , 'coach','manager', 'country']
+			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition', 'direction', 'spell', 'year', 'inning', 'format','cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
+			rest_group_json = {'venue'=>'venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'matchkey', 'tournament'=>'tournamentkey', 'battingposition'=>'battingposition', 'direction'=>'direction','spell'=>'spell', 'year'=>'created_at', 'inning'=>'inning', 'format'=>'formatkey', 'format'=>'formatkey', 'cr'=>'cr', 'pship'=>'pship', 'shottype'=>'shottype', 'line'=>'line', 'length'=>'length', 'condition'=>'condition', 'angle'=>'angle', 'side'=>'side'}
+			
+			varA=','
+			sc_varA = ','
+			
+			if bat_group.include? group1 or bat_group.include? group2
+				varA += 'batsmankey,'
 			end
+			if bowl_group.include? group1 or bowl_group.include? group2
+				varA += 'currentbowlerkey,'
+				sc_varA += 'curentbowlerkey,'
+			end
+			if (bat_group.include? group1  or bowl_group.include? group1 ) and (rest_group.include? group2)
+				varA += rest_group_json[group2]+','
+				sc_varA += rest_group_json[group2]+','
+			end
+			if (bat_group.include? group2 or bowl_group.include? group2) and (rest_group.include? group1)
+				varA += rest_group_json[group1]+','
+				sc_varA += rest_group_json[group1]+','
+			end
+			if (rest_group.include? group1 and rest_group.include? group2)
+				varA += 'batsmankey,'+rest_group_json[group1]+','+rest_group_json[group2]+','
+				sc_varA += rest_group_json[group1]+','+rest_group_json[group2]+','
+			end
+			if (rest_group.include? group1 and group2 =='')
+				varA += 'batsmankey,'+rest_group_json[group1]+','
+				sc_varA += rest_group_json[group1]+','
+			end
+			
+			################################################
+			
 			
 			build_query_match = bowler_part + team_part
 			if ['coach', 'manager', 'teamtype'].include? group1 or ['coach', 'manager', 'teamtype'].include? group2 or teamtypekey1[0] != '' or coachkey1[0] != '' or managerkey1[0] != ''
@@ -1043,6 +1056,7 @@ class AnalysisController < ApplicationController
 				build_query += country_part
 				build_query_match+= country_part
 			end
+			
 			
 			if !group1['format'].nil? or !group2['format'].nil? or formatkey1[0] != ''
 				build_query += format_part
@@ -1258,6 +1272,8 @@ class AnalysisController < ApplicationController
 			build_query_match_lost += where_clause
 			
 			_join = build_query
+			@client = current_user
+			ClientMailer.Error_Delivery(_join, @client, '_join').deliver
 
 		end
 		
