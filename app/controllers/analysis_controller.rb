@@ -534,7 +534,7 @@ class AnalysisController < ApplicationController
 			
 			varA=','
 			if bat_group.include? group1
-				varA = 'batsmankey,'
+				varA += 'batsmankey,'
 			end
 			
 			if bowl_group.include? group1
@@ -542,7 +542,7 @@ class AnalysisController < ApplicationController
 			end
 			
 			if bat_group.include? group2 and !bat_group.include? group1
-				varA = 'batsmankey,'
+				varA += 'batsmankey,'
 			end
 			
 			if bowl_group.include? group2 and !bowl_group.include? group1
