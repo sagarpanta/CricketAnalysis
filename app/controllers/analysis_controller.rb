@@ -548,6 +548,9 @@ class AnalysisController < ApplicationController
 			if (bat_group.include? group2 or bowl_group.include? group2) and (rest_group.include? group1)
 				varA += rest_group_json[group1]+','
 			end
+			if (rest_group.include? group1 and rest_group.include? group2)
+				varA += 'batsmankey,'+rest_group_json[group1]+','+rest_group_json[group2]+','
+			end
 			if (rest_group.include? group1 and group2 =='')
 				varA += 'batsmankey,'+rest_group_json[group1]+','
 			end
@@ -1252,7 +1255,7 @@ class AnalysisController < ApplicationController
 				scorecards = ' scorecards '
 				varB=''
 			else
-				scorecards = ' (select (rank() over (partition by matchkey, batsmankey '+varA[0...-1]+' order by matchkey '+varA+' ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
+				scorecards = ' (select (rank() over (partition by matchkey'+varA[0...-1]+' order by matchkey '+varA+' ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
 				varB = varA
 			end
 			
