@@ -1236,7 +1236,7 @@ class AnalysisController < ApplicationController
 			if lastXballs == -2
 				scorecards = ' scorecards '
 			else
-				scorecards = ' (select (rank() over (partition by matchkey, '+varA+' order by matchkey, '+varA+', ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
+				scorecards = ' (select (rank() over (partition by matchkey '+varA+' order by matchkey '+varA+' ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
 			end
 			
 			
