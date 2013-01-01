@@ -1566,7 +1566,7 @@ class AnalysisController < ApplicationController
 			@chartdata = Scorecard.find_by_sql(cnonstrike)
 			#@client = current_user
 			#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
-		elseif metric == 'consistency'
+		elsif metric == 'consistency'
 			@chartdata = Scorecard.find_by_sql(cstrike)
 		elsif metric == 'inns'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct matchkey) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
