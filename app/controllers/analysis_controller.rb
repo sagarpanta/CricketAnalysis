@@ -1517,7 +1517,7 @@ class AnalysisController < ApplicationController
 				(
 					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
-					  ON A.ballrank = B.ballrank+1 and and a.matchkey=b.matchkey and a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
+					  ON A.ballrank = B.ballrank+1 and a.matchkey=b.matchkey and a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
 				)
 				,
