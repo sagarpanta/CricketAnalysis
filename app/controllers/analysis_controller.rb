@@ -542,11 +542,14 @@ class AnalysisController < ApplicationController
 			if bowl_group.include? group1 or bowl_group.include? group2
 				varA += 'currentbowlerkey,'
 			end
-			if (bat_group.include? group1 or bat_group.include? group2 or bowl_group.include? group1 or bowl_group.include? group2) and (rest_group.include? group1 or rest_group.include? group2)
+			if (bat_group.include? group1  or bowl_group.include? group1 ) and (rest_group.include? group2)
+				varA += rest_group_json[group2]+','
+			end
+			if (bat_group.include? group2 or bowl_group.include? group2) and (rest_group.include? group1)
 				varA += rest_group_json[group1]+','
 			end
 			if (rest_group.include? group1 and group2 =='')
-				varA = 'batsmankey,'+rest_group_json[group1]+','
+				varA += 'batsmankey,'+rest_group_json[group1]+','
 			end
 			
 			
