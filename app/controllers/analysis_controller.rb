@@ -1649,12 +1649,12 @@ class AnalysisController < ApplicationController
 			@chartdata = Scorecard.find_by_sql(dbx)
 		elsif metric == 'c_strike'
 			@chartdata = Scorecard.find_by_sql(cstrike)
-			@client = current_user
-			ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
+			#@client = current_user
+			#ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
 		elsif metric == 'c_nonstrike'
 			@chartdata = Scorecard.find_by_sql(cnonstrike)
-			@client = current_user
-			ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
+			#@client = current_user
+			#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
 		elsif metric == 'consistency'
 			@chartdata = Scorecard.find_by_sql(cstrike)
 		elsif metric == 'inns'
