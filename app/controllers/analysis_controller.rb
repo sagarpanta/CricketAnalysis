@@ -1651,6 +1651,8 @@ class AnalysisController < ApplicationController
 			@chartdata = Scorecard.find_by_sql(cstrike)
 			#@client = current_user
 			#ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
+		#does not work with batting position because batting pos is only for current striker.
+		#The current scorecard id has batting position which is only for current strikerkey
 		elsif metric == 'c_nonstrike'
 			@chartdata = Scorecard.find_by_sql(cnonstrike)
 			#@client = current_user
