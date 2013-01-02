@@ -1459,7 +1459,8 @@ class AnalysisController < ApplicationController
 				)y 
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
 				order by X.grp1'+ (group2!=''? ',X.grp2':'')
-				
+			
+			
 			dbx = '
 				WITH 
 				CTE AS 
@@ -1652,8 +1653,8 @@ class AnalysisController < ApplicationController
 			ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
 		elsif metric == 'c_nonstrike'
 			@chartdata = Scorecard.find_by_sql(cnonstrike)
-			#@client = current_user
-			#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
+			@client = current_user
+			ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
 		elsif metric == 'consistency'
 			@chartdata = Scorecard.find_by_sql(cstrike)
 		elsif metric == 'inns'
