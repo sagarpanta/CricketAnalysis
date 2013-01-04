@@ -1191,7 +1191,6 @@ class ScorecardsController < ApplicationController
   end
 
   
-  
   def match_analysis
 	@runrateperover = 0.0
 	@runsperover = 0
