@@ -136,7 +136,7 @@ class AnalysisController < ApplicationController
 		lastXballs = params[:filters][:lxb].to_i
 		firstXballs = params[:filters][:fxb].to_i
 		
-		if lastXballs == -2 and firstXballs = -2
+		if lastXballs == -2 and firstXballs == -2
 			scorecards = ' scorecards '
 			ballnumber_betn = '0 and 300'
 		elsif lastXballs>0
@@ -1555,7 +1555,7 @@ class AnalysisController < ApplicationController
 				order by X.grp1' + (group2!=''? ',X.grp2':'')
 			
 			
-			if lastXballs == -2 and firstXballs=-2
+			if lastXballs == -2 and firstXballs==-2
 				sc = ' (select ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
 			elsif lastXballs>0
 				if metric == 'cstrike'
