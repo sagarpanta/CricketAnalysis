@@ -1644,7 +1644,7 @@ class AnalysisController < ApplicationController
 				frequency_sc = '(select s.ballnum, s.ballnum as ballrank, s.clientkey, s.ballsdelivered, s.ballsfaced, s.batsmankey, s.battingposition, s.bowlerkey, s.bowlingendkey, s.bowlingposition, s.byes, s.currentbowlerkey, s.currentnonstrikerkey, s.currentstrikerkey, s.dismissedbatsmankey, s.eights, s.fielderkey, s.fives, s.formatkey, s.fours, s.inning, s.legbyes, s.maiden, s.matchkey, s.noballs, s.ones, s.others, s.outbywk, s.outtypekey, s.runs, s.sevens, s.sixes, s.teamidone, s.teamtwoid, s.threes, s.tournamentkey, s.twos, s.venuekey, s.wicket, s.wides, s.zeros, s."over", s.line, s.length, s.shottype, s.side, s.spell,  s.angle, case when s.line <> s1.line then 1 else 0 end as line_frequency, s.length, case when s.length <> s1.length then 1 else 0 end as length_frequency, s.angle, case when s.angle <> s1.angle then 1 else 0 end as angle_frequency, case when s.side <> s1.side then 1 else 0 end as side_frequency
 							from '+scorecards+' s
 							left join '+scorecards+' s1
-							on s.matchkey = s1.matchkey and s.ballnum = s1.ballnum-1 and s.'+groups[0].trim+' = s1.'+groups[0].trim+' and s.'+groups[1].trim+' = s1.'+groups[1].trim+' and s."over" = s1."over"
+							on s.matchkey = s1.matchkey and s.ballnum = s1.ballnum-1 and s.'+groups[0].strip+' = s1.'+groups[0].strip+' and s.'+groups[1].strip+' = s1.'+groups[1].strip+' and s."over" = s1."over"
 							order by s.matchkey, s.'+groups[0].strip+', s.'+groups[1].strip+', s.ballnum)
 							'
 			else 
