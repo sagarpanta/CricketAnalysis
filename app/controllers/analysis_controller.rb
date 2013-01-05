@@ -686,13 +686,13 @@ class AnalysisController < ApplicationController
 			end			
 
 	
-			#build_query += where_always
 			#matchkeys = Scorecard.find_by_sql('select distinct top '+matchcount.to_s+' matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc')
 		    matchkeys = Scorecard.find_by_sql('select distinct s.matchkey from scorecards s '+ build_query + where_clause +' order by s.matchkey desc limit '+matchcount.to_s) 
 			where_matchkeys = ' and s.matchkey in (' 
 			matchkeys.each do |m| 
 				where_matchkeys += m.matchkey.to_s + ','
 			end
+			where_matchkeys = '1,2,3,4,5,'
 			where_matchkeys = where_matchkeys[0...-1]+')'
 			
 			build_query += where_always+ where_matchkeys
@@ -1639,8 +1639,13 @@ class AnalysisController < ApplicationController
 				)X
 				order by X.grp1'+ (group2!=''? ',X.grp2':'')
 
-			groups = varA.split(',')
-			if groups.length >1
+				
+				
+=begin				
+			groups = varA[1..-1].split(',')
+			
+			if groups.length >1 and fq >0
+				scorecards = ' (select rank() over (partition by matchkey, '+groups[0]+', "over" order by ballnum), * from scorecards)'
 				frequency_sc = '(select s.ballnum, s.ballnum as ballrank, s.clientkey, s.ballsdelivered, s.ballsfaced, s.batsmankey, s.battingposition, s.bowlerkey, s.bowlingendkey, s.bowlingposition, s.byes, s.currentbowlerkey, s.currentnonstrikerkey, s.currentstrikerkey, s.dismissedbatsmankey, s.eights, s.fielderkey, s.fives, s.formatkey, s.fours, s.inning, s.legbyes, s.maiden, s.matchkey, s.noballs, s.ones, s.others, s.outbywk, s.outtypekey, s.runs, s.sevens, s.sixes, s.teamidone, s.teamtwoid, s.threes, s.tournamentkey, s.twos, s.venuekey, s.wicket, s.wides, s.zeros, s."over", s.line, s.length, s.shottype, s.side, s.spell,  s.angle, case when s.line <> s1.line then 1 else 0 end as line_frequency, s.length, case when s.length <> s1.length then 1 else 0 end as length_frequency, s.angle, case when s.angle <> s1.angle then 1 else 0 end as angle_frequency, case when s.side <> s1.side then 1 else 0 end as side_frequency
 							from '+scorecards+' s
 							left join '+scorecards+' s1
@@ -1648,6 +1653,7 @@ class AnalysisController < ApplicationController
 							order by s.matchkey, s.'+groups[0].strip+', s.'+groups[1].strip+', s.ballnum)
 							'
 			else 
+				scorecards = ' (select rank() over (partition by matchkey, '+groups[0]+', "over" order by ballnum), * from scorecards)'
 				frequency_sc = '(select s.ballnum, s.ballnum as ballrank, s.clientkey, s.ballsdelivered, s.ballsfaced, s.batsmankey, s.battingposition, s.bowlerkey, s.bowlingendkey, s.bowlingposition, s.byes, s.currentbowlerkey, s.currentnonstrikerkey, s.currentstrikerkey, s.dismissedbatsmankey, s.eights, s.fielderkey, s.fives, s.formatkey, s.fours, s.inning, s.legbyes, s.maiden, s.matchkey, s.noballs, s.ones, s.others, s.outbywk, s.outtypekey, s.runs, s.sevens, s.sixes, s.teamidone, s.teamtwoid, s.threes, s.tournamentkey, s.twos, s.venuekey, s.wicket, s.wides, s.zeros, s."over", s.line, s.length, s.shottype, s.side, s.spell,  s.angle, case when s.line <> s1.line then 1 else 0 end as line_frequency, s.length, case when s.length <> s1.length then 1 else 0 end as length_frequency, s.angle, case when s.angle <> s1.angle then 1 else 0 end as angle_frequency, case when s.side <> s1.side then 1 else 0 end as side_frequency
 							from '+scorecards+' s
 							left join '+scorecards+' s1
@@ -1656,22 +1662,23 @@ class AnalysisController < ApplicationController
 			end
 							
 			if group2 == 'line'
-				grp_frequency = 'line_freqnency'
+				grp_frequency = 'line_frequency'
 			elsif group2== 'length'
-				grp_frequency = 'length_freqnency'
+				grp_frequency = 'length_frequency'
 			elsif group2== 'side'
-				grp_frequency = 'aide_freqnency'
+				grp_frequency = 'aide_frequency'
 			elsif group2== 'angle'
-				grp_frequency = 'angle_freqnency'
+				grp_frequency = 'angle_frequency'
 			end
-				
+			
+			sql = 'Select '+_group1[group1]+' as grp1 '+(!group2[group2].nil? ? ',sum('+grp_frequency+') as grp2':'')+', sum(case when shottype between 28 and 43 or shottype in (7,10) then 1 else 0 end) as val from '+frequency_sc+' s '+ _join + ' group by '+_group1[group1]+' order by '+ _group1[group1] + (!group2[group2].nil? ? ',sum('+grp_frequency+')':'')
+			@client = current_user
+			ClientMailer.Error_Delivery(sql, @client, 'mishits').deliver
+=end			
 		############################################### end of variable definitions #####################################################3	
 	
 		
 		if metric == 'runs'
-			sql = 'Select '+_group1[group1]+' as grp1 '+(!group2[group2].nil? ? 'sum('+grp_frequency+') as grp2':'')+', sum(case when shottype between 28 and 43 or shottype in (7,10) then 1 else 0 end) as val from '+frequency_sc+' s '+ _join + ' and  group by '+_group1[group1]+' order by '+ _group1[group1] + (!group2[group2].nil? ? 'sum('+grp_frequency+')':'')
-			@client = current_user
-			ClientMailer.Error_Delivery(sql, @client, 'mishits').deliver
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
 		elsif metric == 'avg'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'') + ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
@@ -1741,8 +1748,6 @@ class AnalysisController < ApplicationController
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ballsdelivered) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
 		elsif metric == 'noofshots'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ballsdelivered) as val from '+scorecards+' s '+ _join + ' and runs>0  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
-		elsif metric == 'mishits'
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+(!group2[group2].nil? ? 'sum('+grp_frequency+') as grp2':'')+', sum(case when shottype between 28 and 43 or shottype in (7,10) then 1 else 0 end) as val from '+frequency_sc+' s '+ _join + ' and  group by '+_group1[group1]+' order by '+ _group1[group1] + (!group2[group2].nil? ? 'sum('+grp_frequency+')':''))	
 		end
 		
 		@chartdata = @chartdata == []? nil:@chartdata
