@@ -1669,7 +1669,7 @@ class AnalysisController < ApplicationController
 	
 		
 		if metric == 'runs'
-			sql = 'Select '+_group1[group1]+' as grp1 '+(!group2[group2].nil? ? 'sum('grp_frequency') as grp2':'')+', sum(case when shottype between 28 and 43 or shottype in (7,10) then 1 else 0 end) as val from '+frequency_sc+' s '+ _join + ' and  group by '+_group1[group1]+' order by '+ _group1[group1] + (!group2[group2].nil? ? 'sum('grp_frequency')':'')
+			sql = 'Select '+_group1[group1]+' as grp1 '+(!group2[group2].nil? ? 'sum('+grp_frequency+') as grp2':'')+', sum(case when shottype between 28 and 43 or shottype in (7,10) then 1 else 0 end) as val from '+frequency_sc+' s '+ _join + ' and  group by '+_group1[group1]+' order by '+ _group1[group1] + (!group2[group2].nil? ? 'sum('+grp_frequency+')':'')
 			@client = current_user
 			ClientMailer.Error_Delivery(sql, @client, 'mishits').deliver
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
@@ -1742,7 +1742,7 @@ class AnalysisController < ApplicationController
 		elsif metric == 'noofshots'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(ballsdelivered) as val from '+scorecards+' s '+ _join + ' and runs>0  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
 		elsif metric == 'mishits'
-			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+(!group2[group2].nil? ? 'sum('grp_frequency') as grp2':'')+', sum(case when shottype between 28 and 43 or shottype in (7,10) then 1 else 0 end) as val from '+frequency_sc+' s '+ _join + ' and  group by '+_group1[group1]+' order by '+ _group1[group1] + (!group2[group2].nil? ? 'sum('grp_frequency')':''))	
+			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+(!group2[group2].nil? ? 'sum('+grp_frequency+') as grp2':'')+', sum(case when shottype between 28 and 43 or shottype in (7,10) then 1 else 0 end) as val from '+frequency_sc+' s '+ _join + ' and  group by '+_group1[group1]+' order by '+ _group1[group1] + (!group2[group2].nil? ? 'sum('+grp_frequency+')':''))	
 		end
 		
 		@chartdata = @chartdata == []? nil:@chartdata
