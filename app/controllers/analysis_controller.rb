@@ -529,7 +529,7 @@ class AnalysisController < ApplicationController
 			pure_batting_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle']
 			#the followings are the part of batting group, but they are not requirement for adding batting_part...ie if they belong to group2
 			not_required = ['matchtype', 'condition','venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell', 'angle']
-			
+=begin			
 			###########################################
 			#It is related with build bbh, bbr
 			bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
@@ -566,8 +566,44 @@ class AnalysisController < ApplicationController
 			end
 			
 			################################################
+=end		
 			
+			###########################################
+			#It is related with build bbh, bbr
+			#bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
+			bat_group = ['batsman', 'bts', 'team','teamtype' , 'coach','manager', 'country', 'pship' , 'shottype' , 'line', 'length', 'angle', 'side']
+			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match', 'bowlingposition']
+			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition', 'direction', 'year', 'inning', 'format','cr', 'condition']
+			rest_group_json = {'venue'=>'venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'matchkey', 'tournament'=>'tournamentkey', 'battingposition'=>'battingposition', 'year'=>'created_at', 'inning'=>'inning', 'format'=>'formatkey', 'cr'=>'cr', 'condition'=>'condition'}
 			
+			varA=','
+			sc_varA = ','
+			
+			if bat_group.include? group1 or bat_group.include? group2
+				varA += 'batsmankey,'
+			end
+			if bowl_group.include? group1 or bowl_group.include? group2
+				varA += 'currentbowlerkey,'
+				sc_varA += 'currentbowlerkey,'
+			end
+			if (bat_group.include? group1  or bowl_group.include? group1 ) and (rest_group.include? group2)
+				varA += rest_group_json[group2]+','
+				sc_varA += rest_group_json[group2]+','
+			end
+			if (bat_group.include? group2 or bowl_group.include? group2) and (rest_group.include? group1)
+				varA += rest_group_json[group1]+','
+				sc_varA += rest_group_json[group1]+','
+			end
+			if (rest_group.include? group1 and rest_group.include? group2)
+				varA += 'batsmankey,'+rest_group_json[group1]+','+rest_group_json[group2]+','
+				sc_varA += rest_group_json[group1]+','+rest_group_json[group2]+','
+			end
+			if (rest_group.include? group1 and group2 =='')
+				varA += 'batsmankey,'+rest_group_json[group1]+','
+				sc_varA += rest_group_json[group1]+','
+			end
+			
+			################################################		
 			
 			#the match won and match lost queries require players and teams table no matter what
 			#the teams table come with coaches managers and teamtypes table
