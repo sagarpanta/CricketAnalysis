@@ -692,7 +692,6 @@ class AnalysisController < ApplicationController
 			matchkeys.each do |m| 
 				where_matchkeys += m.matchkey.to_s + ','
 			end
-			where_matchkeys = '1,2,3,4,5,'
 			where_matchkeys = where_matchkeys[0...-1]+')'
 			
 			build_query += where_always+ where_matchkeys
