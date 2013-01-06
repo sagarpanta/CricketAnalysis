@@ -1564,7 +1564,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum) as _rank, 
-						   ballnum, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s
+						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s
 					)A
 					where extras >0
 				),
