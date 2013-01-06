@@ -1709,22 +1709,23 @@ class AnalysisController < ApplicationController
 	
 			
 			frequency_sc = ''
+			_metrics = ' s.ballsdelivered, s.ballsfaced, s.byes, s.eights, s.fives, s.fours, s.legbyes, s.maiden, s.noballs, s.ones, s.others,s.runs, s.sevens, s.sixes,s.threes, s.twos, s.wides, s.zeros,  s.line, s.length, s.shottype, s.side, s.angle '
 			frequency_sc = '
 							select grp1, grp2, avg(val) as val
 							from
 							(
-							select grp1, "over", sum(frequency_grp2) as grp2, sum(val) as val
+							select grp1, "over", sum(frequency_grp2) as grp2, sum(mishits) as val
 							from
-							(select s.grp1,s."over", case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end val 
+							(select s.grp1,s."over", case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end as mishits, case when s.shottype in (49,50,51,56) then 1 else 0 end as slugs, '+_metrics + '
 							 from (select grp1, grp2,"over",  rank() over (partition by grp1, "over" order by ballnum) as ballnum from ' + scorecards +' s) s
 								LEFT JOIN 
 								(select grp1, grp2,"over",  rank() over (partition by grp1, "over" order by ballnum) as ballnum from ' + scorecards +' s) s1
 								ON s.grp1 = s1.grp1 and s."over" = s1."over" and s.ballnum = s1.ballnum-1
 							)A
+							group by grp1, "over"
 							)B
-							group by grp1
-							)c
-							group by gpr1, grp2'
+							group by grp1, grp2
+							order by grp1, grp2'
 			@client = current_user
 			ClientMailer.Error_Delivery(frequency_sc, @client, 'frequency_sc').deliver	
 				
