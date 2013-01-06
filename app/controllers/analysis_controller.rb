@@ -1710,11 +1710,10 @@ class AnalysisController < ApplicationController
 			
 			frequency_sc = ''
 			_metrics = ' s.ballsdelivered, s.ballsfaced, s.byes, s.eights, s.fives, s.fours, s.legbyes, s.maiden, s.noballs, s.ones, s.others,s.runs, s.sevens, s.sixes,s.threes, s.twos, s.wides, s.zeros,  s.line, s.length, s.shottype, s.side, s.angle '
-			frequency_sc = '
-							select grp1, cast(grp2 as integer) as grp2 , avg(val) as val
+			frequency_sc = 'select grp1, cast(grp2 as integer) as grp2 , avg(val) as val
 							from
 							(
-							select grp1, "over", case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end as grp2, case when sum(ballsfaced) = 0 then 0 else sum(mishits)/(1.0*sum(ballsfaced))*6 end as val
+							select grp1, "over", round(case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end) as grp2, case when sum(ballsfaced) = 0 then 0 else sum(mishits)/(1.0*sum(ballsfaced))*6 end as val
 							from
 							(select s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end as mishits, case when s.shottype in (49,50,51,56) then 1 else 0 end as slugs
 							 from (select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
@@ -1725,9 +1724,9 @@ class AnalysisController < ApplicationController
 							group by grp1, "over"
 							)B
 							group by grp1, grp2
-							order by grp1, grp2'
-			@client = current_user
-			ClientMailer.Error_Delivery(frequency_sc, @client, 'frequency_sc').deliver	
+							order by grp1, grp2
+						   '
+
 				
 =begin				
 			groups = varA[1..-1].split(',')
