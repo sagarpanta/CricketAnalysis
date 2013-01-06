@@ -1535,9 +1535,9 @@ class AnalysisController < ApplicationController
 				CTE AS 
 				(
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
-					from
+					froms
 					(
-					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum) as _rank, 
+					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', id) as _rank, 
 						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s
 					)A
 					where extras = 0
@@ -1563,7 +1563,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum) as _rank, 
+					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', id) as _rank, 
 						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s
 					)A
 					where extras >0
