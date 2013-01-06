@@ -529,14 +529,14 @@ class AnalysisController < ApplicationController
 			pure_batting_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle']
 			#the followings are the part of batting group, but they are not requirement for adding batting_part...ie if they belong to group2
 			not_required = ['matchtype', 'condition','venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell', 'angle']
-=begin			
+			
 			###########################################
 			#It is related with build bbh, bbr
 			bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
 			#bat_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'bowlingposition','direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
 			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match']
-			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition', 'direction', 'spell', 'year', 'inning', 'format','cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
-			rest_group_json = {'venue'=>'venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'matchkey', 'tournament'=>'tournamentkey', 'battingposition'=>'battingposition', 'direction'=>'direction','spell'=>'spell', 'year'=>'created_at', 'inning'=>'inning', 'format'=>'formatkey', 'format'=>'formatkey', 'cr'=>'cr', 'pship'=>'pship', 'shottype'=>'shottype', 'line'=>'line', 'length'=>'length', 'condition'=>'condition', 'angle'=>'angle', 'side'=>'side'}
+			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition','bowlingposition', 'direction', 'spell', 'year', 'inning', 'format','cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
+			rest_group_json = {'venue'=>'venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'matchkey', 'tournament'=>'tournamentkey', 'battingposition'=>'battingposition',  'bowlingposition'=>'bowlingposition', 'direction'=>'direction','spell'=>'spell', 'year'=>'created_at', 'inning'=>'inning', 'format'=>'formatkey', 'format'=>'formatkey', 'cr'=>'cr', 'pship'=>'pship', 'shottype'=>'shottype', 'line'=>'line', 'length'=>'length', 'condition'=>'condition', 'angle'=>'angle', 'side'=>'side'}
 			
 			varA=','
 			sc_varA = ','
@@ -566,7 +566,7 @@ class AnalysisController < ApplicationController
 			end
 			
 			################################################
-=end		
+=begin		
 			
 			###########################################
 			#It is related with build bbh, bbr
@@ -604,6 +604,7 @@ class AnalysisController < ApplicationController
 			end
 			
 			################################################		
+=end
 			
 			#the match won and match lost queries require players and teams table no matter what
 			#the teams table come with coaches managers and teamtypes table
@@ -1033,7 +1034,8 @@ class AnalysisController < ApplicationController
 			pure_bowling_group = ['bowler' , 'bls'  , 'bowlingtype', 'team', 'venue', 'dismissal','matchtype', 'match','teamtype' , 'tournament', 'coach', 'bowlingposition', 'manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length','side', 'direction', 'spell', 'condition']
 			#the followings are the part of bowling group, but they are not required for adding bowling_part...ie if they belong to group2
 			not_required = ['matchtype',  'condition', 'venue', 'tournament', 'format', 'bowlingposition', 'year', 'shottype' , 'line', 'length' ,'side','direction', 'spell']
-			
+
+		
 			###########################################
 			#It is related with build bbh, bbr
 			bat_group = ['batsman', 'bts','teamagainst' , 'countryagainst' ,'match']
@@ -1069,8 +1071,8 @@ class AnalysisController < ApplicationController
 				sc_varA += rest_group_json[group1]+','
 			end
 			
-			################################################
-			
+			################################################	
+					
 			
 			build_query_match = bowler_part + team_part
 			if ['coach', 'manager', 'teamtype'].include? group1 or ['coach', 'manager', 'teamtype'].include? group2 or teamtypekey1[0] != '' or coachkey1[0] != '' or managerkey1[0] != ''
@@ -1714,8 +1716,8 @@ class AnalysisController < ApplicationController
 	
 		
 		if metric == 'runs'
-			sql = 'Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:'')
-			@client = current_user
+			#sql = 'Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:'')
+			#@client = current_user
 			ClientMailer.Error_Delivery(sql, @client, 'runs').deliver
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(runs) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
 		elsif metric == 'avg'
@@ -1725,8 +1727,6 @@ class AnalysisController < ApplicationController
 		elsif metric == 'dsmsl'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', sum(wicket) as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
 		elsif metric == 'bbh'
-			@client = current_user
-			ClientMailer.Error_Delivery(bbr, @client, 'bbh').deliver
 			@chartdata = Scorecard.find_by_sql(bbr)
 		elsif metric == 'bbb'
 			@chartdata = Scorecard.find_by_sql(bbb)
