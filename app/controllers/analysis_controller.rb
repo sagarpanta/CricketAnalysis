@@ -1717,9 +1717,9 @@ class AnalysisController < ApplicationController
 							select grp1, "over", case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end as grp2, case when sum(ballsfaced) = 0 then 0 else sum(mishits)/(1.0*sum(ballsfaced))*6 end as val
 							from
 							(select s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end as mishits, case when s.shottype in (49,50,51,56) then 1 else 0 end as slugs
-							 from (select '+_group1[group1]+' as grp1, '+(!_group2[group2].nil? ? ' as grp2':'')+',"over", rank() over (partition by grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
+							 from (select grp1,'+(!_group2[group2].nil? ? ',grp2':''+',"over", rank() over (partition by grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
 								LEFT JOIN 
-								(select '+_group1[group1]+' as grp1, '+(!_group2[group2].nil? ? ' as grp2':'')+',"over",  rank() over (partition by grp1, "over" order by ballnum) as ballnum,'+_metrics + ' from ' + scorecards +' s) s1
+								(select grp1,'+(!_group2[group2].nil? ? ',grp2':''+',"over",  rank() over (partition by grp1, "over" order by ballnum) as ballnum,'+_metrics + ' from ' + scorecards +' s) s1
 								ON s.grp1 = s1.grp1 and s."over" = s1."over" and s.ballnum = s1.ballnum-1
 							)A
 							group by grp1, "over"
