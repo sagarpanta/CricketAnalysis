@@ -530,81 +530,7 @@ class AnalysisController < ApplicationController
 			#the followings are the part of batting group, but they are not requirement for adding batting_part...ie if they belong to group2
 			not_required = ['matchtype', 'condition','venue', 'tournament', 'format', 'battingposition', 'year', 'shottype' , 'line', 'length', 'direction', 'spell', 'angle']
 			
-			###########################################
-			#It is related with build bbh, bbr
-			bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
-			#bat_group = ['batsman', 'bts', 'team', 'venue', 'dismissal','matchtype','teamtype' , 'tournament', 'coach', 'battingposition', 'bowlingposition','direction', 'spell','manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
-			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match']
-			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition','bowlingposition', 'direction', 'spell', 'year', 'inning', 'format','cr', 'pship' , 'shottype' , 'line', 'length', 'condition', 'angle', 'side']
-			rest_group_json = {'venue'=>'s.venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'s.matchkey', 'tournament'=>'s.tournamentkey', 'battingposition'=>'battingposition',  'bowlingposition'=>'bowlingposition', 'direction'=>'direction','spell'=>'spell', 'year'=>'s.created_at', 'inning'=>'inning', 'format'=>'s.formatkey', 'cr'=>'cr', 'pship'=>'pship', 'shottype'=>'s.shottype', 'line'=>'s.line', 'length'=>'s.length', 'condition'=>'condition', 'angle'=>'angle', 'side'=>'side'}
-			
-			varA=','
-			sc_varA = ','
-			
-			if bat_group.include? group1 or bat_group.include? group2
-				varA += 'batsmankey,'
-			end
-			if bowl_group.include? group1 or bowl_group.include? group2
-				varA += 'currentbowlerkey,'
-				sc_varA += 'currentbowlerkey,'
-			end
-			if (bat_group.include? group1  or bowl_group.include? group1 ) and (rest_group.include? group2)
-				varA += rest_group_json[group2]+','
-				sc_varA += rest_group_json[group2]+','
-			end
-			if (bat_group.include? group2 or bowl_group.include? group2) and (rest_group.include? group1)
-				varA += rest_group_json[group1]+','
-				sc_varA += rest_group_json[group1]+','
-			end
-			if (rest_group.include? group1 and rest_group.include? group2)
-				varA += 'batsmankey,'+rest_group_json[group1]+','+rest_group_json[group2]+','
-				sc_varA += rest_group_json[group1]+','+rest_group_json[group2]+','
-			end
-			if (rest_group.include? group1 and group2 =='')
-				varA += 'batsmankey,'+rest_group_json[group1]+','
-				sc_varA += rest_group_json[group1]+','
-			end
-			
-			################################################
-=begin		
-			
-			###########################################
-			#It is related with build bbh, bbr
-			#bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
-			bat_group = ['batsman', 'bts', 'team','teamtype' , 'coach','manager', 'country', 'pship' , 'shottype' , 'line', 'length', 'angle', 'side']
-			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match', 'bowlingposition']
-			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition', 'direction', 'year', 'inning', 'format','cr', 'condition']
-			rest_group_json = {'venue'=>'venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'matchkey', 'tournament'=>'tournamentkey', 'battingposition'=>'battingposition', 'year'=>'created_at', 'inning'=>'inning', 'format'=>'formatkey', 'cr'=>'cr', 'condition'=>'condition'}
-			
-			varA=','
-			sc_varA = ','
-			
-			if bat_group.include? group1 or bat_group.include? group2
-				varA += 'batsmankey,'
-			end
-			if bowl_group.include? group1 or bowl_group.include? group2
-				varA += 'currentbowlerkey,'
-				sc_varA += 'currentbowlerkey,'
-			end
-			if (bat_group.include? group1  or bowl_group.include? group1 ) and (rest_group.include? group2)
-				varA += rest_group_json[group2]+','
-				sc_varA += rest_group_json[group2]+','
-			end
-			if (bat_group.include? group2 or bowl_group.include? group2) and (rest_group.include? group1)
-				varA += rest_group_json[group1]+','
-				sc_varA += rest_group_json[group1]+','
-			end
-			if (rest_group.include? group1 and rest_group.include? group2)
-				varA += 'batsmankey,'+rest_group_json[group1]+','+rest_group_json[group2]+','
-				sc_varA += rest_group_json[group1]+','+rest_group_json[group2]+','
-			end
-			if (rest_group.include? group1 and group2 =='')
-				varA += 'batsmankey,'+rest_group_json[group1]+','
-				sc_varA += rest_group_json[group1]+','
-			end
-			
-			################################################		
-=end
+
 			
 			#the match won and match lost queries require players and teams table no matter what
 			#the teams table come with coaches managers and teamtypes table
@@ -1322,10 +1248,10 @@ class AnalysisController < ApplicationController
 				scorecards = '(select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				varB=','
 			elsif lastXballs>0
-				scorecards = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (rank() over (partition by matchkey'+varA[0...-1]+' order by matchkey '+varA+' ballnum desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join+') '
+				scorecards = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join+') '
 				varB = varA
 			elsif firstXballs>0
-				scorecards = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(rank() over (partition by matchkey'+varA[0...-1]+' order by matchkey '+varA+' ballnum)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join+') '
+				scorecards = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join+') '
 				varB = varA
 			end
 			
