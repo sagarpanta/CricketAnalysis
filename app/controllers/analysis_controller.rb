@@ -1638,7 +1638,7 @@ class AnalysisController < ApplicationController
 				WITH 
 				CTE AS 
 				(
-					select ballrank, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
+					select ballrank, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
 					select matchkey, ballrank, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s and wides=0
@@ -1646,7 +1646,7 @@ class AnalysisController < ApplicationController
 				),
 				CTE1 AS
 				(
-					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
+					SELECT  a.grp1'+(!_group2[group2].nil? ? ',a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A.ballrank = B.ballrank+1 and a.matchkey= b.matchkey and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
@@ -1704,7 +1704,10 @@ class AnalysisController < ApplicationController
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
 				order by X.grp1'+ (group2!=''? ',X.grp2':'')
-
+	
+			
+			@client = current_user
+			ClientMailer.Error_Delivery(cnonstrike, @client, 'runs').deliver
 				
 				
 =begin				
