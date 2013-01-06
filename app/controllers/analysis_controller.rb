@@ -1329,9 +1329,7 @@ class AnalysisController < ApplicationController
 				varB = varA
 			end
 			
-			sql = 'Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':'')
-			@client = current_user
-			ClientMailer.Error_Delivery(sql, @client, 'test').deliver
+			
 			
 			if  metric == 'mtchwon'
 				if lastXballs == -2 and firstXballs==-2
@@ -1634,6 +1632,10 @@ class AnalysisController < ApplicationController
 					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				end
 			end
+			
+			sql = 'Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':'')
+			@client = current_user
+			ClientMailer.Error_Delivery(sql, @client, 'test').deliver
 			
 			
 			cnonstrike = '
