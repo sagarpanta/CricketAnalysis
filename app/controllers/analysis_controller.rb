@@ -1632,6 +1632,10 @@ class AnalysisController < ApplicationController
 					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				end
 			end
+			
+			
+			@client = current_user
+			ClientMailer.Error_Delivery(sc, @client, 'runs').deliver
 
 			
 			cnonstrike = '
@@ -1706,8 +1710,6 @@ class AnalysisController < ApplicationController
 				order by X.grp1'+ (group2!=''? ',X.grp2':'')
 	
 			
-			@client = current_user
-			ClientMailer.Error_Delivery(cnonstrike, @client, 'runs').deliver
 				
 				
 =begin				
