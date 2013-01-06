@@ -507,9 +507,9 @@ class AnalysisController < ApplicationController
 		   where_anglekeys1 = ' and s.angle '+anglekeys1
 		   
 			if group1 == 'match'
-				where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn
+				where_always =' where s.clientkey = '+current_user.id.to_s 
 			else 
-				where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn+ ' and ('+_group1[group1] + ') is not null '	
+				where_always =' where s.clientkey = '+current_user.id.to_s + ' and ('+_group1[group1] + ') is not null '	
 			end
 			
 			build_query = ''
@@ -1716,10 +1716,10 @@ class AnalysisController < ApplicationController
 	
 		
 		if metric == 'runs'
-			sql = 'Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':'')
+			sql = 'Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':'')
 			@client = current_user
 			ClientMailer.Error_Delivery(sql, @client, 'runs').deliver
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 		elsif metric == 'avg'
 			@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s '+ _join + ' group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'') + ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
 		elsif metric == 'sr'
