@@ -1616,7 +1616,7 @@ class AnalysisController < ApplicationController
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
 				order by X.grp1' + (group2!=''? ',X.grp2':'')
 			
-			
+			sc = ''
 			if lastXballs == -2 and firstXballs==-2
 				sc = '(select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 			elsif lastXballs>0
@@ -1634,8 +1634,6 @@ class AnalysisController < ApplicationController
 			end
 			
 			
-			@client = current_user
-			ClientMailer.Error_Delivery(sc, @client, 'runs').deliver
 
 			
 			cnonstrike = '
