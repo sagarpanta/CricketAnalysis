@@ -1641,7 +1641,7 @@ class AnalysisController < ApplicationController
 					select ballrank, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select matchkey, ballrank, '+_group1[group1]+' as grp1 '+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', runs from '+sc+' s and wides=0
+					select matchkey, ballrank, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s and wides=0
 					)A order by grp1, ballrank
 				),
 				CTE1 AS
