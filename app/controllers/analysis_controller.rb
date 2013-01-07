@@ -1717,6 +1717,7 @@ class AnalysisController < ApplicationController
 			
 			metrics = {}
 			metrics['runs'] = ',s.runs as val '
+			metrics['zero'] = ',s.zeros as val '
 			metrics['one'] = ',s.ones as val '
 			metrics['two'] = ',s.twos as val '
 			metrics['three'] = ',s.threes as val '
