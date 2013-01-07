@@ -444,3 +444,887 @@ Served asset /up-over.png - 304 Not Modified (0ms)
 Served asset /up.png - 304 Not Modified (0ms)
 Served asset /up-over.png - 304 Not Modified (0ms)
 Served asset /up.png - 304 Not Modified (0ms)
+Connecting to database specified by database.yml
+  [1m[36mSQL (0.0ms)[0m  [1mUSE [CricketAnalysis][0m
+  [1m[35mClient Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''
+  [1m[36mClient Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''[0m
+Served asset /application.css - 304 Not Modified (31ms)
+Served asset /analysis.css - 304 Not Modified (36ms)
+Served asset /chosen.css - 304 Not Modified (6ms)
+Served asset /clientconfigs.css - 304 Not Modified (6ms)
+Served asset /clients.css - 304 Not Modified (6ms)
+Served asset /coaches.css - 304 Not Modified (5ms)
+Served asset /countries.css - 304 Not Modified (33ms)
+Served asset /managers.css - 304 Not Modified (5ms)
+Served asset /matches.css - 304 Not Modified (5ms)
+Served asset /pie.css - 304 Not Modified (6ms)
+Served asset /players.css - 304 Not Modified (6ms)
+Served asset /reveal.css - 304 Not Modified (6ms)
+Served asset /scaffolds.css - 304 Not Modified (7ms)
+Served asset /scorecards.css - 304 Not Modified (5ms)
+Served asset /teams.css - 304 Not Modified (32ms)
+Served asset /tournaments.css - 304 Not Modified (4ms)
+Served asset /venues.css - 304 Not Modified (6ms)
+Served asset /jquery.js - 304 Not Modified (9ms)
+Served asset /jquery_ujs.js - 304 Not Modified (6ms)
+Served asset /analysis.js - 304 Not Modified (5ms)
+Served asset /chosen.jquery.js - 304 Not Modified (4ms)
+Served asset /clientconfigs.js - 304 Not Modified (5ms)
+Served asset /clients.js - 304 Not Modified (5ms)
+Served asset /coaches.js - 304 Not Modified (3ms)
+Served asset /country.js - 304 Not Modified (5ms)
+Served asset /jquery.reveal.js - 304 Not Modified (5ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (4ms)
+Served asset /managers.js - 304 Not Modified (34ms)
+Served asset /matches.js - 304 Not Modified (4ms)
+Served asset /pie.js - 304 Not Modified (5ms)
+Served asset /players.js - 304 Not Modified (4ms)
+Served asset /raphael.js - 304 Not Modified (5ms)
+Served asset /scorecards.js - 304 Not Modified (5ms)
+Served asset /teams.js - 304 Not Modified (5ms)
+Served asset /tournaments.js - 304 Not Modified (4ms)
+Served asset /venues.js - 304 Not Modified (5ms)
+Served asset /application.js - 304 Not Modified (38ms)
+Served asset /logo.png - 304 Not Modified (5ms)
+Served asset /globe.png - 304 Not Modified (5ms)
+Served asset /country.png - 304 Not Modified (5ms)
+Served asset /tournament.png - 304 Not Modified (4ms)
+Served asset /player.png - 304 Not Modified (6ms)
+Served asset /manager.png - 304 Not Modified (5ms)
+Served asset /coach.png - 304 Not Modified (5ms)
+Served asset /team.png - 304 Not Modified (6ms)
+Served asset /venue.png - 304 Not Modified (3ms)
+Served asset /match.png - 304 Not Modified (4ms)
+Served asset /background3.png - 304 Not Modified (34ms)
+  [1m[35mClient Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''
+  [1m[36mMatch Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [matches].* FROM [matches] WHERE (clientkey=2)'[0m
+  [1m[35mMatchType Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [match_types].* FROM [match_types] WHERE [match_types].[id] = 2'
+  [1m[36mTeam Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct teamname as teamname FROM [teams] WHERE (clientkey = 2 and teamid = 1)'[0m
+  [1m[35mTeam Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct teamname as teamname FROM [teams] WHERE (clientkey = 2 and teamid = 2)'
+  [1m[36mTournament Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [tournaments].* FROM [tournaments] WHERE [tournaments].[id] = 1'[0m
+  [1m[35mVenue Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [venues].* FROM [venues] WHERE [venues].[id] = 1'
+  [1m[36mFormat Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [formats].* FROM [formats] WHERE [formats].[id] = 1'[0m
+Served asset /application.css - 304 Not Modified (3ms)
+Served asset /analysis.css - 304 Not Modified (0ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (0ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (0ms)
+Served asset /pie.css - 304 Not Modified (0ms)
+Served asset /players.css - 304 Not Modified (0ms)
+Served asset /reveal.css - 304 Not Modified (0ms)
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+Served asset /scorecards.css - 304 Not Modified (0ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (1ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+Served asset /analysis.js - 304 Not Modified (0ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (0ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (0ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (0ms)
+Served asset /matches.js - 304 Not Modified (1ms)
+Served asset /pie.js - 304 Not Modified (0ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (0ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (1ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (0ms)
+Served asset /application.js - 304 Not Modified (3ms)
+Served asset /logo.png - 304 Not Modified (0ms)
+Served asset /country.png - 304 Not Modified (1ms)
+Served asset /tournament.png - 304 Not Modified (0ms)
+Served asset /player.png - 304 Not Modified (0ms)
+Served asset /manager.png - 304 Not Modified (0ms)
+Served asset /coach.png - 304 Not Modified (0ms)
+Served asset /team.png - 304 Not Modified (0ms)
+Served asset /venue.png - 304 Not Modified (0ms)
+Served asset /match.png - 304 Not Modified (0ms)
+Served asset /match-over.png - 304 Not Modified (3ms)
+  [1m[35mClient Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''
+  [1m[36mMatch Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [matches].* FROM [matches] WHERE [matches].[id] = N''1'' AND [matches].[clientkey] = 2'[0m
+  [1m[35mTournament Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [tournaments].* FROM [tournaments] WHERE [tournaments].[id] = 1'
+  [1m[36mVenue Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [venues].* FROM [venues] WHERE [venues].[id] = 1'[0m
+  [1m[35mFormat Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [formats].* FROM [formats] WHERE [formats].[id] = 1'
+  [1m[36mLine Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [lines].* FROM [lines]'[0m
+  [1m[35mLength Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [lengths].* FROM [lengths]'
+  [1m[36mShottype Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [shottypes].* FROM [shottypes]'[0m
+  [1m[35mTeam Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [teams].* FROM [teams] WHERE [teams].[teamid] = 1'
+  [1m[36mTeam Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [teams].* FROM [teams] WHERE [teams].[teamid] = 2'[0m
+  [1m[35mScorecard Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [scorecards].* FROM [scorecards]'
+  [1m[36mScorecard Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(runs+wides+noballs+legbyes+byes) as scores FROM [scorecards] WHERE (matchkey=N''1'' and inning = 1)'[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'SELECT SUM([scorecards].[ballsdelivered]) AS sum_id FROM [scorecards] WHERE (matchkey=N''1'' and inning = 1)'
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT SUM([scorecards].[wicket]) AS sum_id FROM [scorecards] WHERE (matchkey=N''1'' and inning= 1)'[0m
+  [1m[35mTeam Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [teams].* FROM [teams] WHERE (teamid= 2)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N''1'' and inning = 1)'[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey = N''1'' and inning=1)'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mScorecard Load (3.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35m (4.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey = N''1'' and inning=1 and currentstrikerkey = 3)'
+  [1m[36mScorecard Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 6'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 6
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mScorecard Load (2.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N''1'' and inning = 1 and currentbowlerkey=11)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mVenue Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [venues].* FROM [venues] WHERE [venues].[id] = 1'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE (matchkey=N'1' and inning = 1)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 3'
+  [1m[36m (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and batsmankey=3)'[0m
+  [1m[35m (0.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentnonstrikerkey=3)'
+  [1m[36mScorecard Load (21.0ms)[0m  [1mEXEC sp_executesql N'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced, case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
+								from
+								(
+								select 
+								runs, 
+								zeros,
+								case when runs>0 then ones else 0 end as ones, 
+								case when runs>0 then twos else 0 end twos, 
+								case when runs>0 then threes else 0 end threes, 
+								case when runs>0 then fours else 0 end fours, 
+								case when runs>0 then fives else 0 end fives, 
+								case when runs>0 then sixes else 0 end sixes, 
+								ballsfaced 
+								from scorecards where matchkey = 1 and clientkey = 2 and batsmankey = 3 and inning=1
+								)A
+								'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 6
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 4'
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and batsmankey=4)'[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentnonstrikerkey=4)'
+  [1m[36mScorecard Load (1.0ms)[0m  [1mEXEC sp_executesql N'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced, case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
+								from
+								(
+								select 
+								runs, 
+								zeros,
+								case when runs>0 then ones else 0 end as ones, 
+								case when runs>0 then twos else 0 end twos, 
+								case when runs>0 then threes else 0 end threes, 
+								case when runs>0 then fours else 0 end fours, 
+								case when runs>0 then fives else 0 end fives, 
+								case when runs>0 then sixes else 0 end sixes, 
+								ballsfaced 
+								from scorecards where matchkey = 1 and clientkey = 2 and batsmankey = 4 and inning=1
+								)A
+								'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 6[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 5'
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and batsmankey=5)'[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentnonstrikerkey=5)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced, case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
+								from
+								(
+								select 
+								runs, 
+								zeros,
+								case when runs>0 then ones else 0 end as ones, 
+								case when runs>0 then twos else 0 end twos, 
+								case when runs>0 then threes else 0 end threes, 
+								case when runs>0 then fours else 0 end fours, 
+								case when runs>0 then fives else 0 end fives, 
+								case when runs>0 then sixes else 0 end sixes, 
+								ballsfaced 
+								from scorecards where matchkey = 1 and clientkey = 2 and batsmankey = 5 and inning=1
+								)A
+								'[0m
+  [1m[35mScorecard Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL[0m
+  [1m[35mDismissal Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [dismissals].* FROM [dismissals]'
+  [1m[36mTeam Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [teams].* FROM [teams] WHERE (teamid= 1)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 1'
+  [1m[36m (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=1)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=1)'[0m
+  [1m[35mScorecard Load (0.0ms)[0m  EXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=1 and outtypekey not in (4,5,6,7))'
+  [1m[36mPlayer Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 2'[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=2)'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 6[0m
+  [1m[35mScorecard Load (1.0ms)[0m  EXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=2)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=2 and outtypekey not in (4,5,6,7))'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 6'
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=6)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL
+  [1m[36mScorecard Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=6)'[0m
+  [1m[35mScorecard Load (0.0ms)[0m  EXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=6 and outtypekey not in (4,5,6,7))'
+  [1m[36mPlayer Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 7'[0m
+  [1m[35m (0.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=7)'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL[0m
+  [1m[35mScorecard Load (0.0ms)[0m  EXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=7)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=7 and outtypekey not in (4,5,6,7))'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 8'
+  [1m[36m (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=8)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=8)'[0m
+  [1m[35mScorecard Load (1.0ms)[0m  EXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=8 and outtypekey not in (4,5,6,7))'
+  [1m[36mPlayer Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 9'[0m
+  [1m[35m (0.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=9)'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL[0m
+  [1m[35mScorecard Load (1.0ms)[0m  EXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=9)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=9 and outtypekey not in (4,5,6,7))'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 10'
+  [1m[36m (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=10)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=10)'[0m
+  [1m[35mScorecard Load (1.0ms)[0m  EXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=10 and outtypekey not in (4,5,6,7))'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 11'[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=11)'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] = 14[0m
+  [1m[35mScorecard Load (0.0ms)[0m  EXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=11)'
+  [1m[36mScorecard Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=11 and outtypekey not in (4,5,6,7))'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 12'
+  [1m[36m (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=12)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=12)'[0m
+  [1m[35mScorecard Load (1.0ms)[0m  EXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=12 and outtypekey not in (4,5,6,7))'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [players].* FROM [players] WHERE [players].[id] = 13'[0m
+  [1m[35m (1.0ms)[0m  EXEC sp_executesql N'SELECT MAX([scorecards].[id]) AS max_id FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=13)'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT TOP (1) [scorecards].* FROM [scorecards] WHERE [scorecards].[id] IS NULL[0m
+  [1m[35mScorecard Load (1.0ms)[0m  EXEC sp_executesql N'SELECT sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=13)'
+  [1m[36mScorecard Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT sum(wicket) as wickets FROM [scorecards] WHERE (matchkey=N''1'' and inning=1 and currentbowlerkey=13 and outtypekey not in (4,5,6,7))'[0m
+Served asset /application.css - 304 Not Modified (3ms)
+Served asset /analysis.css - 304 Not Modified (0ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (0ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (1ms)
+Served asset /pie.css - 304 Not Modified (1ms)
+Served asset /players.css - 304 Not Modified (0ms)
+Served asset /reveal.css - 304 Not Modified (0ms)
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+Served asset /scorecards.css - 304 Not Modified (0ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (0ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (1ms)
+Served asset /analysis.js - 304 Not Modified (0ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (0ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (0ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (1ms)
+Served asset /matches.js - 304 Not Modified (0ms)
+Served asset /pie.js - 304 Not Modified (0ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (0ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (0ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (1ms)
+Served asset /application.js - 304 Not Modified (3ms)
+Served asset /logo.png - 304 Not Modified (1ms)
+Served asset /up.png - 304 Not Modified (7ms)
+Served asset /button.png - 304 Not Modified (35ms)
+Served asset /stumps.png - 304 Not Modified (8ms)
+Served asset /0.jpg - 200 OK (21ms)
+Served asset /1.jpg - 200 OK (54ms)
+Served asset /2.jpg - 200 OK (20ms)
+Served asset /3.jpg - 200 OK (19ms)
+Served asset /4.jpg - 200 OK (100ms)
+Served asset /5.jpg - 200 OK (22ms)
+Served asset /6.jpg - 200 OK (21ms)
+Served asset /7.jpg - 200 OK (60ms)
+Served asset /8.jpg - 200 OK (22ms)
+Served asset /up-over.png - 304 Not Modified (6ms)
+Served asset /up.png - 304 Not Modified (0ms)
+Served asset /button-over.png - 304 Not Modified (5ms)
+Served asset /button.png - 304 Not Modified (0ms)
+Served asset /up-over.png - 304 Not Modified (0ms)
+Served asset /up.png - 304 Not Modified (0ms)
+Served asset /up-over.png - 304 Not Modified (0ms)
+Served asset /up-over.png - 304 Not Modified (0ms)
+Served asset /up.png - 304 Not Modified (0ms)
+  [1m[35mClient Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''
+  [1m[36mTournament Load (2.0ms)[0m  [1mEXEC sp_executesql N'SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)'[0m
+  [1m[35mFormat Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [formats].* FROM [formats]'
+  [1m[36mDismissal Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [dismissals].* FROM [dismissals]'[0m
+  [1m[35mMatchType Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [match_types].* FROM [match_types]'
+  [1m[36mTeamType Load (2.0ms)[0m  [1mEXEC sp_executesql N'SELECT [team_types].* FROM [team_types]'[0m
+  [1m[35mVenue Load (2.0ms)[0m  EXEC sp_executesql N'SELECT [venues].* FROM [venues] WHERE (clientkey=2)'
+  [1m[36mLine Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [lines].* FROM [lines]'[0m
+  [1m[35mLength Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [lengths].* FROM [lengths]'
+  [1m[36mShottype Load (2.0ms)[0m  [1mEXEC sp_executesql N'SELECT [shottypes].* FROM [shottypes]'[0m
+  [1m[35mCountry Load (69.0ms)[0m  EXEC sp_executesql N'SELECT [countries].* FROM [countries] WHERE (clientkey=2)'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)[0m
+  [1m[35mTeam Load (3.0ms)[0m  EXEC sp_executesql N'SELECT distinct teamid, teamname FROM [teams] WHERE (clientkey=2)'
+  [1m[36mCoach Load (2.0ms)[0m  [1mEXEC sp_executesql N'SELECT [coaches].* FROM [coaches] WHERE (clientkey=2)'[0m
+  [1m[35mManager Load (2.0ms)[0m  EXEC sp_executesql N'SELECT [managers].* FROM [managers] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (20.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct playertype FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (2.0ms)[0m  EXEC sp_executesql N'SELECT distinct battingstyle FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (2.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct bowlingtype FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (2.0ms)[0m  EXEC sp_executesql N'SELECT [players].* FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (3.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct bowlingstyle FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mScorecard Load (4.0ms)[0m  EXEC sp_executesql N'SELECT distinct direction FROM [scorecards] WHERE (clientkey=2)'
+  [1m[36mMatch Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [matches].* FROM [matches] WHERE (clientkey=2)'[0m
+Compiled analysis.css  (134ms)  (pid 912)
+Compiled application.css  (9ms)  (pid 912)
+Compiled analysis.js  (1ms)  (pid 912)
+Compiled application.js  (14ms)  (pid 912)
+Served asset /application.css - 304 Not Modified (32ms)
+Served asset /analysis.css - 200 OK (6ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (1ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (0ms)
+Served asset /pie.css - 304 Not Modified (0ms)
+Served asset /players.css - 304 Not Modified (0ms)
+Served asset /reveal.css - 304 Not Modified (0ms)
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+Served asset /scorecards.css - 304 Not Modified (0ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (0ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+Served asset /analysis.js - 200 OK (3ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (0ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (0ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (0ms)
+Served asset /matches.js - 304 Not Modified (0ms)
+Served asset /pie.js - 304 Not Modified (0ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (0ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (0ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (0ms)
+Served asset /application.js - 304 Not Modified (24ms)
+Served asset /logo.png - 304 Not Modified (0ms)
+  [1m[35mScorecard Load (131.0ms)[0m  EXEC sp_executesql N'	Select c1.country as grp2, count(distinct mat.id) as won , count(distinct mat1.id) as lost 
+					from scorecards s 
+					inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey 
+					inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey 
+					 
+					inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey 
+					inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey 
+
+					LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
+					LEFT join (select * from matches where winnerkey<>-2) mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
+					inner join clients cl on tm.clientkey = cl.id
+					inner join countries c on c.country = cl.country and tm.countrykey = c.id
+					inner join countries c1 on c1.id = tm1.countrykey
+					where s.clientkey = 2
+					group by c1.country
+				'
+  [1m[36mClientconfig Load (2.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [clientconfigs].* FROM [clientconfigs] WHERE [clientconfigs].[clientkey] = N''2'''[0m
+Served asset /_analysis4.png - 304 Not Modified (28ms)
+Served asset /chosen-sprite.png - 304 Not Modified (5ms)
+  [1m[35mClient Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''
+  [1m[36mTournament Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)'[0m
+  [1m[35mFormat Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [formats].* FROM [formats]'
+  [1m[36mDismissal Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [dismissals].* FROM [dismissals]'[0m
+  [1m[35mMatchType Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [match_types].* FROM [match_types]'
+  [1m[36mTeamType Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [team_types].* FROM [team_types]'[0m
+  [1m[35mVenue Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [venues].* FROM [venues] WHERE (clientkey=2)'
+  [1m[36mLine Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [lines].* FROM [lines]'[0m
+  [1m[35mLength Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [lengths].* FROM [lengths]'
+  [1m[36mShottype Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [shottypes].* FROM [shottypes]'[0m
+  [1m[35mCountry Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [countries].* FROM [countries] WHERE (clientkey=2)'
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)[0m
+  [1m[35mTeam Load (2.0ms)[0m  EXEC sp_executesql N'SELECT distinct teamid, teamname FROM [teams] WHERE (clientkey=2)'
+  [1m[36mCoach Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [coaches].* FROM [coaches] WHERE (clientkey=2)'[0m
+  [1m[35mManager Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [managers].* FROM [managers] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct playertype FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct battingstyle FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct bowlingtype FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [players].* FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct bowlingstyle FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mScorecard Load (0.0ms)[0m  EXEC sp_executesql N'SELECT distinct direction FROM [scorecards] WHERE (clientkey=2)'
+  [1m[36mMatch Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [matches].* FROM [matches] WHERE (clientkey=2)'[0m
+Compiled analysis.js  (1ms)  (pid 912)
+Compiled application.js  (13ms)  (pid 912)
+Served asset /application.css - 304 Not Modified (2ms)
+Served asset /analysis.css - 304 Not Modified (0ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (0ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (0ms)
+Served asset /pie.css - 304 Not Modified (0ms)
+Served asset /players.css - 304 Not Modified (0ms)
+Served asset /reveal.css - 304 Not Modified (0ms)
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+Served asset /scorecards.css - 304 Not Modified (0ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (1ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+Served asset /analysis.js - 200 OK (39ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (0ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (0ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (0ms)
+Served asset /matches.js - 304 Not Modified (0ms)
+Served asset /pie.js - 304 Not Modified (1ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (0ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (0ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (0ms)
+Served asset /application.js - 304 Not Modified (49ms)
+Served asset /logo.png - 304 Not Modified (0ms)
+  [1m[35mClientconfig Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clientconfigs].* FROM [clientconfigs] WHERE [clientconfigs].[clientkey] = N''2'''
+Served asset /_analysis4.png - 304 Not Modified (0ms)
+  [1m[36mClient Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''[0m
+  [1m[35mTournament Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)'
+  [1m[36mFormat Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [formats].* FROM [formats]'[0m
+  [1m[35mDismissal Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [dismissals].* FROM [dismissals]'
+  [1m[36mMatchType Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [match_types].* FROM [match_types]'[0m
+  [1m[35mTeamType Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [team_types].* FROM [team_types]'
+  [1m[36mVenue Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [venues].* FROM [venues] WHERE (clientkey=2)'[0m
+  [1m[35mLine Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [lines].* FROM [lines]'
+  [1m[36mLength Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [lengths].* FROM [lengths]'[0m
+  [1m[35mShottype Load (2.0ms)[0m  EXEC sp_executesql N'SELECT [shottypes].* FROM [shottypes]'
+  [1m[36mCountry Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [countries].* FROM [countries] WHERE (clientkey=2)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)
+  [1m[36mTeam Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct teamid, teamname FROM [teams] WHERE (clientkey=2)'[0m
+  [1m[35mCoach Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [coaches].* FROM [coaches] WHERE (clientkey=2)'
+  [1m[36mManager Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [managers].* FROM [managers] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT distinct playertype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct battingstyle FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingtype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [players].* FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingstyle FROM [players] WHERE (clientkey=2)'
+  [1m[36mScorecard Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct direction FROM [scorecards] WHERE (clientkey=2)'[0m
+  [1m[35mMatch Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [matches].* FROM [matches] WHERE (clientkey=2)'
+Compiled analysis.js  (0ms)  (pid 912)
+Compiled application.js  (13ms)  (pid 912)
+Served asset /application.css - 304 Not Modified (1ms)
+Served asset /analysis.css - 304 Not Modified (0ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (0ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (0ms)
+Served asset /pie.css - 304 Not Modified (0ms)
+Served asset /players.css - 304 Not Modified (0ms)
+Served asset /reveal.css - 304 Not Modified (0ms)
+Served asset /scaffolds.css - 304 Not Modified (1ms)
+Served asset /scorecards.css - 304 Not Modified (0ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (0ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+Served asset /analysis.js - 200 OK (6ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (0ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (0ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (0ms)
+Served asset /matches.js - 304 Not Modified (0ms)
+Served asset /pie.js - 304 Not Modified (0ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (0ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (0ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (0ms)
+Served asset /application.js - 304 Not Modified (27ms)
+Served asset /logo.png - 304 Not Modified (0ms)
+  [1m[36mScorecard Load (2.0ms)[0m  [1mEXEC sp_executesql N'	Select c1.country as grp2, count(distinct mat.id) as won , count(distinct mat1.id) as lost 
+					from scorecards s 
+					inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey 
+					inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey 
+					 
+					inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey 
+					inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey 
+
+					LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
+					LEFT join (select * from matches where winnerkey<>-2) mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
+					inner join clients cl on tm.clientkey = cl.id
+					inner join countries c on c.country = cl.country and tm.countrykey = c.id
+					inner join countries c1 on c1.id = tm1.countrykey
+					where s.clientkey = 2
+					group by c1.country
+				'[0m
+  [1m[35mClientconfig Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clientconfigs].* FROM [clientconfigs] WHERE [clientconfigs].[clientkey] = N''2'''
+Served asset /_analysis4.png - 304 Not Modified (0ms)
+Served asset /background3.png - 304 Not Modified (0ms)
+Served asset /chosen-sprite.png - 304 Not Modified (0ms)
+  [1m[36mClient Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''[0m
+  [1m[35mTournament Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)'
+  [1m[36mFormat Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [formats].* FROM [formats]'[0m
+  [1m[35mDismissal Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [dismissals].* FROM [dismissals]'
+  [1m[36mMatchType Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [match_types].* FROM [match_types]'[0m
+  [1m[35mTeamType Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [team_types].* FROM [team_types]'
+  [1m[36mVenue Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [venues].* FROM [venues] WHERE (clientkey=2)'[0m
+  [1m[35mLine Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [lines].* FROM [lines]'
+  [1m[36mLength Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [lengths].* FROM [lengths]'[0m
+  [1m[35mShottype Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [shottypes].* FROM [shottypes]'
+  [1m[36mCountry Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [countries].* FROM [countries] WHERE (clientkey=2)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)
+  [1m[36mTeam Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct teamid, teamname FROM [teams] WHERE (clientkey=2)'[0m
+  [1m[35mCoach Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [coaches].* FROM [coaches] WHERE (clientkey=2)'
+  [1m[36mManager Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [managers].* FROM [managers] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct playertype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct battingstyle FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingtype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [players].* FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingstyle FROM [players] WHERE (clientkey=2)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct direction FROM [scorecards] WHERE (clientkey=2)'[0m
+  [1m[35mMatch Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [matches].* FROM [matches] WHERE (clientkey=2)'
+Compiled analysis.js  (0ms)  (pid 912)
+Compiled application.js  (13ms)  (pid 912)
+Served asset /application.css - 304 Not Modified (3ms)
+Served asset /analysis.css - 304 Not Modified (0ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (0ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (0ms)
+Served asset /pie.css - 304 Not Modified (0ms)
+Served asset /players.css - 304 Not Modified (0ms)
+Served asset /reveal.css - 304 Not Modified (0ms)
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+Served asset /scorecards.css - 304 Not Modified (1ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (0ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+Served asset /analysis.js - 200 OK (5ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (0ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (0ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (0ms)
+Served asset /matches.js - 304 Not Modified (1ms)
+Served asset /pie.js - 304 Not Modified (0ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (0ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (0ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (0ms)
+Served asset /application.js - 304 Not Modified (49ms)
+Served asset /logo.png - 304 Not Modified (0ms)
+  [1m[36mScorecard Load (2.0ms)[0m  [1mEXEC sp_executesql N'	Select c1.country as grp2, count(distinct mat.id) as won , count(distinct mat1.id) as lost 
+					from scorecards s 
+					inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey 
+					inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey 
+					 
+					inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey 
+					inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey 
+
+					LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
+					LEFT join (select * from matches where winnerkey<>-2) mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
+					inner join clients cl on tm.clientkey = cl.id
+					inner join countries c on c.country = cl.country and tm.countrykey = c.id
+					inner join countries c1 on c1.id = tm1.countrykey
+					where s.clientkey = 2
+					group by c1.country
+				'[0m
+  [1m[35mClientconfig Load (1.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clientconfigs].* FROM [clientconfigs] WHERE [clientconfigs].[clientkey] = N''2'''
+Served asset /_analysis4.png - 304 Not Modified (0ms)
+Served asset /background3.png - 304 Not Modified (0ms)
+Served asset /chosen-sprite.png - 304 Not Modified (0ms)
+  [1m[36mClient Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''[0m
+  [1m[35mTournament Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)'
+  [1m[36mFormat Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [formats].* FROM [formats]'[0m
+  [1m[35mDismissal Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [dismissals].* FROM [dismissals]'
+  [1m[36mMatchType Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [match_types].* FROM [match_types]'[0m
+  [1m[35mTeamType Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [team_types].* FROM [team_types]'
+  [1m[36mVenue Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [venues].* FROM [venues] WHERE (clientkey=2)'[0m
+  [1m[35mLine Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [lines].* FROM [lines]'
+  [1m[36mLength Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [lengths].* FROM [lengths]'[0m
+  [1m[35mShottype Load (2.0ms)[0m  EXEC sp_executesql N'SELECT [shottypes].* FROM [shottypes]'
+  [1m[36mCountry Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [countries].* FROM [countries] WHERE (clientkey=2)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)
+  [1m[36mTeam Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct teamid, teamname FROM [teams] WHERE (clientkey=2)'[0m
+  [1m[35mCoach Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [coaches].* FROM [coaches] WHERE (clientkey=2)'
+  [1m[36mManager Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [managers].* FROM [managers] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT distinct playertype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct battingstyle FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingtype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [players].* FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingstyle FROM [players] WHERE (clientkey=2)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct direction FROM [scorecards] WHERE (clientkey=2)'[0m
+  [1m[35mMatch Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [matches].* FROM [matches] WHERE (clientkey=2)'
+Compiled analysis.js  (2ms)  (pid 912)
+Compiled application.js  (13ms)  (pid 912)
+Served asset /application.css - 304 Not Modified (2ms)
+Served asset /analysis.css - 304 Not Modified (0ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (0ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (0ms)
+Served asset /pie.css - 304 Not Modified (0ms)
+Served asset /players.css - 304 Not Modified (0ms)
+Served asset /reveal.css - 304 Not Modified (0ms)
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+Served asset /scorecards.css - 304 Not Modified (0ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (0ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+Served asset /analysis.js - 200 OK (5ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (0ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (0ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (0ms)
+Served asset /matches.js - 304 Not Modified (0ms)
+Served asset /pie.js - 304 Not Modified (0ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (0ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (0ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (1ms)
+Served asset /application.js - 304 Not Modified (27ms)
+Served asset /background3.png - 304 Not Modified (0ms)
+  [1m[36mScorecard Load (1.0ms)[0m  [1mEXEC sp_executesql N'	Select c1.country as grp2, count(distinct mat.id) as won , count(distinct mat1.id) as lost 
+					from scorecards s 
+					inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey 
+					inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey 
+					 
+					inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey 
+					inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey 
+
+					LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
+					LEFT join (select * from matches where winnerkey<>-2) mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
+					inner join clients cl on tm.clientkey = cl.id
+					inner join countries c on c.country = cl.country and tm.countrykey = c.id
+					inner join countries c1 on c1.id = tm1.countrykey
+					where s.clientkey = 2
+					group by c1.country
+				'[0m
+  [1m[35mClientconfig Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clientconfigs].* FROM [clientconfigs] WHERE [clientconfigs].[clientkey] = N''2'''
+Served asset /logo.png - 304 Not Modified (1ms)
+Served asset /_analysis4.png - 304 Not Modified (0ms)
+Served asset /chosen-sprite.png - 304 Not Modified (0ms)
+  [1m[36mClient Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''[0m
+  [1m[35mTournament Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)'
+  [1m[36mFormat Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [formats].* FROM [formats]'[0m
+  [1m[35mDismissal Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [dismissals].* FROM [dismissals]'
+  [1m[36mMatchType Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [match_types].* FROM [match_types]'[0m
+  [1m[35mTeamType Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [team_types].* FROM [team_types]'
+  [1m[36mVenue Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [venues].* FROM [venues] WHERE (clientkey=2)'[0m
+  [1m[35mLine Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [lines].* FROM [lines]'
+  [1m[36mLength Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [lengths].* FROM [lengths]'[0m
+  [1m[35mShottype Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [shottypes].* FROM [shottypes]'
+  [1m[36mCountry Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [countries].* FROM [countries] WHERE (clientkey=2)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)
+  [1m[36mTeam Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct teamid, teamname FROM [teams] WHERE (clientkey=2)'[0m
+  [1m[35mCoach Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [coaches].* FROM [coaches] WHERE (clientkey=2)'
+  [1m[36mManager Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [managers].* FROM [managers] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT distinct playertype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct battingstyle FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingtype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [players].* FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingstyle FROM [players] WHERE (clientkey=2)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct direction FROM [scorecards] WHERE (clientkey=2)'[0m
+  [1m[35mMatch Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [matches].* FROM [matches] WHERE (clientkey=2)'
+Compiled analysis.js  (0ms)  (pid 912)
+Compiled application.js  (14ms)  (pid 912)
+Served asset /application.css - 304 Not Modified (2ms)
+Served asset /analysis.css - 304 Not Modified (0ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (0ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (0ms)
+Served asset /pie.css - 304 Not Modified (0ms)
+Served asset /players.css - 304 Not Modified (1ms)
+Served asset /reveal.css - 304 Not Modified (1ms)
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+Served asset /scorecards.css - 304 Not Modified (0ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (0ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+Served asset /analysis.js - 200 OK (37ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (1ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (1ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (0ms)
+Served asset /matches.js - 304 Not Modified (1ms)
+Served asset /pie.js - 304 Not Modified (0ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (0ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (0ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (0ms)
+Served asset /application.js - 304 Not Modified (25ms)
+Served asset /logo.png - 304 Not Modified (1ms)
+  [1m[36mScorecard Load (2.0ms)[0m  [1mEXEC sp_executesql N'	Select c1.country as grp2, count(distinct mat.id) as won , count(distinct mat1.id) as lost 
+					from scorecards s 
+					inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey 
+					inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey 
+					 
+					inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey 
+					inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey 
+
+					LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
+					LEFT join (select * from matches where winnerkey<>-2) mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
+					inner join clients cl on tm.clientkey = cl.id
+					inner join countries c on c.country = cl.country and tm.countrykey = c.id
+					inner join countries c1 on c1.id = tm1.countrykey
+					where s.clientkey = 2
+					group by c1.country
+				'[0m
+  [1m[35mClientconfig Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clientconfigs].* FROM [clientconfigs] WHERE [clientconfigs].[clientkey] = N''2'''
+Served asset /_analysis4.png - 304 Not Modified (0ms)
+Served asset /background3.png - 304 Not Modified (0ms)
+Served asset /chosen-sprite.png - 304 Not Modified (0ms)
+  [1m[36mClient Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT TOP (1) [clients].* FROM [clients] WHERE [clients].[username] = N''can'''[0m
+  [1m[35mTournament Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)'
+  [1m[36mFormat Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [formats].* FROM [formats]'[0m
+  [1m[35mDismissal Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [dismissals].* FROM [dismissals]'
+  [1m[36mMatchType Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [match_types].* FROM [match_types]'[0m
+  [1m[35mTeamType Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [team_types].* FROM [team_types]'
+  [1m[36mVenue Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [venues].* FROM [venues] WHERE (clientkey=2)'[0m
+  [1m[35mLine Load (0.0ms)[0m  EXEC sp_executesql N'SELECT [lines].* FROM [lines]'
+  [1m[36mLength Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [lengths].* FROM [lengths]'[0m
+  [1m[35mShottype Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [shottypes].* FROM [shottypes]'
+  [1m[36mCountry Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [countries].* FROM [countries] WHERE (clientkey=2)'[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT [tournaments].* FROM [tournaments] WHERE (clientkey=2)
+  [1m[36mTeam Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct teamid, teamname FROM [teams] WHERE (clientkey=2)'[0m
+  [1m[35mCoach Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [coaches].* FROM [coaches] WHERE (clientkey=2)'
+  [1m[36mManager Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT [managers].* FROM [managers] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct playertype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct battingstyle FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (0.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingtype FROM [players] WHERE (clientkey=2)'
+  [1m[36mPlayer Load (1.0ms)[0m  [1mEXEC sp_executesql N'SELECT [players].* FROM [players] WHERE (clientkey=2)'[0m
+  [1m[35mPlayer Load (1.0ms)[0m  EXEC sp_executesql N'SELECT distinct bowlingstyle FROM [players] WHERE (clientkey=2)'
+  [1m[36mScorecard Load (0.0ms)[0m  [1mEXEC sp_executesql N'SELECT distinct direction FROM [scorecards] WHERE (clientkey=2)'[0m
+  [1m[35mMatch Load (1.0ms)[0m  EXEC sp_executesql N'SELECT [matches].* FROM [matches] WHERE (clientkey=2)'
+Compiled analysis.js  (2ms)  (pid 912)
+Compiled application.js  (14ms)  (pid 912)
+Served asset /application.css - 304 Not Modified (2ms)
+Served asset /analysis.css - 304 Not Modified (0ms)
+Served asset /chosen.css - 304 Not Modified (0ms)
+Served asset /clientconfigs.css - 304 Not Modified (0ms)
+Served asset /clients.css - 304 Not Modified (0ms)
+Served asset /coaches.css - 304 Not Modified (0ms)
+Served asset /countries.css - 304 Not Modified (0ms)
+Served asset /managers.css - 304 Not Modified (0ms)
+Served asset /matches.css - 304 Not Modified (0ms)
+Served asset /pie.css - 304 Not Modified (0ms)
+Served asset /players.css - 304 Not Modified (0ms)
+Served asset /reveal.css - 304 Not Modified (0ms)
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+Served asset /scorecards.css - 304 Not Modified (0ms)
+Served asset /teams.css - 304 Not Modified (0ms)
+Served asset /tournaments.css - 304 Not Modified (0ms)
+Served asset /venues.css - 304 Not Modified (0ms)
+Served asset /jquery.js - 304 Not Modified (0ms)
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+Served asset /analysis.js - 200 OK (6ms)
+Served asset /chosen.jquery.js - 304 Not Modified (0ms)
+Served asset /clientconfigs.js - 304 Not Modified (0ms)
+Served asset /clients.js - 304 Not Modified (0ms)
+Served asset /coaches.js - 304 Not Modified (0ms)
+Served asset /country.js - 304 Not Modified (0ms)
+Served asset /jquery.reveal.js - 304 Not Modified (0ms)
+Served asset /jquery.reverseorder.js - 304 Not Modified (0ms)
+Served asset /managers.js - 304 Not Modified (0ms)
+Served asset /matches.js - 304 Not Modified (0ms)
+Served asset /pie.js - 304 Not Modified (0ms)
+Served asset /players.js - 304 Not Modified (0ms)
+Served asset /raphael.js - 304 Not Modified (1ms)
+Served asset /scorecards.js - 304 Not Modified (0ms)
+Served asset /teams.js - 304 Not Modified (1ms)
+Served asset /tournaments.js - 304 Not Modified (0ms)
+Served asset /venues.js - 304 Not Modified (0ms)
+Served asset /application.js - 304 Not Modified (52ms)
+Served asset /background3.png - 304 Not Modified (1ms)
+  [1m[36mScorecard Load (3.0ms)[0m  [1mEXEC sp_executesql N'	Select c1.country as grp2, count(distinct mat.id) as won , count(distinct mat1.id) as lost 
+					from scorecards s 
+					inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey 
+					inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey 
+					 
+					inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey 
+					inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey 
+
+					LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
+					LEFT join (select * from matches where winnerkey<>-2) mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
+					inner join clients cl on tm.clientkey = cl.id
+					inner join countries c on c.country = cl.country and tm.countrykey = c.id
+					inner join countries c1 on c1.id = tm1.countrykey
+					where s.clientkey = 2
+					group by c1.country
+				'[0m
+  [1m[35mClientconfig Load (0.0ms)[0m  EXEC sp_executesql N'SELECT TOP (1) [clientconfigs].* FROM [clientconfigs] WHERE [clientconfigs].[clientkey] = N''2'''
+Served asset /logo.png - 304 Not Modified (0ms)
+Served asset /_analysis4.png - 304 Not Modified (0ms)
+Served asset /chosen-sprite.png - 304 Not Modified (0ms)

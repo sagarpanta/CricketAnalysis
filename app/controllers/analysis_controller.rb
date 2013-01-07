@@ -126,6 +126,7 @@ class AnalysisController < ApplicationController
   def generate
 	begin
 		lastXmatches = params[:filters][:lxm].to_i
+		fq = params[:filters][:fq].to_i
 		
 		if lastXmatches == -2
 			matchcount = Scorecard.count('distinct matchkey')
@@ -1732,24 +1733,24 @@ class AnalysisController < ApplicationController
 			metrics['mishits'] = ',case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end as val '
 			metrics['slugs'] = ',case when s.shottype in (49,50,51,56) then 1 else 0 end as val '
 			
+			#does not work for #shots, #deliveries, c strike, c nonstrike, bbx, bbh, bbb, match won, match lost, innings, avg,
+			#econ, sr, bowl avg, 50s, 100s, and consistency
 			frequency_sc = 'select grp1, cast(grp2 as integer) as grp2 , avg(val) as val
 							from
 							(
-							select grp1, "over", round(case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end) as grp2, case when sum(ballsfaced) = 0 then 0 else sum(val)/(1.0*sum(ballsfaced))*6 end as val
+							select matchkey,grp1, "over", round(case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end) as grp2, case when sum(ballsfaced) = 0 then 0 else sum(val)/(1.0*sum(ballsfaced))*6 end as val
 							from
-							(select s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, '+ metrics[metric]+'
+							(select s.matchkey,s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2'+ metrics[metric]+'
 							 from (select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
 								LEFT JOIN 
 								(select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over",  rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum,'+_metrics + ' from ' + scorecards +' s) s1
 								ON s.grp1 = s1.grp1 and s."over" = s1."over" and s.ballnum = s1.ballnum-1 and s.matchkey = s1.matchkey
 							)A
-							group by grp1, "over"
+							group by matchkey,grp1, "over"
 							)B
 							group by grp1, grp2
 							order by grp1, grp2
 						   '
-			@client = current_user
-			ClientMailer.Error_Delivery(frequency_sc, @client, 'frequency').deliver
 				
 =begin				
 			groups = varA[1..-1].split(',')
@@ -1787,84 +1788,85 @@ class AnalysisController < ApplicationController
 =end			
 		############################################### end of variable definitions #####################################################3	
 	
-		
-		if metric == 'runs'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'avg'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))											
-		elsif metric == 'sr'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'dsmsl'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(wicket) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'bbh'
-			@chartdata = Scorecard.find_by_sql(bbr)
-		elsif metric == 'bbb'
-			@chartdata = Scorecard.find_by_sql(bbb)
-		elsif metric == 'dbx'
-			@chartdata = Scorecard.find_by_sql(dbx)
-		elsif metric == 'c_strike'
-			@chartdata = Scorecard.find_by_sql(cstrike)
-			#@client = current_user
-			#ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
-		#does not work with batting position because batting pos is only for current striker.
-		#The current scorecard id has batting position which is only for current strikerkey
-		elsif metric == 'c_nonstrike'
-			@chartdata = Scorecard.find_by_sql(cnonstrike)
-			#@client = current_user
-			#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
-		elsif metric == 'consistency'
-			@chartdata = Scorecard.find_by_sql(cstrike)
-		elsif metric == 'inns'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'zero'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(zeros) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'one'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ones) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'two'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(twos) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'three'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(threes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'four'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(fours) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'six'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(sixes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'wides'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'noballs'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(noballs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'byes'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(byes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'legbyes'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(legbyes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'extras'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides+noballs+byes+legbyes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'econ'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides+noballs+runs)/(SUM(ballsdelivered)/6+SUM(ballsdelivered)%6/6.0) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'bavg'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket) = 0 then 0 else  sum(wides+noballs+runs)/(1.0*SUM(wicket)) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'fifties'
-			if group1=='batsman' or group2=='batsman'
-				@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', s.matchkey, case when sum(runs)>=50 and sum(runs)<100 then 1 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+ (group2 != ''? ',grp2':''))	
+		if fq ==0 
+			
+			if metric == 'runs'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'avg'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))											
+			elsif metric == 'sr'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'dsmsl'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(wicket) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'bbh'
+				@chartdata = Scorecard.find_by_sql(bbr)
+			elsif metric == 'bbb'
+				@chartdata = Scorecard.find_by_sql(bbb)
+			elsif metric == 'dbx'
+				@chartdata = Scorecard.find_by_sql(dbx)
+			elsif metric == 'c_strike'
+				@chartdata = Scorecard.find_by_sql(cstrike)
+				#@client = current_user
+				#ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
+			#does not work with batting position because batting pos is only for current striker.
+			#The current scorecard id has batting position which is only for current strikerkey
+			elsif metric == 'c_nonstrike'
+				@chartdata = Scorecard.find_by_sql(cnonstrike)
+				#@client = current_user
+				#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
+			elsif metric == 'consistency'
+				@chartdata = Scorecard.find_by_sql(cstrike)
+			elsif metric == 'inns'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'zero'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(zeros) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'one'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ones) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'two'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(twos) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'three'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(threes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'four'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(fours) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'six'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(sixes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'wides'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'noballs'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(noballs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'byes'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(byes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'legbyes'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(legbyes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'extras'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides+noballs+byes+legbyes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'econ'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides+noballs+runs)/(SUM(ballsdelivered)/6+SUM(ballsdelivered)%6/6.0) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'bavg'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket) = 0 then 0 else  sum(wides+noballs+runs)/(1.0*SUM(wicket)) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'fifties'
+				if group1=='batsman' or group2=='batsman'
+					@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', s.matchkey, case when sum(runs)>=50 and sum(runs)<100 then 1 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+ (group2 != ''? ',grp2':''))	
+				end
+			elsif metric == 'hundreds'
+				if group1=='batsman' or group2=='batsman'
+					@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', s.matchkey, case when sum(runs)>=100 then 1 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+ (group2 != ''? ',grp2':''))	
+				end
+			elsif metric == 'mtchwon'
+				#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'mtchlost'
+				#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match_lost+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'noofdels'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'noofshots'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0 group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 			end
-		elsif metric == 'hundreds'
-			if group1=='batsman' or group2=='batsman'
-				@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', s.matchkey, case when sum(runs)>=100 then 1 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+ (group2 != ''? ',grp2':''))	
-			end
-		elsif metric == 'mtchwon'
-			#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'mtchlost'
-			#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match_lost+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'noofdels'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		elsif metric == 'noofshots'
-			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0 group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+		else
+			@chartdata = Scorecard.find_by_sql(frequency_sc)
 		end
-
-
-
-		
+	
 		@chartdata = @chartdata == []? nil:@chartdata
 		
 		@data = Scorecard.getChartData(@chartdata, group1, group2, metric)
