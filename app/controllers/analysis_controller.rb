@@ -1737,7 +1737,7 @@ class AnalysisController < ApplicationController
 							(
 							select grp1, "over", round(case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end) as grp2, case when sum(ballsfaced) = 0 then 0 else sum(val)/(1.0*sum(ballsfaced))*6 end as val
 							from
-							(select s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, '+_metrics[metric]+'
+							(select s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, '+ metrics[metric]+'
 							 from (select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
 								LEFT JOIN 
 								(select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over",  rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum,'+_metrics + ' from ' + scorecards +' s) s1
