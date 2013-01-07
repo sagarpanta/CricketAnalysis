@@ -1710,7 +1710,7 @@ class AnalysisController < ApplicationController
 	
 			
 			frequency_sc = ''
-			_metrics = ' s.ballsdelivered, s.ballsfaced, s.byes, s.eights, s.fives, s.fours, s.legbyes, s.maiden, s.noballs, s.ones, s.others,s.runs, s.sevens, s.sixes,s.threes, s.twos, s.wides, s.zeros,  s.line, s.length, s.shottype, s.side, s.angle '
+			_metrics = ' s.ballsdelivered, s.ballsfaced, s.byes, s.eights, s.fives, s.fours, s.legbyes, s.maiden, s.noballs, s.ones, s.others,s.runs, s.sevens, s.sixes,s.threes, s.twos, s.wides, s.zeros,  s.line, s.length, s.shottype, s.side, s.angle, s.outtypekey '
 			
 			
 			metrics = {}
