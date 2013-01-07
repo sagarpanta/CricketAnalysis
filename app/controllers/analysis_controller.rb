@@ -1676,7 +1676,7 @@ class AnalysisController < ApplicationController
 				WITH 
 				CTE AS 
 				(
-					select ballrank, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
+					select ballrank, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+' , runs as val, matchkey
 					from
 					(
 					select matchkey, ballrank,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where ballnum between '+ballnumber_betn+' and wides=0
@@ -1806,8 +1806,8 @@ class AnalysisController < ApplicationController
 			elsif metric == 'dbx'
 				@chartdata = Scorecard.find_by_sql(dbx)
 			elsif metric == 'c_strike'
-				#@chartdata = Scorecard.find_by_sql(cstrike)
-				#@client = current_user
+				@chartdata = Scorecard.find_by_sql(cstrike)
+				@client = current_user
 				ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
 			#does not work with batting position because batting pos is only for current striker.
 			#The current scorecard id has batting position which is only for current strikerkey
