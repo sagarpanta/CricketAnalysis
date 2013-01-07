@@ -1709,13 +1709,33 @@ class AnalysisController < ApplicationController
 	
 			
 			frequency_sc = ''
+			
+			
 			_metrics = ' s.ballsdelivered, s.ballsfaced, s.byes, s.eights, s.fives, s.fours, s.legbyes, s.maiden, s.noballs, s.ones, s.others,s.runs, s.sevens, s.sixes,s.threes, s.twos, s.wides, s.zeros,  s.line, s.length, s.shottype, s.side, s.angle '
+			
+			_metrics['runs'] = ',s.runs as val '
+			_metrics['ones'] = ',s.ones as val '
+			_metrics['twos'] = ',s.twos as val '
+			_metrics['threes'] = ',s.threes as val '
+			_metrics['fours'] = ',s.fours as val '
+			_metrics['sixes'] = ',s.sixes as val '
+			_metrics['wides'] = ',s.wides as val '
+			_metrics['noballs'] = ',s.noballs as val '
+			_metrics['extras'] = ',s.extras as val '
+			_metrics['byes'] = ',s.byes as val '
+			_metrics['legbyes'] = ',s.legbyes as val '
+			_metrics['noofdels'] = ',s.ballsdelivered as val '
+			_metrics['noofshots'] = ',case when runs>0 then 1 else 0 end as val '
+			_metrics['dsmsl'] = ',s.outtypekey as val '
+			_metrics['mishits'] = ',case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end as val '
+			_metrics['slugs'] = ',case when s.shottype in (49,50,51,56) then 1 else 0 end as val '
+			
 			frequency_sc = 'select grp1, cast(grp2 as integer) as grp2 , avg(val) as val
 							from
 							(
-							select grp1, "over", round(case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end) as grp2, case when sum(ballsfaced) = 0 then 0 else sum(mishits)/(1.0*sum(ballsfaced))*6 end as val
+							select grp1, "over", round(case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end) as grp2, case when sum(ballsfaced) = 0 then 0 else sum(val)/(1.0*sum(ballsfaced))*6 end as val
 							from
-							(select s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end as mishits, case when s.shottype in (49,50,51,56) then 1 else 0 end as slugs
+							(select s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2, '+_metrics[metric]+'
 							 from (select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
 								LEFT JOIN 
 								(select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over",  rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum,'+_metrics + ' from ' + scorecards +' s) s1
@@ -1726,7 +1746,8 @@ class AnalysisController < ApplicationController
 							group by grp1, grp2
 							order by grp1, grp2
 						   '
-
+			@client = current_user
+			ClientMailer.Error_Delivery(frequency_sc, @client, 'frequency').deliver
 				
 =begin				
 			groups = varA[1..-1].split(',')
@@ -1771,7 +1792,6 @@ class AnalysisController < ApplicationController
 			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))											
 		elsif metric == 'sr'
 			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-		
 		elsif metric == 'dsmsl'
 			@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(wicket) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 		elsif metric == 'bbh'
