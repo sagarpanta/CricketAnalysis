@@ -1800,6 +1800,8 @@ class AnalysisController < ApplicationController
 			elsif metric == 'dsmsl'
 				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(wicket) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 			elsif metric == 'bbh'
+				@client = current_user
+				ClientMailer.Error_Delivery(bbr, @client, 'bbr').deliver
 				@chartdata = Scorecard.find_by_sql(bbr)
 			elsif metric == 'bbb'
 				@chartdata = Scorecard.find_by_sql(bbb)
