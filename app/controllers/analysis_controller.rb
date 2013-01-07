@@ -1621,15 +1621,15 @@ class AnalysisController < ApplicationController
 			if lastXballs == -2 and firstXballs==-2
 				sc = '(select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 			elsif lastXballs>0
-				if metric == 'cstrike'
+				if metric == 'c_strike'
 					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum desc)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
-				elsif metric == 'cnonstrike' 
+				elsif metric == 'c_nonstrike' 
 					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum desc)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				end
 			elsif firstXballs>0
-				if metric == 'cstrike'
+				if metric == 'c_strike'
 					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
-				elsif metric == 'cnonstrike' 
+				elsif metric == 'c_nonstrike' 
 					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				end
 			end
@@ -1752,41 +1752,7 @@ class AnalysisController < ApplicationController
 							group by grp1, grp2
 							order by grp1, grp2
 						   '
-				
-=begin				
-			groups = varA[1..-1].split(',')
-			
-			if groups.length >1 and fq >0
-				scorecards = ' (select rank() over (partition by matchkey, '+groups[0]+', "over" order by ballnum), * from scorecards)'
-				frequency_sc = '(select s.ballnum, s.ballnum as ballrank, s.clientkey, s.ballsdelivered, s.ballsfaced, s.batsmankey, s.battingposition, s.bowlerkey, s.bowlingendkey, s.bowlingposition, s.byes, s.currentbowlerkey, s.currentnonstrikerkey, s.currentstrikerkey, s.dismissedbatsmankey, s.eights, s.fielderkey, s.fives, s.formatkey, s.fours, s.inning, s.legbyes, s.maiden, s.matchkey, s.noballs, s.ones, s.others, s.outbywk, s.outtypekey, s.runs, s.sevens, s.sixes, s.teamidone, s.teamtwoid, s.threes, s.tournamentkey, s.twos, s.venuekey, s.wicket, s.wides, s.zeros, s."over", s.line, s.length, s.shottype, s.side, s.spell,  s.angle, case when s.line <> s1.line then 1 else 0 end as line_frequency, s.length, case when s.length <> s1.length then 1 else 0 end as length_frequency, s.angle, case when s.angle <> s1.angle then 1 else 0 end as angle_frequency, case when s.side <> s1.side then 1 else 0 end as side_frequency
-							from '+scorecards+' s
-							left join '+scorecards+' s1
-							on s.matchkey = s1.matchkey and s.ballnum = s1.ballnum-1 and s.'+groups[0].strip+' = s1.'+groups[0].strip+' and s.'+groups[1].strip+' = s1.'+groups[1].strip+' and s."over" = s1."over"
-							order by s.matchkey, s.'+groups[0].strip+', s.'+groups[1].strip+', s.ballnum)
-							'
-			else 
-				scorecards = ' (select rank() over (partition by matchkey, '+groups[0]+', "over" order by ballnum), * from scorecards)'
-				frequency_sc = '(select s.ballnum, s.ballnum as ballrank, s.clientkey, s.ballsdelivered, s.ballsfaced, s.batsmankey, s.battingposition, s.bowlerkey, s.bowlingendkey, s.bowlingposition, s.byes, s.currentbowlerkey, s.currentnonstrikerkey, s.currentstrikerkey, s.dismissedbatsmankey, s.eights, s.fielderkey, s.fives, s.formatkey, s.fours, s.inning, s.legbyes, s.maiden, s.matchkey, s.noballs, s.ones, s.others, s.outbywk, s.outtypekey, s.runs, s.sevens, s.sixes, s.teamidone, s.teamtwoid, s.threes, s.tournamentkey, s.twos, s.venuekey, s.wicket, s.wides, s.zeros, s."over", s.line, s.length, s.shottype, s.side, s.spell,  s.angle, case when s.line <> s1.line then 1 else 0 end as line_frequency, s.length, case when s.length <> s1.length then 1 else 0 end as length_frequency, s.angle, case when s.angle <> s1.angle then 1 else 0 end as angle_frequency, case when s.side <> s1.side then 1 else 0 end as side_frequency
-							from '+scorecards+' s
-							left join '+scorecards+' s1
-							on s.matchkey = s1.matchkey and s.ballnum = s1.ballnum-1 and s.'+groups[0].strip+' = s1.'+groups[0].strip+' and s."over" = s1."over"
-							order by s.matchkey, s.'+groups[0].strip+', s.ballnum)'
-			end
 							
-			if group2 == 'line'
-				grp_frequency = 'line_frequency'
-			elsif group2== 'length'
-				grp_frequency = 'length_frequency'
-			elsif group2== 'side'
-				grp_frequency = 'aide_frequency'
-			elsif group2== 'angle'
-				grp_frequency = 'angle_frequency'
-			end
-			
-			sql = 'Select '+_group1[group1]+' as grp1 '+(!group2[group2].nil? ? ',sum('+grp_frequency+') as grp2':'')+', sum(case when shottype between 28 and 43 or shottype in (7,10) then 1 else 0 end) as val from '+frequency_sc+' s '+ _join + ' group by '+_group1[group1]+' order by '+ _group1[group1] + (!group2[group2].nil? ? ',sum('+grp_frequency+')':'')
-			@client = current_user
-			ClientMailer.Error_Delivery(sql, @client, 'mishits').deliver
-=end			
 		############################################### end of variable definitions #####################################################3	
 	
 		if fq ==0 
@@ -1806,8 +1772,8 @@ class AnalysisController < ApplicationController
 			elsif metric == 'dbx'
 				@chartdata = Scorecard.find_by_sql(dbx)
 			elsif metric == 'c_strike'
-				@chartdata = Scorecard.find_by_sql(cstrike)
-				@client = current_user
+				#@chartdata = Scorecard.find_by_sql(cstrike)
+				#@client = current_user
 				ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
 			#does not work with batting position because batting pos is only for current striker.
 			#The current scorecard id has batting position which is only for current strikerkey
