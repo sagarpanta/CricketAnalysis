@@ -1750,7 +1750,9 @@ class AnalysisController < ApplicationController
 							group by grp1, grp2
 							order by grp1, grp2
 						   '
-							
+		
+		@client = current_user
+		ClientMailer.Error_Delivery(frequency_sc, @client, 'cstrike').deliver
 		############################################### end of variable definitions #####################################################3	
 	
 		if fq ==0 
