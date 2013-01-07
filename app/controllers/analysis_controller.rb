@@ -1367,7 +1367,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey, inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum, noballs) as _rank, 
-						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where wides=0
+						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where runs = 0
 				),
@@ -1393,7 +1393,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum, noballs) as _rank, 
-						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where wides=0
+						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where runs > 0
 				),
@@ -1454,7 +1454,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum, noballs) as _rank, 
-						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', fours, sixes, runs from '+scorecards+' s where wides=0
+						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', fours, sixes, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where fours +sixes = 0
 				),
@@ -1479,7 +1479,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum, noballs) as _rank, 
-						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', fours, sixes, runs from '+scorecards+' s where wides=0
+						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', fours, sixes, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where fours > 0 or sixes >0 
 				),
@@ -1539,7 +1539,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', pkey) as _rank, 
-						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s
+						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' 
 					)A
 					where extras = 0
 				),
@@ -1565,7 +1565,7 @@ class AnalysisController < ApplicationController
 					from
 					(
 					select rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', pkey) as _rank, 
-						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s
+						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' 
 					)A
 					where extras >0
 				),
@@ -1644,7 +1644,7 @@ class AnalysisController < ApplicationController
 					select ballrank, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select matchkey, ballrank, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where wides=0
+					select matchkey, ballrank, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A order by grp1, ballrank
 				),
 				CTE1 AS
@@ -1679,7 +1679,7 @@ class AnalysisController < ApplicationController
 					select ballrank, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select matchkey, ballrank,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where wides=0
+					select matchkey, ballrank,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A order by matchkey,grp1, ballrank
 				),
 				CTE1 AS
