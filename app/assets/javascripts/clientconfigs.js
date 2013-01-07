@@ -48,6 +48,8 @@ $(document).ready(function(){
 				if (data["c_strike"]==1) {$('[data-metric="c_strike"]').addClass('enable');}
 				if (data["c_nonstrike"]==1) {$('[data-metric="c_nonstrike"]').addClass('enable');}
 				if (data["consistency"]==1) {$('[data-metric="consistency"]').addClass('enable');}
+				if (data["mishits"]==1) {$('[data-metric="mishits"]').addClass('enable');}
+				if (data["slugs"]==1) {$('[data-metric="slugs"]').addClass('enable');}
 				
 				
 			},

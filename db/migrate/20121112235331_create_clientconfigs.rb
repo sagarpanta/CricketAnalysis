@@ -34,6 +34,8 @@ class CreateClientconfigs < ActiveRecord::Migration
 	  t.integer :c_strike
 	  t.integer :c_nonstrike
 	  t.integer :consistency
+	  t.integer :mishits
+	  t.slugs   :slugs
 
       t.timestamps
     end
