@@ -1713,22 +1713,24 @@ class AnalysisController < ApplicationController
 			
 			_metrics = ' s.ballsdelivered, s.ballsfaced, s.byes, s.eights, s.fives, s.fours, s.legbyes, s.maiden, s.noballs, s.ones, s.others,s.runs, s.sevens, s.sixes,s.threes, s.twos, s.wides, s.zeros,  s.line, s.length, s.shottype, s.side, s.angle '
 			
-			_metrics['runs'] = ',s.runs as val '
-			_metrics['ones'] = ',s.ones as val '
-			_metrics['twos'] = ',s.twos as val '
-			_metrics['threes'] = ',s.threes as val '
-			_metrics['fours'] = ',s.fours as val '
-			_metrics['sixes'] = ',s.sixes as val '
-			_metrics['wides'] = ',s.wides as val '
-			_metrics['noballs'] = ',s.noballs as val '
-			_metrics['extras'] = ',s.extras as val '
-			_metrics['byes'] = ',s.byes as val '
-			_metrics['legbyes'] = ',s.legbyes as val '
-			_metrics['noofdels'] = ',s.ballsdelivered as val '
-			_metrics['noofshots'] = ',case when runs>0 then 1 else 0 end as val '
-			_metrics['dsmsl'] = ',s.outtypekey as val '
-			_metrics['mishits'] = ',case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end as val '
-			_metrics['slugs'] = ',case when s.shottype in (49,50,51,56) then 1 else 0 end as val '
+			
+			metrics = {}
+			metrics['runs'] = ',s.runs as val '
+			metrics['one'] = ',s.ones as val '
+			metrics['two'] = ',s.twos as val '
+			metrics['three'] = ',s.threes as val '
+			metrics['four'] = ',s.fours as val '
+			metrics['six'] = ',s.sixes as val '
+			metrics['wides'] = ',s.wides as val '
+			metrics['noballs'] = ',s.noballs as val '
+			metrics['extras'] = ',s.extras as val '
+			metrics['byes'] = ',s.byes as val '
+			metrics['legbyes'] = ',s.legbyes as val '
+			metrics['noofdels'] = ',s.ballsdelivered as val '
+			metrics['noofshots'] = ',case when runs>0 then 1 else 0 end as val '
+			metrics['dsmsl'] = ',s.outtypekey as val '
+			metrics['mishits'] = ',case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end as val '
+			metrics['slugs'] = ',case when s.shottype in (49,50,51,56) then 1 else 0 end as val '
 			
 			frequency_sc = 'select grp1, cast(grp2 as integer) as grp2 , avg(val) as val
 							from
