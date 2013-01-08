@@ -1828,6 +1828,10 @@ class AnalysisController < ApplicationController
 				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 			elsif metric == 'noofshots'
 				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0 group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'mishits'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			elsif metric == 'slugs'
+				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(case when s.shottype in (49,50,51,56) then 1 else 0 end) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0 group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 			end
 		else
 			@chartdata = Scorecard.find_by_sql(frequency_sc)
