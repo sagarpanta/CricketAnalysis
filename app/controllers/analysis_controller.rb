@@ -1645,8 +1645,6 @@ class AnalysisController < ApplicationController
 			end
 			
 
-						
-			
 			cnonstrike = '
 				WITH 
 				CTE AS 
@@ -1817,9 +1815,9 @@ class AnalysisController < ApplicationController
 			elsif metric == 'dbx'
 				@chartdata = Scorecard.find_by_sql(dbx)
 			elsif metric == 'c_strike'
-				@client = current_user
+				#@client = current_user
 				#ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
-				#@chartdata = Scorecard.find_by_sql(cstrike)
+				@chartdata = Scorecard.find_by_sql(cstrike)
 			#does not work with batting position because batting pos is only for current striker.
 			#The current scorecard id has batting position which is only for current strikerkey
 			elsif metric == 'c_nonstrike'
@@ -1827,6 +1825,8 @@ class AnalysisController < ApplicationController
 				#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
 				@chartdata = Scorecard.find_by_sql(cnonstrike)
 			elsif metric == 'consistency'
+				@client = current_user
+				ClientMailer.Error_Delivery(consistency, @client, 'consistency').deliver
 				@chartdata = Scorecard.find_by_sql(consistency)
 			elsif metric == 'inns'
 				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
