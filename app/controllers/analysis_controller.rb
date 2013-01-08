@@ -1644,7 +1644,7 @@ class AnalysisController < ApplicationController
 				_sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, rank() over (partition by matchkey, grp1 order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
 			end
 			
-
+			
 			cnonstrike = '
 				WITH 
 				CTE AS 
@@ -1679,7 +1679,8 @@ class AnalysisController < ApplicationController
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
 				order by X.grp1'+ (group2!=''? ',X.grp2':'')
-				
+			
+			
 			cstrike = '
 				WITH 
 				CTE AS 
@@ -1715,7 +1716,8 @@ class AnalysisController < ApplicationController
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
 				order by X.grp1'+ (group2!=''? ',X.grp2':'')
-				
+			
+
 			consistency = '
 				WITH 
 				CTE AS 
@@ -1728,7 +1730,7 @@ class AnalysisController < ApplicationController
 				),
 				CTE1 AS
 				(
-					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
+					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.grp1, a.ballrank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A.ballrank = B.ballrank+1 and a.matchkey=b.matchkey and a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
@@ -1736,7 +1738,7 @@ class AnalysisController < ApplicationController
 				,
 				CTE2 AS
 				(
-					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.ballrank) _order
+					SELECT  a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A.ballrank, ROW_NUMBER() OVER( ORDER BY a.matchkey,a.grp1, a.ballrank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A.ballrank+1 = B.ballrank and  a.matchkey= b.matchkey and a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
@@ -1751,11 +1753,9 @@ class AnalysisController < ApplicationController
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
 				order by X.grp1'+ (group2!=''? ',X.grp2':'')
-	
-			
+
 			frequency_sc = ''
 			_metrics = ' s.ballsdelivered, s.ballsfaced, s.byes, s.eights, s.fives, s.fours, s.legbyes, s.maiden, s.noballs, s.ones, s.others,s.runs, s.sevens, s.sixes,s.threes, s.twos, s.wides, s.zeros,  s.line, s.length, s.shottype, s.side, s.angle, s.outtypekey '
-			
 			
 			metrics = {}
 			metrics['runs'] = ',s.runs as val '
@@ -1825,8 +1825,6 @@ class AnalysisController < ApplicationController
 				#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
 				@chartdata = Scorecard.find_by_sql(cnonstrike)
 			elsif metric == 'consistency'
-				@client = current_user
-				ClientMailer.Error_Delivery(consistency, @client, 'consistency').deliver
 				@chartdata = Scorecard.find_by_sql(consistency)
 			elsif metric == 'inns'
 				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
