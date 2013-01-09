@@ -1778,10 +1778,11 @@ class AnalysisController < ApplicationController
 			
 			#does not work for #shots, #deliveries, c strike, c nonstrike, bbx, bbh, bbb, match won, match lost, innings, avg,
 			#econ, sr, bowl avg, 50s, 100s, and consistency
-			frequency_sc = 'select grp1, cast(grp2 as integer) as grp2 , avg(val) as val
+			grp1 = "grp1||'|'round(avg(ballsfaced))"
+			frequency_sc = 'select '+grp1+', cast(grp2 as integer) as grp2 , avg(val) as val
 							from
 							(
-							select matchkey,grp1, "over", sum(frequency_grp2) as grp2, sum(val) as val
+							select matchkey,grp1, "over", sum(s.ballsfaced) as ballsfaced, sum(frequency_grp2) as grp2, sum(val) as val
 							from
 							(select s.matchkey,s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2'+ (metrics[metric].nil? ? '':metrics[metric])+'
 							 from (select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
