@@ -3,16 +3,24 @@
 #
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
+#development:
+#    adapter: sqlserver
+#    mode: dblib
+#    dataserver: tshv0dv06   # Name from freetds.conf, host or instance 'localhost\SQLEXPRESS'
+#    host: mydb.net          # Used if dataserver is blank.
+#    port: 1433              # Used if host present. Default is 1433.
+#    database: CricketAnalysis
+#    username: sa
+#    password: P@ssw0rd
+#    timeout: 5000
+
 development:
-    adapter: sqlserver
-    mode: dblib
-    dataserver: tshv0dv06   # Name from freetds.conf, host or instance 'localhost\SQLEXPRESS'
-    host: mydb.net          # Used if dataserver is blank.
-    port: 1433              # Used if host present. Default is 1433.
-    database: CricketAnalysis
-    username: sa
-    password: P@ssw0rd
-    timeout: 5000
+  adapter: postgresql
+  encoding: unicode
+  database: CricketAnalysis
+  pool: 5
+  username: postgres
+  password: p@ssw0rd
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

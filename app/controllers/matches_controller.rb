@@ -1,3 +1,4 @@
+#require 'csv'
 class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
@@ -18,6 +19,7 @@ class MatchesController < ApplicationController
 			@teamorder = 'links'
 			@venueorder = 'links'
 			@matchorder = 'order'
+			
 			respond_to do |format|
 			  format.html # index.html.erb
 			  format.json { render json: @matches }
@@ -25,7 +27,6 @@ class MatchesController < ApplicationController
 		else 
 			redirect_to signin_path
 		end
-
   end
 
   # GET /matches/1
@@ -161,6 +162,13 @@ class MatchesController < ApplicationController
   def create
 	begin
 		@match = Match.new(params[:match])
+		
+		#csv_text = File.read(Rails.root.join('bin', 'scorecards.csv').to_s)
+		#	csv = CSV.parse(csv_text, :headers => true)
+		#	csv.each do |row|
+		#		row = row.to_hash
+		#	binding.pry
+		#end
 
 		respond_to do |format|
 		  if @match.save
