@@ -1796,8 +1796,7 @@ class AnalysisController < ApplicationController
 							order by grp1, grp2
 						   '
 			#round(case when sum(ballsfaced) = 0 then 0 else sum(frequency_grp2)/(sum(ballsfaced)*1.0)*6 end) as grp2, case when sum(ballsfaced) = 0 then 0 else sum(val)/(1.0*sum(ballsfaced))*6 end as val
-			@client = current_user
-			ClientMailer.Error_Delivery(frequency_sc, @client, 'frequency').deliver
+
 		############################################### end of variable definitions #####################################################3	
 	
 		if fq ==0 
