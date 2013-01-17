@@ -27,11 +27,15 @@ body{
 
 #logo{
 	position:absolute;
-	margin-left:-9px;
+	margin-left:-4px;
 	margin-top:-9px;
 	top:0;
 	left:0;
 	z-index:999
+}
+
+#logo a:hover{
+	background-color:transparent
 }
 
 h5{
