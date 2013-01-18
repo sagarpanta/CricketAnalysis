@@ -32,6 +32,8 @@ gem 'pdfkit'
 gem 'thin'
 gem 'pg'
 
+gem 'turbolinks'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
