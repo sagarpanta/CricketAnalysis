@@ -7,14 +7,6 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" defer="defer"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi" defer="defer"></script>
-<script type="text/javascript" defer="defer">
-      google.load('visualization', '1', {packages: ['corechart']});
-	  google.load('visualization', '1', {'packages': ['geochart']});
-	  google.load('visualization', '1', {packages: ['table']});
-</script>
-
 
 </head>
 
@@ -77,8 +69,15 @@
 	</table>
 </div>
 
-
 <%= yield %>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+	  google.load('visualization', '1', {'packages': ['geochart']});
+	  google.load('visualization', '1', {packages: ['table']});
+</script>
 
 </body>
 </html>
