@@ -29,6 +29,7 @@ gem 'pdfkit'
 
 #gem 'pry'
 
+
 gem 'thin'
 gem 'pg'
 
