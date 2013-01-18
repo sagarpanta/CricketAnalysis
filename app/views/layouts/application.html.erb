@@ -6,6 +6,8 @@
   <%= stylesheet_link_tag  "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
       google.load('visualization', '1', {packages: ['corechart']});
@@ -74,7 +76,6 @@
 </div>
 
 <%= yield %>
-
 
 </body>
 </html>
