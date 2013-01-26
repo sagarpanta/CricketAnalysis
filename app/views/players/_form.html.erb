@@ -17,20 +17,20 @@
   <div id="maxid" style="display:none"><%= Player.maxplayerid %></div>
   <table align="center">
 	<tr>
-		<td class="caption"></td>
-		<td id="maxplayerid"><%= @maxidtext %><br /></td>
-	</tr>
-	<tr>
-		<td class="caption">Player ID</td>
-		<td class="fields"><%= f.number_field :playerid, :size=>"20", :disabled=>@disabled %></td>
-	</tr>
-	<tr>
 		<td class="caption">First Name</td>
 		<td class="fields"><%= f.text_field :fname, :size=>"20" %></td>
 	</tr>
 	<tr>
 		<td class="caption">Last Name</td>
 		<td class="fields"><%= f.text_field :lname,:size=>"20" %></td>
+	</tr>
+	<tr>
+		<td class="caption"></td>
+		<td id="maxplayerid"><%= @maxidtext %><br /></td>
+	</tr>
+	<tr>
+		<td class="caption">Player ID</td>
+		<td class="fields"><%= f.number_field :playerid, :size=>"20", :disabled=>@disabled %></td>
 	</tr>
 	<tr>
 		<td class="caption">DOB</td>
@@ -54,7 +54,7 @@
 	</tr>
 	<tr>
 		<td class="caption">Format</td>
-		<td class="fields"><%= f.select :formatkey, @formats %></td>
+		<td class="fields"><%= f.select :formatkey, @formats, {} , :multiple=>true %></td>
 	</tr>
 	<tr>
 		<td class="caption">Country</td>

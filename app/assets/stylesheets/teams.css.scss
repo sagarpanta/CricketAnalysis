@@ -62,7 +62,7 @@ min-width:399px;
 min-height:400px;
 border:2px solid;
 border-width:1x;
-background-color:darkgrey;
+background-color:#778899;
 }
 
 .selected {
@@ -76,7 +76,7 @@ width:399px;
 min-height:400px;
 border:2px solid;
 border-width:1x;
-background-color:darkgrey;
+background-color:#778899;
 
 }
 
@@ -103,17 +103,17 @@ background-color:darkgrey;
 
 
 .selection_window .ui-selecting {
-	background: silver;
+	background: black;
 }
 .selection_window .ui-selected {
-	background: gray;
+	background: black;
 }
 
 .selected_window .ui-selecting {
-	background: silver;
+	background: black;
 }
 .selected_window .ui-selected {
-	background: gray;
+	background: black;
 }
 
 

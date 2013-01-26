@@ -5,6 +5,7 @@ class Team < ActiveRecord::Base
   def playerkey=(playerkey)
 	write_attribute(:playerkey, playerkey)
 	self.winloss = -2
+	self.wh_current = 1
   end
   
 

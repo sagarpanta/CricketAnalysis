@@ -12,7 +12,6 @@ table#players{
 }
 
 
-
 table#players th.lite{
 	background-color:steelblue;
 }
@@ -132,6 +131,21 @@ top:0px
 .edit_player table, .edit_player .actions, #success_message{
 position:relative;
 top:0px
+}
+
+
+.search{
+	position:absolute;
+	margin-top:-20px;
+	right:300px;
+	color:white;
+	font:bold;
+	font-weight:14px;
+}
+.name{
+	position:absolute;
+	margin-top:-25px;
+	right:130px;
 }
 
 

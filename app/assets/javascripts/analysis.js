@@ -65,14 +65,14 @@ $(document).ready(function(){
 	var frequency = 0;
 	var frequency_click = 0;
 	
-	$('#lastXballs').live('click', function(){
+	$(document).on('click', '#lastXballs',function(){
 		firstXballs = $('#firstXballs').val();
 		if (firstXballs!=''){
 			alert('Cannot have values on both Last X balls and First X balls');
 		}
 	});
 	
-	$('#firstXballs').live('click', function(){
+	$(document).on('click','#firstXballs', function(){
 		lastXballs = $('#lastXballs').val();
 		if (lastXballs!=''){
 			alert('Cannot have values on both Last X balls and First X balls');
@@ -858,7 +858,7 @@ $(document).ready(function(){
 	
 
 	
-	$('.charttype').live('click', function(){
+	$('.charttype').on('click', function(){
 		charttype = $(this).html();
 		if (charttype == 'Column') {
 			charttype = 'bars';
@@ -873,7 +873,7 @@ $(document).ready(function(){
 		$(this).css('opacity', '0.7');
 	});
 	
-	$('#frequency').live('click', function(){
+	$('#frequency').on('click', function(){
 		frequency_click += 1;
 		if (frequency_click%2==1){
 			frequency = 1;
@@ -887,18 +887,18 @@ $(document).ready(function(){
 	});
 	
 	
-	$('.tabletype a').live('click', function(){
+	$('.tabletype a').on('click', function(){
 		$('.tabletype a').css('opacity', '1');
 		$(this).css('opacity', '0.7');
 	});
 	
 	
-	$('.tabletype a').live('mouseover', function(){
+	$('.tabletype a').on('mouseover', function(){
 		//no color change
 		$('.tabletype a').css('background-color', '#19197D');
 	});
 	
-	$('.tabletype a').live('mouseout', function(){
+	$('.tabletype a').on('mouseout', function(){
 		//
 		$('.tabletype a').css('background-color', '#19197D');
 		$('.tabletype a').css('opacity', '1');
@@ -910,7 +910,7 @@ $(document).ready(function(){
 	var metricclickcount = 0;
 	var groupclickcount = 0;
 
-	$('.enable').live('click', function(){
+	$(document).on('click','.enable', function(){
 		metricclickcount = metricclickcount + 1;
 		
 		if(metricclickcount == 1) {
@@ -983,7 +983,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('.groups').live('click', function(){
+	$(document).on('click', '.groups',function(){
 		groupclickcount = groupclickcount + 1;
 		group = $(this).attr('data-group');
 		

@@ -30,6 +30,47 @@ $(document).ready(function(){
 	$('#btn-ok').live('click', function(){
 		$( "#dialog-player-form" ).dialog('close');
 	});
+	
+	$(document).on('keyup','#name', function(){
+		var searchname = $(this).val();
+		if (searchname ==''){
+			$('.playerdata').show();
+		}
+		else{
+			$('.playerdata').hide();
+			$("td:contains("+searchname+")").parent().show()
+		}
+	});
+	
+	$(document).on('click', '#player_fname', function(){
+		$('#player_playerid').val('');
+	});
+	
+	$(document).on('click', '#player_playerid', function(){		
+		var fname = $('#player_fname').val();
+		var lname = $('#player_lname').val();
+		if (fname != undefined){
+			fname = fname.charAt(0).toUpperCase()+fname.slice(1);
+		}
+		if (lname != undefined){
+			lname = lname.charAt(0).toUpperCase()+lname.slice(1);
+		}
+		var fullname = fname+' '+lname;
+		$.ajax({
+			url: '/playerids.json?fullname='+fullname,
+			type: 'get',
+			cache: false,
+			success: function(data, textStatus, jqXHR ) { 
+				console.log('successful');
+				if(data['fullname'] == fullname && fullname != ''){
+					$('#player_playerid').val(data['playerid']);
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown){ 
+				console.log('unsuccessful');
+			}
+		});
+	});
 		
 	
 

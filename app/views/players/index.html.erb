@@ -17,6 +17,10 @@
 		<li data-link='matches' class="<%= @matchorder %>"><span class="pretty" title="Match"><%=  image_tag('/assets/match.png') %></span></li>
 	</ul>
 </h2>
+
+	<div class="search" style="display:inline">Search:</div>
+	<div class="name"><%= text_field_tag 'name' %></div>
+
 <table id="players" cellspacing="0" cellpadding="0" >
   <tr>
 	<th width="80px" class="<%= @client_header %>"><%= link_to "Client", players_path(:sort=>'client') %></th>
@@ -38,7 +42,7 @@
   </tr>
 
 <% @players.each do |player| %>
-  <tr>
+  <tr class="playerdata">
 	<td width="80px"><%= player.clientkey %></td>
 	<td width="80px"><%= player.age %></td>
 	<td width="80px"><%= player.battingstyle %></td>

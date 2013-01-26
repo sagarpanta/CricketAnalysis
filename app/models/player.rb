@@ -1,8 +1,7 @@
 class Player < ActiveRecord::Base
   attr_accessible :clientkey, :countrykey, :age, :battingstyle, :bowlingstyle, :bowlingtype, :dob, :fname, :format, :formatkey, :fullname, :lname, :playerid, :playertype, :wh_current
-
-  
-    validates_uniqueness_of  :playerid, :scope=> [:clientkey]
+ 
+    validates_uniqueness_of  :playerid, :scope=> [:clientkey, :formatkey]
   
   def battingstyle=(battingstyle)
 	 write_attribute(:battingstyle, battingstyle)
@@ -58,7 +57,6 @@ class Player < ActiveRecord::Base
 		return max_id
 	
 	end
-  
-  
+	  
 end
 

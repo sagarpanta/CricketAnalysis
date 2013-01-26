@@ -163,7 +163,6 @@ $(document).ready(function(){
 					player[index][0] = playerkey[index]
 					player[index][1] = playername[index]
 					player[index][2] = playerid[index]
-					console.log(player[index]);
 			});
 			            
         }
@@ -172,8 +171,8 @@ $(document).ready(function(){
 	
 	$('#intheteam').live("click" , function(){
 		$.each(player, function(index, player){
-			$('#removable_players_table').append('<tr><td class="removable_playerid">'+player[2]+'</td><td class="removable_playername" data-pid="'+player[0]+'">'+player[1]+'</td></tr>');
-			$('[data-id="'+player[0]+'"]').parent().hide();
+			$('#removable_players_table').append('<tr><td class="removable_playerid">'+player[2]+'</td><td class="removable_playername" data-pid="'+player[2]+'">'+player[1]+'</td></tr>');
+			$('[data-id="'+player[2]+'"]').parent().hide();
 		});
 		player = new Array();
 	});
@@ -200,7 +199,6 @@ $(document).ready(function(){
 			$.each(data, function(index, element){
 				removable_playerkey[index]=$(element).find('[data-pid]').attr('data-pid');
 				removable_playername[index] = $(element).find('[data-pid]').html();
-				console.log(element);
 				removable_playerid[index]=$(element).find('.removable_playerid').html();
 				player[index] = new Array();
 				player[index][0] = removable_playerkey[index]
@@ -213,8 +211,8 @@ $(document).ready(function(){
 	
 	$('#outoftheteam').live("click" , function(){
 		$.each(player, function(index, player){
-			$('[data-pid="'+player[0]+'"]').parent().remove();
-			$('[data-id="'+player[0]+'"]').parent().show();
+			$('[data-pid="'+player[2]+'"]').parent().remove();
+			$('[data-id="'+player[2]+'"]').parent().show();
 		});
 		player = new Array();
 	});
@@ -242,6 +240,7 @@ $(document).ready(function(){
 		var mkey = $("#team_managerkey option:selected").val();
 		var managername = $("#team_managerkey option:selected").html();
 		var tname = $('#team_teamname').val();
+		tname = tname.charAt(0).toUpperCase()+tname.slice(1);
 		var teamid = $('#team_teamid').val();
 		var teamtypekey = $("#team_teamtypekey option:selected").val();
 		var formatkey = $("#format_select option:selected").val();
@@ -323,8 +322,8 @@ $(document).ready(function(){
 	
 	$('#in_the_team').live("click" , function(){		
 		$.each(player, function(index, player){
-			$('#removable_players_table').append('<tr><td class="removable_playerid">'+player[2]+'</td><td class="removable_playername" data-pid="'+player[0]+'">'+player[1]+'</td></tr>');
-			$('[data-id="'+player[0]+'"]').parent().hide();
+			$('#removable_players_table').append('<tr><td class="removable_playerid">'+player[2]+'</td><td class="removable_playername" data-pid="'+player[2]+'">'+player[1]+'</td></tr>');
+			$('[data-id="'+player[2]+'"]').parent().hide();
 		});
 		player = new Array();
 	});
@@ -332,8 +331,8 @@ $(document).ready(function(){
 	
 	$('#out_of_the_team').live("click" , function(){
 		$.each(player, function(index, player){			
-			$('[data-pid="'+player[0]+'"]').parent().remove();
-			$('[data-id="'+player[0]+'"]').parent().show();			
+			$('[data-pid="'+player[2]+'"]').parent().remove();
+			$('[data-id="'+player[2]+'"]').parent().show();			
 		});
 		player = new Array();
 	});
@@ -369,6 +368,7 @@ $(document).ready(function(){
 
 	if ($('body,html').find('#modify_team_form').length != 0){
 		var teamid = $('#team_teamid').val();
+		var date_drafted = $('#date_drafted').html();
 		$('.player').hide();
 		countrykey = $('#countrykey_team option:selected').val();
 		formatkey =  $('#team_formatkey option:selected').val();
@@ -379,7 +379,7 @@ $(document).ready(function(){
 			}
 		});	
 		$.ajax({
-			url: '/team.json?teamid='+teamid,
+			url: '/team.json?date_drafted='+date_drafted+'&teamid='+teamid,
 			type: 'get',
 			cache: false,
 			success: function(data, textStatus, jqXHR ) { 	
@@ -387,8 +387,8 @@ $(document).ready(function(){
 				console.log(object_count);
 				var i;
 				for(i=0; i<object_count; i++){
-					$('#removable_players_table').append('<tr><td class="removable_playerid">'+data[i]['playerid']+'</td><td class="removable_playername" data-teamkey="'+data[i]['id']+'" data-pid="'+data[i]['playerkey']+'">'+data[i]['player_name']+'</td></tr>');
-					$('[data-id="'+data[i]['playerkey']+'"]').parent().hide();			
+					$('#removable_players_table').append('<tr><td class="removable_playerid">'+data[i]['playerid']+'</td><td class="removable_playername" data-teamkey="'+data[i]['id']+'" data-pid="'+data[i]['playerid']+'">'+data[i]['player_name']+'</td></tr>');
+					$('[data-id="'+data[i]['playerid']+'"]').parent().hide();			
 				}
 				
 			},
@@ -415,6 +415,7 @@ $(document).ready(function(){
 		var mkey = $("#team_managerkey option:selected").val();
 		var tname = $('#team_teamname').val();
 		var teamid = $('#team_teamid').val();
+		var date_drafted = $('#date_drafted').html();
 		var teamtypekey = $("#team_teamtypekey option:selected").val();
 		var formatkey = $("#team_formatkey option:selected").val();
 		var countrykey = $("#countrykey_team option:selected").val();
@@ -423,18 +424,18 @@ $(document).ready(function(){
 
 		var team_players = [];
 		$.ajax({
-			url: '/team.json?teamid='+teamid,
+			url: '/team.json?date_drafted='+date_drafted+'&teamid='+teamid,
 			type: 'get',
 			cache: false,
 			success: function(data, textStatus, jqXHR ) { 	
 				var object_count = data.length
-
 				var i;
 				for(i=0; i<object_count; i++){
+					console.log(data[i]);
 					$.ajax({
 						url: '/teams/'+data[i]['id'],
 						type: 'DELETE',
-						data: {id:data[i]['id']},
+						data: {id:data[i]['id']},	
 						cache: false,
 						data: {team:jsonObj},
 						success: function(data, textStatus, jqXHR ) { 
@@ -518,7 +519,7 @@ $(document).ready(function(){
 	});
 	
 	var x = $('.x').html();
-	if (x==1){
+	if (x==1 && x!= undefined){
 		$('#navigation_bar').hide();
 		$('#centralnav').hide();
 	}

@@ -22,17 +22,20 @@
   <tr>
     <th>Country</th>
     <th>Team</th>
-    <th></th>
+	<th>Format</th>
+    <th>Date</th>
     <th></th>
     <th></th>
   </tr>
 
 <% @teams.each do |team| %>
   <tr>
-    <td><%= team.countrykey %></td>
+    <td><%= team.country %></td>
     <td><%= team.teamname %></td>
-    <td><%= link_to 'Show', {:controller=>"teams", :action=>"team", :teamid=>team.teamid} %></td>
-    <td><%= link_to 'Edit', {:controller=>"teams", :action=>"modify_team", :teamid=>team.teamid} %></td>
+	<td><%= team.formatname %></td>
+	<td><%= team.date_drafted %></td>
+    <td><%= link_to 'Show', {:controller=>"teams", :action=>"team", :teamid=>team.teamid, :date_drafted=>team.date_drafted} %></td>
+    <td><%= link_to 'Edit', {:controller=>"teams", :action=>"modify_team", :teamid=>team.teamid,  :date_drafted=>team.date_drafted} %></td>
   </tr>
 <% end %>
 </table>

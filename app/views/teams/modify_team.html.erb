@@ -18,7 +18,7 @@
 	</ul>
 	Editing Team
 </h2>
-
+<div id="date_drafted"><%= @date_drafted %></div>
 <div id='modify_team_form' data-role="page"> 
   
   <div class="field" id="clientfield">
@@ -45,7 +45,7 @@
 					<% @players.each do |p| %>
 						<tr class="player">
 							<td class="playerid"><%= p.playerid %></td>
-							<td class="playername" data-id="<%= p.id %>" data-country="<%= p.countrykey %>" data-format="<%= p.formatkey %>"><%= p.fullname %></td>
+							<td class="playername" data-id="<%= p.playerid %>" data-country="<%= p.countrykey %>" data-format="<%= p.formatkey %>"><%= p.fullname %></td>
 						</tr>
 					<% end %>
 				</table>
@@ -71,6 +71,10 @@
 
  
   <table>
+  	<tr>
+		<td class="caption1">Team Name</td>
+		<td class="fields1"><%= text_field 'team', 'teamname' , :value=> @teamname %></td>
+	</tr>
 	<tr>
 		<td class="caption1">Coach</td>
 		<td class="fields1"><%= select 'team', 'coachkey', @coaches, :selected=> @coach_selected %></td>
@@ -89,10 +93,7 @@
 		<td class="fields1"><%= select  'team', 'teamtypekey', @teamtypes, :selected=>@teamtype %></td>
 	</tr>
 	
-	<tr>
-		<td class="caption1">Team Name</td>
-		<td class="fields1"><%= text_field 'team', 'teamname' , :value=> @teamname %></td>
-	</tr>
+
   </table> 
 
   <div id="success_message"></div>   

@@ -183,8 +183,8 @@ class ScorecardsController < ApplicationController
 			@batting_side = 0
 			@fielding_side = 0
 			
-			@teamone = Team.find_by_teamid(@match.teamidone)
-			@teamtwo = Team.find_by_teamid(@match.teamidtwo)
+			@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone, 1)
+			@teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
 			
 			if @match.tosswon == @match.teamidone
 				if @match.electedto == 'Bat'
@@ -471,7 +471,7 @@ class ScorecardsController < ApplicationController
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
-			@teams = Team.find_by_sql('select distinct teamid, teamname from teams where teamid in ('+@match.teamidone.to_s+','+@match.teamidtwo.to_s+')')
+			@teams = Team.find_by_sql('select distinct teamid, teamname from teams where teamid in ('+@match.teamidone.to_s+','+@match.teamidtwo.to_s+') and wh_current=1')
 
 			@target = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
 			#redirect_to scorecard_first_inning_path({:id=>@match.id})
@@ -489,8 +489,8 @@ class ScorecardsController < ApplicationController
 			@batting_side = 0
 			@fielding_side = 0
 			
-			@teamone = Team.find_by_teamid(@match.teamidone)
-			@teamtwo = Team.find_by_teamid(@match.teamidtwo)
+			@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone,1)
+			@teamtwo = Team.find_by_teamid_wh_current(@match.teamidtwo,1)
 			
 			if @match.tosswon == @match.teamidone
 				if @match.electedto == 'Bat'
@@ -803,8 +803,8 @@ class ScorecardsController < ApplicationController
 			@batting_side = 0
 			@fielding_side = 0
 			
-			@teamone = Team.find_by_teamid(@match.teamidone)
-			@teamtwo = Team.find_by_teamid(@match.teamidtwo)
+			@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone, 1)
+			@teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
 			
 			if @match.tosswon == @match.teamidone
 				if @match.electedto == 'Bat'

@@ -24,7 +24,7 @@
 					<% @players.each do |p| %>
 						<tr class="player">
 							<td class="playerid"><%= p.playerid %></td>
-							<td class="playername" data-id="<%= p.id %>" data-country="<%= p.countrykey %>" data-format="<%= p.formatkey %>"><%= p.fullname %></td>
+							<td class="playername" data-id="<%= p.playerid %>" data-country="<%= p.countrykey %>" data-format="<%= p.formatkey %>"><%= p.fullname %></td>
 						</tr>
 					<% end %>
 				</table>
@@ -54,6 +54,10 @@
  <div id="teammaxid" style="display:none"><%= Team.maxteamid(current_user.id) %></div>
   <table>
 	<tr>
+		<td class="caption">Team Name</td>
+		<td class="fields"><%= text_field 'team', 'teamname', :size=>20 %></td>
+	</tr>
+	<tr>
 		<td class="caption">Coach</td>
 		<td class="fields"><%= select 'team', 'coachkey', Coach.all.collect {|t| [ t.name, t.id]}%></td>
 	</tr>
@@ -74,10 +78,6 @@
 		<td class="fields"><%= select  'team', 'teamtypekey', @teamtypes %></td>
 	</tr>
 	
-	<tr>
-		<td class="caption">Team Name</td>
-		<td class="fields"><%= text_field 'team', 'teamname', :size=>20 %></td>
-	</tr>
   </table> 
 
   <div id="success_message"></div>   

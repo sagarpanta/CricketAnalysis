@@ -38,6 +38,7 @@ CricketAnalysis::Application.routes.draw do
   resources :players
   match 'temp_login' , :to=>'players#temp_login'
   match 'allow_temp_connection' , :to=>'players#allow_temp_connection'
+  match 'playerids' , :to=>'players#playerids'
   
   match 'all_players' , :to => 'players#all_players'
 

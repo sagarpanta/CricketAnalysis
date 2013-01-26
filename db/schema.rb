@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121229000723) do
+ActiveRecord::Schema.define(:version => 20130125041601) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -110,6 +110,9 @@ ActiveRecord::Schema.define(:version => 20121229000723) do
     t.integer  "noofshots"
     t.integer  "c_strike"
     t.integer  "c_nonstrike"
+    t.integer  "consistency"
+    t.integer  "mishits"
+    t.integer  "slugs"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
@@ -120,14 +123,13 @@ ActiveRecord::Schema.define(:version => 20121229000723) do
     t.string   "encrypted_password_confirmation"
     t.string   "remember_token"
     t.string   "country"
+    t.string   "actype"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
     t.string   "salt"
     t.string   "email"
     t.string   "temppass"
     t.string   "name"
-    t.date     "expiry"
-    t.string   "actype"
   end
 
   create_table "coaches", :force => true do |t|
@@ -139,10 +141,10 @@ ActiveRecord::Schema.define(:version => 20121229000723) do
 
   create_table "countries", :force => true do |t|
     t.string   "country"
+    t.string   "country_s"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "clientkey"
-    t.string   "country_s"
   end
 
   create_table "dismissals", :force => true do |t|
@@ -209,13 +211,13 @@ ActiveRecord::Schema.define(:version => 20121229000723) do
     t.integer  "formatkey"
     t.integer  "tosswon"
     t.integer  "clientkey"
-    t.float    "matchovers",     :limit => 24
+    t.float    "matchovers"
     t.date     "matchdate"
     t.integer  "dayandnite"
     t.string   "electedto"
     t.string   "pitchcondition"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   add_index "matches", ["id", "clientkey", "matchdate", "matchtypekey", "pitchcondition", "electedto"], :name => "UIX_Matches_idNmatchtype", :unique => true
@@ -226,7 +228,7 @@ ActiveRecord::Schema.define(:version => 20121229000723) do
     t.integer  "playerkey"
     t.integer  "battingstylekey"
     t.integer  "totalruns"
-    t.float    "battingaverage",                 :limit => 24
+    t.float    "battingaverage"
     t.integer  "notouts"
     t.integer  "highestscore"
     t.integer  "ballsfaced"
@@ -234,24 +236,24 @@ ActiveRecord::Schema.define(:version => 20121229000723) do
     t.integer  "totalinnings"
     t.integer  "maxdissmissedaskey"
     t.integer  "positionwbestbattingavg"
-    t.float    "battingstrikerate",              :limit => 24
+    t.float    "battingstrikerate"
     t.integer  "positionwbestbattingstrikerate"
     t.integer  "bowlingstylekey"
     t.integer  "bowlingtypekey"
     t.integer  "totalballsdelivered"
     t.integer  "totalwickets"
     t.integer  "highestwickets"
-    t.float    "bowlingaverage",                 :limit => 24
+    t.float    "bowlingaverage"
     t.integer  "totalcatches"
     t.integer  "stumpings"
     t.integer  "maxdismissedbatsmanaskey"
     t.string   "maidens"
     t.integer  "playertypekey"
-    t.float    "bowlingstrikerate",              :limit => 24
+    t.float    "bowlingstrikerate"
     t.integer  "winloss"
     t.integer  "formatkey"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "clientkey"
   end
 
@@ -338,19 +340,19 @@ ActiveRecord::Schema.define(:version => 20121229000723) do
     t.integer  "side"
     t.integer  "over"
     t.integer  "ballnum"
+    t.integer  "spell"
+    t.string   "direction"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
     t.integer  "batsmanid"
     t.integer  "currentbowlerid"
-    t.string   "direction"
-    t.integer  "spell"
     t.integer  "angle"
   end
 
   add_index "scorecards", ["id", "clientkey", "ballnum", "formatkey", "tournamentkey", "venuekey", "inning", "matchkey", "outtypekey", "batsmankey", "currentnonstrikerkey", "currentbowlerkey", "battingposition", "bowlingposition", "cr", "dismissedbatsmankey"], :name => "UIX_Scorecards_Evrythng", :unique => true
   add_index "scorecards", ["id", "clientkey", "spell", "direction"], :name => "UIX_Scorecards_idspellndirection", :unique => true
   add_index "scorecards", ["id", "clientkey"], :name => "index_scorecards_on_id_and_clientkey", :unique => true
-  add_index "scorecards", ["id", "line", "length", "shottype"], :name => "UIX_Scorecards_LineLenghtShottype", :unique => true
+  add_index "scorecards", ["id", "line", "length", "shottype", "spell", "direction"], :name => "UIX_Scorecards_LineLenghtShottype", :unique => true
 
   create_table "shottypes", :force => true do |t|
     t.string   "shottype"
@@ -379,6 +381,7 @@ ActiveRecord::Schema.define(:version => 20121229000723) do
     t.integer  "formatkey"
     t.integer  "countrykey"
     t.integer  "playerid"
+    t.integer  "wh_current"
   end
 
   add_index "teams", ["id", "teamid", "clientkey", "playerkey", "coachkey", "managerkey"], :name => "UIX_Teams", :unique => true

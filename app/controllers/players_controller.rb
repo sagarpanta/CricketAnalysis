@@ -94,8 +94,8 @@ class PlayersController < ApplicationController
 	end
 
   end
+    
   
-
   # GET /players/1
   # GET /players/1.json
 =begin  
@@ -182,7 +182,7 @@ class PlayersController < ApplicationController
   # POST /players
   # POST /players.json
   def create
-	begin
+	
 		referrer_path = request.env['HTTP_REFERER'].nil? ? '': request.env['HTTP_REFERER']
 		origin_path = request.env['HTTP_ORIGIN'].nil? ? '': request.env['HTTP_ORIGIN']
 		path = referrer_path[origin_path.length..referrer_path.length]  
@@ -190,26 +190,37 @@ class PlayersController < ApplicationController
 		if path == '/allow_temp_connection'
 			sign_out
 		end
-		@player = Player.new(params[:player])
-		@player.save
+		success='passed'
+		for formatkey in params[:player][:formatkey]
+			if formatkey != '' 
+				Player.create!({'clientkey'=>params[:player][:clientkey].to_i,
+				                      'playerid'=>params[:player][:playerid].to_i,
+									  'fname'=>params[:player][:fname],
+									  'lname'=>params[:player][:lname],
+									  'dob'=>params[:player][:dob],
+									  'playertype'=>params[:player][:playertype],
+									  'battingstyle'=>params[:player][:battingstyle],
+									  'bowlingstyle'=>params[:player][:bowlingstyle],
+									  'bowlingtype'=>params[:player][:bowlingtype],
+									  'formatkey'=>formatkey.to_i,
+									  'countrykey'=>params[:player][:countrykey].to_i
+									  })
+			end
+		end
+		#@player = Player.new(params[:player])
+		
 		respond_to do |format|
-		  if @player.save
+		  if success='passed'
 			format.html { redirect_to players_path }
 			format.js {render 'success_create.js.erb'}
-			format.json { render json: @player, status: :created, location: @player }
+			#format.json { render json: @player, status: :created, location: @player }
 		  else
 			format.html { render action: "new" }
 			format.js {render 'fail_create.js.erb'}
-			format.json { render json: @player.errors, status: :unprocessable_entity }
+			#format.json { render json: @player.errors, status: :unprocessable_entity }
 		  end
 		end
-	
-	rescue => e
-		 @message = e.message
-		 @client = current_user
-		 @caught_at = 'players#create'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end	
+
   end
 
   # PUT /players/1
@@ -331,5 +342,12 @@ class PlayersController < ApplicationController
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end	
   end	
+  
+  def playerids
+	@players = Player.find_by_fullname_and_clientkey(params[:fullname],current_user.id)
+	respond_to do |format|
+		format.json { render json: @players }
+	end
+  end
   
 end
