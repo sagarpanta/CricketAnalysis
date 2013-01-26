@@ -59,7 +59,7 @@ $(document).ready(function(){
 		});	
 	}
 
-	$('#all').live('click' , function(){
+	$(document).on('click','#all', function(){
 		var checked = $('.new_clientconfig .field [type="checkbox"], .edit_clientconfig .field [type="checkbox"]').prop('checked');
 		var all = $(this).prop('checked');
 		if ((checked == false) || (all == true)){

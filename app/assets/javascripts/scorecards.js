@@ -9,7 +9,7 @@ $(document).ready(function(){
 		$('#stumps img').css('margin-left', '-46px');	
 	}
 	
-	$('.Batsman').live('click', function(){
+	$('.Batsman').on('click', function(){
 		if (dblclicked%2 == 0){
 			$('.Batsman').removeClass('hilite');
 			$(this).removeClass('hilite-nonstriker');
@@ -42,7 +42,7 @@ $(document).ready(function(){
 		dblclicked = dblclicked+1;
 	});
 	
-	$('.Bowler').live('click', function(event){
+	$('.Bowler').on('click', function(event){
 		$('.Bowler').removeClass('hilite');
 		$(this).addClass('hilite');
 	});
@@ -63,7 +63,7 @@ $(document).ready(function(){
 		var batsmanid, batsmankey, clientkey;
 		var bowlerid;
 		var runs = 0, zeros = 0, ones = 0, twos = 0, threes = 0, fours = 0, fives=0, sixes = 0, sevens = 0, eights = 0, others = 0, outbywk = -2, formatkey = 0;
-		var wides = 0, noballs=0, byes=0, legbyes=0, ballsdelivered = 0, ballsfaced = 0, maiden = 0;
+		var wides = 0, noballs=0, byes=0, legbyes=0, ballsdeonred = 0, ballsfaced = 0, maiden = 0;
 		var ballsbeforeboundary = 0, ballsbeforerun = 0, dbx= 0, dbr= 0, dbb = 0;
 		var fielderkey = -2, bowlerkey = -2, currentbowlerkey = -2, currentstrikerkey = -2, currentnonstrikerkey = -2;
 		var dismissedbatsmankey = -2,bowlerkey = -2, outbatsmankey = -2;
@@ -82,7 +82,7 @@ $(document).ready(function(){
 		clientkey = $('#clientkey').html();
 
 		
-	$('.scoring_numbers').live('click', function(){
+	$(document).on('click','.scoring_numbers', function(){
 		runs_string = $(this).html();
 		$('.scoring_numbers').removeAttr('scoring_number_clicked');
 		$('.scoring_numbers').css('opacity', '0.9')
@@ -90,11 +90,11 @@ $(document).ready(function(){
 		activity = 1;
 	});
 	
-	$('.scoring_numbers').live('hover', function(){
+	$(document).on('mouseover','.scoring_numbers', function(){
 		$(this).css('opacity', '0.7');
 	});
 	
-	$('.scoring_numbers').live('mouseout', function(){
+	$(document).on('mouseout','.scoring_numbers', function(){
 		if ($(this).attr('class') == 'scoring_numbers scoring_number_clicked'){
 			$(this).css('opacity', '0.7');
 		}
@@ -104,7 +104,7 @@ $(document).ready(function(){
 	});
 
 			
-	$('.area').live('click', function(){
+	$('.area').on('click', function(){
 		$('.area').css('background', 'steelblue').css('opacity', 0.8);
 		$(this).css('opacity', 0.6);
 		line = parseInt($(this).attr('data-line'));
@@ -112,7 +112,7 @@ $(document).ready(function(){
 		area_clicked = line+length;
 	});
 	
-	$('.area').live('mouseover', function(){
+	$('.area').on('mouseover', function(){
 		hovered_line = $(this).attr('data-line');
 		hovered_length = $(this).attr('data-length');
 		if((hovered_line+hovered_length != line.toString()+length.toString()) || (area_clicked == 0)){
@@ -120,7 +120,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('.area').live('mouseout', function(){
+	$('.area').on('mouseout', function(){
 		hovered_line = $(this).attr('data-line');
 		hovered_length = $(this).attr('data-length');
 		if((hovered_line+hovered_length != line.toString()+length.toString()) || (area_clicked == 0)){
@@ -128,21 +128,21 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('.angle_img').live("click", function(){
+	$('.angle_img').on("click", function(){
 		angle = parseInt($(this).attr('data-angle'));
 		$('.angle_img').css('opacity', '0.8');
 		$(this).css('opacity', '0.6');
 		console.log('angle clicked ' , angle);
 	});
 	
-	$('.angle_img').live("mouseover", function(){
+	$('.angle_img').on("mouseover", function(){
 		var n = parseInt($(this).attr('data-angle'));
 		if (angle != n){
 			$(this).css('opacity', '0.6');
 		}
 	});
 	
-	$('.angle_img').live("mouseout", function(){
+	$('.angle_img').on("mouseout", function(){
 		var n = parseInt($(this).attr('data-angle'));
 		if (angle != n){
 			$(this).css('opacity', '0.8');
@@ -161,7 +161,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('.bowling_side ul li').live('click', function(){
+	$('.bowling_side ul li').on('click', function(){
 		$('.bowling_side ul li').css('opacity', '0.9');
 		$('.bowling_side ul li').removeClass('side');
 		$(this).css('opacity', '0.6');	
@@ -169,20 +169,20 @@ $(document).ready(function(){
 	});
 	
 	
-	$('#runs a').live('mouseover', function(){
+	$('#runs a').on('mouseover', function(){
 		if (rclicked!=1){
 			$(this).children('img').attr('src','/assets/up-over.png');	
 		}
 	});
 
-	$('#runs a').live('mouseout', function(){
+	$('#runs a').on('mouseout', function(){
 		if (rclicked!=1){
 			$(this).children('img').attr('src','/assets/up.png');	
 		}
 	});
 	
 
-	$('#runs a').live('click', function(){
+	$('#runs a').on('click', function(){
 		//there is an activity
 		activity = 1;
 		//rclicked is to make sure that if you hover over a clicked image, do not replace the image
@@ -234,28 +234,28 @@ $(document).ready(function(){
 				break;
 		}
 		if (noballs==1){
-			ballsdelivered = 0;
+			ballsdeonred = 0;
 		}
 		else{
-			ballsdelivered = 1;
+			ballsdeonred = 1;
 		}
 		ballsfaced = 1;
 	});
 	
-	$('#wides a').live('mouseover', function(){
+	$('#wides a').on('mouseover', function(){
 		if (wclicked!=1){
 			$(this).children('img').attr('src','/assets/up-over.png');	
 		}
 	});
 
-	$('#wides a').live('mouseout', function(){
+	$('#wides a').on('mouseout', function(){
 		if (wclicked!=1){
 			$(this).children('img').attr('src','/assets/up.png');	
 		}
 		
 	});
 	
-	$('#wides a').live('click', function(){
+	$('#wides a').on('click', function(){
 		//there is an activity
 		activity = 1;
 		
@@ -296,20 +296,20 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#noballs').live('mouseover', function(){
+	$('#noballs').on('mouseover', function(){
 		if (nclicked!=1){
 			$(this).children('img').attr('src','/assets/up-over.png');	
 		}
 	});
 
-	$('#noballs').live('mouseout', function(){
+	$('#noballs').on('mouseout', function(){
 		if (nclicked!=1){
 			$(this).children('img').attr('src','/assets/up.png');	
 		}
 		
 	});
 	
-	$('#noballs').live('click', function(){
+	$('#noballs').on('click', function(){
 		//there is an activity
 		activity = 1;
 		
@@ -323,24 +323,24 @@ $(document).ready(function(){
 		$(this).children('img').attr('src','/assets/up-over.png');
 		noballs = 1
 		ballsfaced = 1
-		ballsdelivered = 0;
+		ballsdeonred = 0;
 		//$( "#dialog-form" ).dialog( "open" ); 
 	});
 	
-	$('#byes a').live('mouseover', function(){
+	$('#byes a').on('mouseover', function(){
 		if (bclicked!=1){
 			$(this).children('img').attr('src','/assets/up-over.png');	
 		}
 	});
 
-	$('#byes a').live('mouseout', function(){
+	$('#byes a').on('mouseout', function(){
 		if (bclicked!=1){
 			$(this).children('img').attr('src','/assets/up.png');	
 		}
 		
 	});
 	
-	$('#byes a').live('click', function(){
+	$('#byes a').on('click', function(){
 		//there is an activity
 		activity = 1;
 		
@@ -374,29 +374,29 @@ $(document).ready(function(){
 				break;
 		}
 		if (noballs==1){
-			ballsdelivered = 0;
+			ballsdeonred = 0;
 		}
 		else{
-			ballsdelivered = 1;
+			ballsdeonred = 1;
 		}
 		ballsfaced = 1
 		ones = twos = threes = fours = fives = sixes = sevens = 0;
 		zeros = 1;
 	});
 	
-	$('#legbyes a').live('mouseover', function(){
+	$('#legbyes a').on('mouseover', function(){
 		if (lbclicked!=1){
 			$(this).children('img').attr('src','/assets/up-over.png');	
 		}
 	});
 
-	$('#legbyes a').live('mouseout', function(){
+	$('#legbyes a').on('mouseout', function(){
 		if (lbclicked!=1){
 			$(this).children('img').attr('src','/assets/up.png');	
 		}
 	});
 	
-	$('#legbyes a').live('click', function(){
+	$('#legbyes a').on('click', function(){
 		//there is an activity
 		activity = 1;
 		
@@ -430,10 +430,10 @@ $(document).ready(function(){
 				break;
 		}
 		if (noballs==1){
-			ballsdelivered = 0;
+			ballsdeonred = 0;
 		}
 		else{
-			ballsdelivered = 1;
+			ballsdeonred = 1;
 		}
 		ballsfaced = 1
 		ones = twos = threes = fours = fives = sixes = sevens = 0;
@@ -511,17 +511,17 @@ $(document).ready(function(){
 		
 	});
 
-	$('#submit_runs').live('mouseover', function(){	
+	$('#submit_runs').on('mouseover', function(){	
 		$(this).children('img').attr('src','/assets/button-over.png');	
 		$('#submit_caption').css('top', 10);
 	});
 
-	$('#submit_runs').live('mouseout', function(){
+	$('#submit_runs').on('mouseout', function(){
 		$(this).children('img').attr('src','/assets/button.png');	
 		$('#submit_caption').css('top', 7);
 	});
 	
-	$('#submit_runs').live('click', function(){
+	$('#submit_runs').on('click', function(){
 	if (activity == 1){
 		$(this).children('img').attr('src','/assets/button-over.png');	
 			
@@ -615,7 +615,7 @@ $(document).ready(function(){
 		//ballsdelievered is counted one for every run hit, but if 
 		//it is hit in a noball, the ball should not be counted
 		if (runs>0 && noballs>0){
-			ballsdelivered = 0
+			ballsdeonred = 0
 		}
 		
 		directionkey = $('#directionkey').html();
@@ -715,9 +715,9 @@ $(document).ready(function(){
 		if (currentbowlernoballs == '') {currentbowlernoballs = 0;}
 		if (currentbowlerothers == '') {currentbowlerothers = 0;}
 		
-		var totalovers =  parseFloat((ballsdelivered +parseFloat(currentbowlerovers)*10)/10.0).toFixed(1);
+		var totalovers =  parseFloat((ballsdeonred +parseFloat(currentbowlerovers)*10)/10.0).toFixed(1);
 		console.log('total overs ' + totalovers);
-		var totaldeliveries = parseInt(totalovers)*6+parseInt((totalovers - parseInt(totalovers))*10);
+		var totaldeonries = parseInt(totalovers)*6+parseInt((totalovers - parseInt(totalovers))*10);
 		if ((parseInt(totalovers)*6+parseInt((totalovers - parseInt(totalovers))*10)) % 6 == 0){
 			if(wides==0 && noballs==0 && inningballcounter != 0){
 				totalovers = parseInt(totalovers)+1.0
@@ -736,7 +736,7 @@ $(document).ready(function(){
 			totalwickets = parseInt(currentbowlerwickets);
 		}
 		var totalecon = 0;
-		if (totaldeliveries != 0) {totalecon = totalruns/(totaldeliveries/6.0); }
+		if (totaldeonries != 0) {totalecon = totalruns/(totaldeonries/6.0); }
 		
 		var totalzeros = zeros + parseInt(currentbowlerzeros);
 		var totalones = ones+parseInt(currentbowlerones);
@@ -776,7 +776,7 @@ $(document).ready(function(){
 	
 	
 		
-		jsonObj = {clientkey:clientkey,  ballsdelivered:ballsdelivered, ballsfaced:ballsfaced, batsmankey:batsmankey, batsmanid:batsmanid, battingendkey:battingendkey, battingposition:battingposition, bowlerkey:bowlerkey, bowlingendkey:bowlingendkey, bowlingposition:bowlingposition, byes:byes, currentbowlerkey:currentbowlerkey,  currentbowlerid:currentbowlerid, currentnonstrikerkey:currentnonstrikerkey, currentstrikerkey:currentstrikerkey, dismissedbatsmankey:dismissedbatsmankey, eights:eights, fielderkey:fielderkey, fives:fives, formatkey:formatkey, fours:fours, inning:inning, legbyes:legbyes, maiden:maiden, matchkey:matchkey, noballs:noballs, ones:ones, others:others, outbywk:outbywk, outtypekey:dismissaltypekey, runs:runs, sevens:sevens, sixes:sixes, teamidone:teamoneid, teamtwoid:teamtwoid, threes:threes, tournamentkey:tournamentkey, twos:twos, venuekey:venuekey, wicket:wicket, wides:wides, zeros:zeros, line:line, length:length, shottype:shottype, side:bowling_side, direction:directionkey, spell:spell, ballnum:inningballcounter, over:over, angle:angle};
+		jsonObj = {clientkey:clientkey,  ballsdeonred:ballsdeonred, ballsfaced:ballsfaced, batsmankey:batsmankey, batsmanid:batsmanid, battingendkey:battingendkey, battingposition:battingposition, bowlerkey:bowlerkey, bowlingendkey:bowlingendkey, bowlingposition:bowlingposition, byes:byes, currentbowlerkey:currentbowlerkey,  currentbowlerid:currentbowlerid, currentnonstrikerkey:currentnonstrikerkey, currentstrikerkey:currentstrikerkey, dismissedbatsmankey:dismissedbatsmankey, eights:eights, fielderkey:fielderkey, fives:fives, formatkey:formatkey, fours:fours, inning:inning, legbyes:legbyes, maiden:maiden, matchkey:matchkey, noballs:noballs, ones:ones, others:others, outbywk:outbywk, outtypekey:dismissaltypekey, runs:runs, sevens:sevens, sixes:sixes, teamidone:teamoneid, teamtwoid:teamtwoid, threes:threes, tournamentkey:tournamentkey, twos:twos, venuekey:venuekey, wicket:wicket, wides:wides, zeros:zeros, line:line, length:length, shottype:shottype, side:bowling_side, direction:directionkey, spell:spell, ballnum:inningballcounter, over:over, angle:angle};
 		
 		$.ajax({
 			url: '/scorecards',
@@ -858,7 +858,7 @@ $(document).ready(function(){
 		 
 		 
 		runs = 0; zeros = 0; ones = 0; twos = 0; threes = 0; fours = 0; fives=0; sixes = 0; sevens = 0; eights = 0; others = 0;
-		outbywk = -2; formatkey = 0; wides = 0; byes=0; noballs = 0;legbyes=0; ballsdelivered = 0; ballsfaced = 0; maiden = 0;
+		outbywk = -2; formatkey = 0; wides = 0; byes=0; noballs = 0;legbyes=0; ballsdeonred = 0; ballsfaced = 0; maiden = 0;
 		fielderkey = -2; currentbowlerkey = -2; currentstrikerkey = -2; bowlerkey = -2, batsmankey = -2; 
 		currentnonstrikerkey = -2; dismissedbatsmankey = -2; wicket = 0; dismissaltypekey = -2; teamoneid = -2; teamtwoid =-2;
 		venuekey = -2; line = 0; length= 0; shottype = 0; spell=0; directionkey=0; activity=0;angle=-2;
@@ -868,15 +868,15 @@ $(document).ready(function(){
 	
 	
 	
-	$('#matchupdate img').live('mouseover', function(){	
+	$('#matchupdate img').on('mouseover', function(){	
 		$(this).attr('src','/assets/button-over.png');	
 	});
 
-	$('#matchupdate img').live('mouseout', function(){
+	$('#matchupdate img').on('mouseout', function(){
 		$(this).attr('src','/assets/button.png');	
 	});
 	
-	$('#matchupdate img').live('click', function(){
+	$('#matchupdate img').on('click', function(){
 		$(this).attr('src','/assets/button-over.png');	
 		var winnerkey = $('#mw_mwkey').children('option:selected').val();
 		var matchid = $('#details_values').attr('data-matchid');

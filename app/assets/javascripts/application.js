@@ -52,36 +52,36 @@ $(document).ready(function(){
 	
 	$('#centralnav').fadeTo(0,0);
 	
-	$('#centralnav').live('mouseover' , function(){
+	$(document).on('mouseover','#centralnav', function(){
 		$(this).fadeTo(0,1);
 	});
 	
-	$('#centralnav').live('mouseout' , function(){
+	$(document).on('mouseout' ,'#centralnav', function(){
 		$(this).fadeTo(0,0);
 	});
 	
 	
-	$('.cnav').live('hover', function(){
+	$(document).on('hover','.cnav', function(){
 		$(this).css('opacity', '0.7');
 		
 	});
 	
-	$('.cnav').live('mouseout', function(){
+	$(document).on('mouseout','.cnav', function(){
 		$(this).css('opacity', '0.6');
 	});	
 	
 	
-	$('.actions input').live('mouseover', function(){
+	$(document).on('mouseover','.actions input', function(){
 		var data = $(this).attr('data');
 		$(this).attr('src', '/assets/'+data+'-over.png');
 	});
 	
-	$('.actions input').live('mouseout', function(){
+	$(document).on('mouseout','.actions input', function(){
 		var data = $(this).attr('data');
 		$(this).attr('src', '/assets/'+data+'.png');
 	});
 	
-	$('.actions input').live('click', function(){
+	$(document).on('click', '.actions input', function(){
 		var data = $(this).attr('data');
 		$(this).attr('src', '/assets/'+data+'-over.png');
 	});
@@ -169,7 +169,7 @@ $(document).ready(function(){
 	});
 	
 	
-	$('#intheteam').live("click" , function(){
+	$(document).on("click" ,'#intheteam', function(){
 		$.each(player, function(index, player){
 			$('#removable_players_table').append('<tr><td class="removable_playerid">'+player[2]+'</td><td class="removable_playername" data-pid="'+player[2]+'">'+player[1]+'</td></tr>');
 			$('[data-id="'+player[2]+'"]').parent().hide();
@@ -209,7 +209,7 @@ $(document).ready(function(){
 	});
 	
 	
-	$('#outoftheteam').live("click" , function(){
+	$(document).on("click" , '#outoftheteam',function(){
 		$.each(player, function(index, player){
 			$('[data-pid="'+player[2]+'"]').parent().remove();
 			$('[data-id="'+player[2]+'"]').parent().show();
@@ -218,11 +218,11 @@ $(document).ready(function(){
 	});
 
 	
-	$('#draft_team img').live('mouseover', function(){
+	$(document).on('mouseover','#draft_team img', function(){
 		$(this).attr('src', '/assets/create-over.png');
 	});
 	
-	$('#draft_team img').live('mouseout', function(){
+	$(document).on('mouseout', '#draft_team img', function(){
 		$(this).attr('src', '/assets/create.png');
 	});
 	
@@ -230,7 +230,7 @@ $(document).ready(function(){
 	
 	var maxteamid = parseInt($('#teammaxid').html());
 	
-	$('#draft_team').live('click', function(){
+	$(document).on('click','#draft_team', function(){
 		$(this).children('img').attr('src', '/assets/create-over.png');
 		var jsonObj = {};
 		var selected_players = $('#removable_players_table').children('tbody').children('tr');
@@ -320,7 +320,7 @@ $(document).ready(function(){
 		});
 	});
 	
-	$('#in_the_team').live("click" , function(){		
+	$(document).on("click" ,'#in_the_team', function(){		
 		$.each(player, function(index, player){
 			$('#removable_players_table').append('<tr><td class="removable_playerid">'+player[2]+'</td><td class="removable_playername" data-pid="'+player[2]+'">'+player[1]+'</td></tr>');
 			$('[data-id="'+player[2]+'"]').parent().hide();
@@ -329,7 +329,7 @@ $(document).ready(function(){
 	});
 	
 	
-	$('#out_of_the_team').live("click" , function(){
+	$(document).on("click" ,'#out_of_the_team', function(){
 		$.each(player, function(index, player){			
 			$('[data-pid="'+player[2]+'"]').parent().remove();
 			$('[data-id="'+player[2]+'"]').parent().show();			
@@ -398,15 +398,15 @@ $(document).ready(function(){
 		});
 	}
 
-	$('#update_team img').live('mouseover', function(){
+	$(document).on('mouseover','#update_team img', function(){
 		$(this).attr('src', '/assets/update-over.png');
 	});
 	
-	$('#update_team img').live('mouseout', function(){
+	$(document).on('mouseout','#update_team img', function(){
 		$(this).attr('src', '/assets/update.png');
 	});
 	
-	$('#update_team').live('click', function(){
+	$(document).on('click','#update_team', function(){
 		$(this).children('img').attr('src', '/assets/update-over.png');
 		var jsonObj = {};
 		var selected_players = $('#removable_players_table').children('tbody').children('tr');
@@ -486,35 +486,35 @@ $(document).ready(function(){
 
 	});
 	
-	$('._country').live('click', function()  {
+	$(document).on('click','._country', function()  {
 		window.location='/countries/new';
 	});
 	
-	$('._tournament').live('click', function()  {
+	$(document).on('click','._tournament', function()  {
 		window.location='/tournaments/new';
 	});
 	
-	$('._player').live('click', function()  {
+	$(document).on('click', '._player',function()  {
 		window.location='/players/new';
 	});
 	
-	$('._manager').live('click', function()  {
+	$(document).on('click','._manager', function()  {
 		window.location='/managers/new';
 	});
 	
-	$('._coach').live('click', function()  {
+	$(document).on('click','._coach', function()  {
 		window.location='/coaches/new';
 	});
 	
-	$('._team').live('click', function()  {
+	$(document).on('click','._team', function()  {
 		window.location='/teams/new';
 	});
 	
-	$('._venue').live('click', function()  {
+	$(document).on('click','._venue', function()  {
 		window.location='/venues/new';
 	});
 
-	$('._match').live('click', function()  {
+	$(document).on('click','._match', function()  {
 		window.location='/matches/new';
 	});
 	

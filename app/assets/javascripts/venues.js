@@ -8,7 +8,7 @@ $(document).ready(function(){
 	});
 
 	
-	$('.fields').live('click', function(){
+	$('.fields').on('click', function(){
 		$('#success_message').html('');	
 	});
 

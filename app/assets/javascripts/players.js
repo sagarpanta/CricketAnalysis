@@ -11,7 +11,7 @@ $(document).ready(function(){
 	$("#datepicker").datepicker({dateFormat: 'yy-mm-dd'});
 	
 	
-	$('.fields').live('click', function(){
+	$('.fields').on('click', function(){
 		$('#success_message').html('');	
 	});
 	
@@ -23,11 +23,11 @@ $(document).ready(function(){
 		modal: true
 	});
 	
-	$('.edit_player table tr td #player_playerid').live('click', function(){
+	$('.edit_player table tr td #player_playerid').on('click', function(){
 		$( "#dialog-player-form" ).dialog('open');
 	});
 
-	$('#btn-ok').live('click', function(){
+	$('#btn-ok').on('click', function(){
 		$( "#dialog-player-form" ).dialog('close');
 	});
 	

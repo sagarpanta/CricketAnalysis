@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$('.links').live('mouseout', function(){
+	$('.links').on('mouseout', function(){
 		
 		var alt = $(this).children('span').children('img').attr('alt').toLowerCase();
 		$(this).children('span').children('img').attr('src', '/assets/'+alt+'.png');
@@ -7,13 +7,13 @@ $(document).ready(function(){
 	
 	});
 	
-	$('.links').live('mouseover', function(){	
+	$('.links').on('mouseover', function(){	
 		var alt = $(this).children('span').children('img').attr('alt').toLowerCase();
 		$(this).children('span').children('img').attr('src', '/assets/'+alt+'-over.png');
 
 	});
 	
-	$('.links').live('click', function(){
+	$('.links').on('click', function(){
 		var alt = $(this).children('span').children('img').attr('alt').toLowerCase();
 		$(this).children('span').children('img').attr('src', '/assets/'+alt+'.png');
 		link = $(this).attr('data-link');

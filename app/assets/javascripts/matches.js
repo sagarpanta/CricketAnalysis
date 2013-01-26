@@ -8,7 +8,7 @@ $(document).ready(function(){
 	});
 	var textfield_filled = 0;
 	
-	$('.fields').live('click', function(){
+	$('.fields').on('click', function(){
 		$('#success_message').html('');	
 	});
 
@@ -114,7 +114,7 @@ $(document).ready(function(){
 
 	   }
 	   
-	 $('[name="button"]').live('click', function(){
+	 $('[name="button"]').on('click', function(){
 		var runrate = parseFloat($('#runrate').val());
 		var currentscore = parseInt($('#currScore').html());
 		var ovrsRemaining = parseFloat($('#oversRemaining').html());
@@ -142,7 +142,7 @@ $(document).ready(function(){
 		});
 	}
 	var pitch_clicked = 0;
-	$('#match_pitchcondition').live('click', function(){
+	$('#match_pitchcondition').on('click', function(){
 		pitch_clicked = pitch_clicked+1;
 		if (pitch_clicked==1){
 			$('.pitchcondition').slideDown('slow', function() {
@@ -160,7 +160,7 @@ $(document).ready(function(){
 			});
 		}
 	}); 
-	$('#match_pitchcondition').live('mouseout', function(){
+	$('#match_pitchcondition').on('mouseout', function(){
 		$('.pitchcondition').html('');
 		pitch_clicked = 0;
 		console.log('hellow hou are you');

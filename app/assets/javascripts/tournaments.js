@@ -6,7 +6,7 @@ $(document).ready(function(){
 	$('#tournaments tr').mouseout(function(){
 		$(this).children('td').css('background-color','black').css('color', 'white');
 	});
-	$('.fields').live('click', function(){
+	$('.fields').on('click', function(){
 		$('#success_message').html('');	
 	});
 
