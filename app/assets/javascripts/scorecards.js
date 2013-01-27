@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
 	var dblclicked = 0;
 	var laststriker_bts = $('.Batsman.hilite').attr('data-bts');
 	
