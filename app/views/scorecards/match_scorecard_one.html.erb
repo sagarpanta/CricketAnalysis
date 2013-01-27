@@ -251,12 +251,18 @@
 </table>
 
 
-<video width="550px" height="550px" autoplay controls></video>
-<img src="">
-<canvas></canvas>
+<div style="text-align:center;">
+<video id="basic-stream" class="videostream" autoplay></video>
+<p><button id="capture-button">Capture video</button> <button id="stop-button">Stop</button></p>
+</div>
+
+
 
 
 <div class="scorecard"><%= link_to '2nd Inning' , {:controller=>"scorecards", :action=>"match_scorecard_two", :id=>@match.id} %>
 <%= link_to 'Current Match Status' , {:controller=>"matches", :action=>"match_status", :id=>@match.id} %>
 </div>
     
+	
+	
+	

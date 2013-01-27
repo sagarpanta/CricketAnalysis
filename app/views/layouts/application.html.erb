@@ -13,25 +13,6 @@
 	  google.load('visualization', '1', {packages: ['table']});
 </script>
 <script>
-  var onFailSoHard = function(e) {
-    console.log('Reeeejected!', e);
-  };
-  
-	window.URL = window.URL || window.webkitURL;
-	navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia ||
-							  navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
-	var video = document.querySelector('video');
-
-	if (navigator.getUserMedia) {
-	  navigator.getUserMedia({video: true}, function(stream) {
-		video.src = window.URL.createObjectURL(stream);
-	  }, onFailSoHard);
-	} else {
-	  video.src = 'somevideo.webm'; // fallback.
-	}
-</script>
-<script>
 	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 	window.requestFileSystem(window.TEMPORARY, 5*1024*1024, initFS, errorHandler);
 	function initFS(fs){
@@ -108,7 +89,55 @@
 </div>
 
 <%= yield %>
+<script>
+function onFailSoHard(e){
+	if(e.code==1){
+		alert('User denied access to their camera');
+	}
+	else{
+		alert('getUserMedia() not supported in your browser.');
+	}
+}
 
+(function(){
+	var video=document.querySelector('#basic-stream');
+	var button=document.querySelector('#capture-button');
+	var localMediaStream=null, recorder;
+	
+	button.addEventListener('click',function(e){
+		if(navigator.getUserMedia){
+			navigator.getUserMedia('video',function(stream){
+				video.src=stream;
+				video.controls=true;
+				localMediaStream=stream;
+			},onFailSoHard);
+		}
+		else if(navigator.webkitGetUserMedia){
+			navigator.webkitGetUserMedia({video:true},function(stream){
+				video.src=window.webkitURL.createObjectURL(stream);
+				video.controls=true;localMediaStream=stream;
+			},onFailSoHard);
+		}
+		else{
+			onFailSoHard({target:video});
+		}
+    },false);
+
+	document.querySelector('#stop-button').addEventListener('click',function(e){
+		video.pause();
+		localMediaStream.stop();
+		recorder.getRecordedData(function(blob){
+			 fs.root.getFile('blob', {create: true}, function(fileEntry) {
+				console.log('blob has been created');
+
+			}, function(e){
+				console.log('blob has not been created');
+			});
+		});
+	},false);
+})();
+
+</script>
 </body>
 </html>
 
