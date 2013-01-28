@@ -1,0 +1,41 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  _over: 1
+  ballnum: 1
+  striker: MyString
+  nonstriker: MyString
+  bowler: MyString
+  fielder: MyString
+  runs: 1
+  extras: 1
+  balltype: MyString
+  shottype: MyString
+  line: MyString
+  length: MyString
+  uncomfortable: MyString
+  wicket: MyString
+  beaten: MyString
+  releaseshot: MyString
+  bowlingend: MyString
+  bowlingside: MyString
+
+two:
+  _over: 1
+  ballnum: 1
+  striker: MyString
+  nonstriker: MyString
+  bowler: MyString
+  fielder: MyString
+  runs: 1
+  extras: 1
+  balltype: MyString
+  shottype: MyString
+  line: MyString
+  length: MyString
+  uncomfortable: MyString
+  wicket: MyString
+  beaten: MyString
+  releaseshot: MyString
+  bowlingend: MyString
+  bowlingside: MyString

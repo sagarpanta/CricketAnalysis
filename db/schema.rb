@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125041601) do
+ActiveRecord::Schema.define(:version => 20130128022018) do
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -149,6 +149,29 @@ ActiveRecord::Schema.define(:version => 20130125041601) do
 
   create_table "dismissals", :force => true do |t|
     t.string   "dismissaltype"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "externals", :force => true do |t|
+    t.integer  "_over"
+    t.integer  "ballnum"
+    t.string   "striker"
+    t.string   "nonstriker"
+    t.string   "bowler"
+    t.string   "fielder"
+    t.integer  "runs"
+    t.integer  "extras"
+    t.string   "balltype"
+    t.string   "shottype"
+    t.string   "line"
+    t.string   "length"
+    t.string   "uncomfortable"
+    t.string   "wicket"
+    t.string   "beaten"
+    t.string   "releaseshot"
+    t.string   "bowlingend"
+    t.string   "bowlingside"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end

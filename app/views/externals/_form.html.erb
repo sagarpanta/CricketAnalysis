@@ -1,0 +1,89 @@
+<%= form_for(@external) do |f| %>
+  <% if @external.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@external.errors.count, "error") %> prohibited this external from being saved:</h2>
+
+      <ul>
+      <% @external.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :_over %><br />
+    <%= f.number_field :_over %>
+  </div>
+  <div class="field">
+    <%= f.label :ballnum %><br />
+    <%= f.number_field :ballnum %>
+  </div>
+  <div class="field">
+    <%= f.label :striker %><br />
+    <%= f.text_field :striker %>
+  </div>
+  <div class="field">
+    <%= f.label :nonstriker %><br />
+    <%= f.text_field :nonstriker %>
+  </div>
+  <div class="field">
+    <%= f.label :bowler %><br />
+    <%= f.text_field :bowler %>
+  </div>
+  <div class="field">
+    <%= f.label :fielder %><br />
+    <%= f.text_field :fielder %>
+  </div>
+  <div class="field">
+    <%= f.label :runs %><br />
+    <%= f.number_field :runs %>
+  </div>
+  <div class="field">
+    <%= f.label :extras %><br />
+    <%= f.number_field :extras %>
+  </div>
+  <div class="field">
+    <%= f.label :balltype %><br />
+    <%= f.text_field :balltype %>
+  </div>
+  <div class="field">
+    <%= f.label :shottype %><br />
+    <%= f.text_field :shottype %>
+  </div>
+  <div class="field">
+    <%= f.label :line %><br />
+    <%= f.text_field :line %>
+  </div>
+  <div class="field">
+    <%= f.label :length %><br />
+    <%= f.text_field :length %>
+  </div>
+  <div class="field">
+    <%= f.label :uncomfortable %><br />
+    <%= f.text_field :uncomfortable %>
+  </div>
+  <div class="field">
+    <%= f.label :wicket %><br />
+    <%= f.text_field :wicket %>
+  </div>
+  <div class="field">
+    <%= f.label :beaten %><br />
+    <%= f.text_field :beaten %>
+  </div>
+  <div class="field">
+    <%= f.label :releaseshot %><br />
+    <%= f.text_field :releaseshot %>
+  </div>
+  <div class="field">
+    <%= f.label :bowlingend %><br />
+    <%= f.text_field :bowlingend %>
+  </div>
+  <div class="field">
+    <%= f.label :bowlingside %><br />
+    <%= f.text_field :bowlingside %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

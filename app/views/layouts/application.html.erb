@@ -13,6 +13,7 @@
 	  google.load('visualization', '1', {packages: ['table']});
 </script>
 <script>
+/*
 	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 	window.requestFileSystem(window.TEMPORARY, 5*1024*1024, initFS, errorHandler);
 	function initFS(fs){
@@ -26,6 +27,33 @@
 	function errorHandler(){
 	  console.log('An error occured');
 	}
+	
+//----------------------------------------------------------------------------------------------
+window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
+window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+
+function onInitFs(fs) {
+  console.log('Opened file system: ' + fs.name);
+  fs.root.getDirectory('permanettestDoc',{create:true},  function(dirEntry) {
+		console.log(dirEntry.name);
+  }, errorHandler);
+  fs.root.getDirectory('permanettestDoc/_test.txt',{create:true},  function(dirEntry) {
+		console.log(dirEntry.name);
+  }, errorHandler);
+}
+
+function errorHandler(){
+	  console.log('An error occured');
+}
+
+window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024*1024, function(grantedBytes) {
+  window.requestFileSystem(PERSISTENT, grantedBytes, onInitFs, errorHandler);
+}, function(e) {
+  console.log('Error', e);
+});
+
+
+*/
 </script>
 </head>
 
@@ -90,6 +118,8 @@
 
 <%= yield %>
 <script>
+
+/*
 function onFailSoHard(e){
 	if(e.code==1){
 		alert('User denied access to their camera');
@@ -103,41 +133,45 @@ function onFailSoHard(e){
 	var video=document.querySelector('#basic-stream');
 	var button=document.querySelector('#capture-button');
 	var localMediaStream=null, recorder;
-	
-	button.addEventListener('click',function(e){
-		if(navigator.getUserMedia){
-			navigator.getUserMedia('video',function(stream){
-				video.src=stream;
-				video.controls=true;
-				localMediaStream=stream;
-			},onFailSoHard);
-		}
-		else if(navigator.webkitGetUserMedia){
-			navigator.webkitGetUserMedia({video:true},function(stream){
-				video.src=window.webkitURL.createObjectURL(stream);
-				video.controls=true;localMediaStream=stream;
-			},onFailSoHard);
-		}
-		else{
-			onFailSoHard({target:video});
-		}
-    },false);
+	if (button){
+		button.addEventListener('click',function(e){
+			if(navigator.getUserMedia){
+				navigator.getUserMedia('video',function(stream){
+					video.src=stream;
+					video.controls=true;
+					localMediaStream=stream;
+				},onFailSoHard);
+			}
+			else if(navigator.webkitGetUserMedia){
+				navigator.webkitGetUserMedia({video:true},function(stream){
+					video.src=window.webkitURL.createObjectURL(stream);
+					video.controls=true;localMediaStream=stream;
+				},onFailSoHard);
+			}
+			else{
+				onFailSoHard({target:video});
+			}
+		},false);
+		
 
-	document.querySelector('#stop-button').addEventListener('click',function(e){
-		video.pause();
-		localMediaStream.stop();
-		recorder.getRecordedData(function(blob){
-			 fs.root.getFile('blob', {create: true}, function(fileEntry) {
-				console.log('blob has been created');
+		document.querySelector('#stop-button').addEventListener('click',function(e){
+			video.pause();
+			localMediaStream.stop();
+			//recorder.getRecordedData(function(blob){
+			//	 fs.root.getFile('blob', {create: true}, function(fileEntry) {
+			//		console.log('blob has been created');
 
-			}, function(e){
-				console.log('blob has not been created');
-			});
-		});
-	},false);
+			//	}, function(e){
+			//		console.log('blob has not been created');
+			//	});
+			//});
+		},false);
+	}
 })();
-
+*/
 </script>
+
+
 </body>
 </html>
 

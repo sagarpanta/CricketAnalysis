@@ -1,0 +1,57 @@
+<h1>Listing externals</h1>
+
+<table>
+  <tr>
+    <th> over</th>
+    <th>Ballnum</th>
+    <th>Striker</th>
+    <th>Nonstriker</th>
+    <th>Bowler</th>
+    <th>Fielder</th>
+    <th>Runs</th>
+    <th>Extras</th>
+    <th>Balltype</th>
+    <th>Shottype</th>
+    <th>Line</th>
+    <th>Length</th>
+    <th>Uncomfortable</th>
+    <th>Wicket</th>
+    <th>Beaten</th>
+    <th>Releaseshot</th>
+    <th>Bowlingend</th>
+    <th>Bowlingside</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @externals.each do |external| %>
+  <tr>
+    <td><%= external._over %></td>
+    <td><%= external.ballnum %></td>
+    <td><%= external.striker %></td>
+    <td><%= external.nonstriker %></td>
+    <td><%= external.bowler %></td>
+    <td><%= external.fielder %></td>
+    <td><%= external.runs %></td>
+    <td><%= external.extras %></td>
+    <td><%= external.balltype %></td>
+    <td><%= external.shottype %></td>
+    <td><%= external.line %></td>
+    <td><%= external.length %></td>
+    <td><%= external.uncomfortable %></td>
+    <td><%= external.wicket %></td>
+    <td><%= external.beaten %></td>
+    <td><%= external.releaseshot %></td>
+    <td><%= external.bowlingend %></td>
+    <td><%= external.bowlingside %></td>
+    <td><%= link_to 'Show', external %></td>
+    <td><%= link_to 'Edit', edit_external_path(external) %></td>
+    <td><%= link_to 'Destroy', external, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New External', new_external_path %>
