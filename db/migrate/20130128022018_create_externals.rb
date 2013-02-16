@@ -1,24 +1,45 @@
 class CreateExternals < ActiveRecord::Migration
   def change
     create_table :externals do |t|
-      t.integer :_over
-      t.integer :ballnum
-      t.string :striker
-      t.string :nonstriker
-      t.string :bowler
-      t.string :fielder
-      t.integer :runs
-      t.integer :extras
-      t.string :balltype
-      t.string :shottype
-      t.string :line
-      t.string :length
-      t.string :uncomfortable
-      t.string :wicket
-      t.string :beaten
-      t.string :releaseshot
-      t.string :bowlingend
-      t.string :bowlingside
+      t.integer :OverNo
+      t.integer :BallNo
+	  t.integer :InningsNo
+      t.string :StrikerName
+	  t.string :StrikerBatType
+      t.string :NonStrikerName
+	  t.string :NonStrikerBatType
+      t.string :BowlerName
+	  t.string :BowlType
+      t.string :FielderName
+      t.integer :Runs
+      t.integer :Extras
+      t.string :BallType
+      t.string :ShotName
+      t.string :Line
+      t.string :Length
+      t.integer :IsUncomfortable
+      t.integer :IsWickettakingBall
+	  t.integer :IsWicket
+      t.integer :IsBeaten
+      t.integer :IsReleaseshot
+	  t.integer :IsWide
+	  t.integer :IsNoBall
+	  t.integer :IsBye
+	  t.integer :IsLegBye
+	  t.integer :IsFour
+	  t.integer :IsSix
+      t.string :BowlingEnd
+      t.string :BowlingDirection
+	  t.integer :Day
+	  t.integer :SpellNo
+	  t.string :WicketType
+	  t.integer :SessionNo
+	  t.string :Region
+	  t.integer :PlayingOrder
+	  t.string :OutBatsmanName
+	  
+	  
+
 
       t.timestamps
     end

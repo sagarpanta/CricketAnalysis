@@ -164,7 +164,7 @@ class ScorecardsController < ApplicationController
   end
  
   def match_scorecard_one
-	begin
+	
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
@@ -220,11 +220,12 @@ class ScorecardsController < ApplicationController
 			ballsdelivered = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).sum(:ballsdelivered)
 			@overs = ballsdelivered/6 + ballsdelivered%6/10.0
 			@wickets =  Scorecard.where('matchkey=? and inning= ?', params[:id], @inning).sum(:wicket)
-
+			id = Scorecard.maximum(:id)
+			@next_id = id.nil? ? 1:(id+1)
 
 			#batting side players
-			@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerkey}
-			
+			@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerid}
+						
 			
 			#beginning of calculation of current bowler or batsman or non striker or fielder in action
 			#maxid is the last entry id of Scorecard
@@ -294,7 +295,7 @@ class ScorecardsController < ApplicationController
 				if counter >11
 					break
 				end
-				player = Player.find_by_id(b)
+				player = Player.find_by_clientkey_and_formatkey_and_playerid(current_user.id, @format.id, b)
 				#this is the last entry id of the bastman b
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', params[:id],@inning,b).maximum(:id)
@@ -318,6 +319,7 @@ class ScorecardsController < ApplicationController
 								'
 				stats = Scorecard.find_by_sql(stats_query)
 				
+
 				
 				hilite = ''
 				if @currentstrikerkey == b
@@ -350,6 +352,7 @@ class ScorecardsController < ApplicationController
 					#of the select tag where as empty is the first element of the select tag for wktakingbowlerkey
 					outtypekey = -2
 				end
+				
 
 				@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :bts=>player.battingstyle,
 							 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
@@ -377,8 +380,6 @@ class ScorecardsController < ApplicationController
 			
 			@batsmen = Scorecard.sortPlayers(@batsmen)
 			
-
-			
 			#types of dismissals. Add -2 to the entry, which is the default value 
 			#i.e. the batsman has not played yet or is still no out.
 			#same with the fielder and wicket taking bowlers
@@ -386,13 +387,13 @@ class ScorecardsController < ApplicationController
 			@dismissals << ['', -2]
 			
 			@fielders = [['', -2]]
-			@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerkey}
+			@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
 			
 			@fieldingside = []
 			pos = 0
 			counter = 0
 			@fieldingkeys.each do |b|
-				player = Player.find_by_id(b)
+				player = Player.find_by_clientkey_and_formatkey_and_playerid(current_user.id, @format.id, b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
 				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
@@ -449,7 +450,7 @@ class ScorecardsController < ApplicationController
 					temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
 					b[:bowlingposition] = temp
 					@bowlers << b
-					@wktakingbowlers << [b[:name],b[:playerkey]]
+					@wktakingbowlers << [b[:name],b[:playerid]]
 					counter= counter + 1
 				end
 			end
@@ -457,22 +458,17 @@ class ScorecardsController < ApplicationController
 		else 
 			redirect_to signin_path
 		end	
-	rescue => e
-		 @message = e.message 
-		 @client = current_user
-		 @caught_at = 'scorecards#match_scorecard_one'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
+
   end
   
   
    def match_scorecard_two
-	begin
+	
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
 			@teams = Team.find_by_sql('select distinct teamid, teamname from teams where teamid in ('+@match.teamidone.to_s+','+@match.teamidtwo.to_s+') and wh_current=1')
-
+			
 			@target = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
 			#redirect_to scorecard_first_inning_path({:id=>@match.id})
 			#####common entry for all records
@@ -490,7 +486,7 @@ class ScorecardsController < ApplicationController
 			@fielding_side = 0
 			
 			@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone,1)
-			@teamtwo = Team.find_by_teamid_wh_current(@match.teamidtwo,1)
+			@teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
 			
 			if @match.tosswon == @match.teamidone
 				if @match.electedto == 'Bat'
@@ -534,12 +530,17 @@ class ScorecardsController < ApplicationController
 			@lastball = Scorecard.where('matchkey=? and inning = ?', params[:id], @inning).maximum(:ballnum)
 			@lastball = @lastball.nil? ? 0:@lastball
 			@overs = ballsdelivered/6 + ballsdelivered%6/10.0
+			id = Scorecard.maximum(:id)
+			@next_id = id.nil? ? 1:(@id+1)
+			
 			@wickets =  Scorecard.where('matchkey=? and inning= ?', params[:id], @inning).sum(:wicket)
 			@overballnum = (ballsdelivered%6 == 0 and ballsdelivered>0)? 6:ballsdelivered%6  #-ve 1 because to use in between in the next sql
 			@runsthisover = Scorecard.where('matchkey=? and inning = ? and ballnum between ? and ?', params[:id], @inning, @lastball==0? 0:@lastball-@overballnum+1, @lastball).select('sum(runs+noballs+byes+legbyes+wides) as runs')[0].runs
 			@runsthisover = @runsthisover.nil? ? 0:@runsthisover
 			#batting side players
-			@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerkey}
+			@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerid}
+			
+
 			
 			#beginning of calculation of current bowler or batsman or non striker or fielder in action
 			#maxid is the last entry id of Scorecard
@@ -590,7 +591,6 @@ class ScorecardsController < ApplicationController
 				@currentstrikerkey = @currentstrikerkey
 				@currentnonstrikerkey = @currentnonstrikerkey
 			elsif ballsdelivered%6==0 and ((@lastnoball>0 and (@lastbye%2==1 or @lastlbye%2==1 or @lastrun%2==1)) or (@lastnoball == 0 and (@lastrun%2==0 and @lastbye%2== 0 and @lastlbye%2 == 0)) or (@lastwide%2==0 and (@lastwide != 1 or @lastwide!=4)))
-				
 				temp = @currentstrikerkey
 				@currentstrikerkey = @currentnonstrikerkey
 				@currentnonstrikerkey = temp
@@ -612,10 +612,10 @@ class ScorecardsController < ApplicationController
 				if counter >11
 					break
 				end
-				player = Player.find_by_id(b)
+				player = Player.find_by_clientkey_and_formatkey_and_playerid(current_user.id,@match.formatkey,b)
 				#this is the last entry id of the bastman b
-				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).maximum(:id)
-				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', params[:id],@inning,b).maximum(:id)
+				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=? and formatkey=?', params[:id],@inning,b, @match.formatkey).maximum(:id)
+				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=? and formatkey=?', params[:id],@inning,b, @match.formatkey).maximum(:id)
 				
 				#get the stats of batsman b so far.
 				stats_query = 'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced,  case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
@@ -690,6 +690,8 @@ class ScorecardsController < ApplicationController
 				
 			end
 			
+			#@batsmen = Scorecard.sortPlayers(@batsmen)
+			
 			@batsmen = @batsmen.sort_by{|b| b[:battingposition]}
 
 			#types of dismissals. Add -2 to the entry, which is the default value 
@@ -699,13 +701,13 @@ class ScorecardsController < ApplicationController
 			@dismissals << ['', -2]
 			
 			@fielders = [['', -2]]
-			@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerkey}
+			@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
 			
 			@fieldingside = []
 			pos = 0
 			counter = 0
 			@fieldingkeys.each do |b|
-				player = Player.find_by_id(b)
+				player = Player.find_by_clientkey_and_formatkey_and_playerid(current_user.id,@match.formatkey,b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
 				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
@@ -761,7 +763,7 @@ class ScorecardsController < ApplicationController
 					temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
 					b[:bowlingposition] = temp
 					@bowlers << b
-					@wktakingbowlers << [b[:name],b[:playerkey]]
+					@wktakingbowlers << [b[:name],b[:playerid]]
 					counter= counter + 1
 				end
 			end
@@ -770,12 +772,7 @@ class ScorecardsController < ApplicationController
 		else 
 			redirect_to signin_path
 		end	
-	rescue => e
-		 @message = e.message
-		 @client = current_user
-		 @caught_at = 'scorecards#match_scorecard_two'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
+
 
   end
 
@@ -848,7 +845,7 @@ class ScorecardsController < ApplicationController
 			@wickets =  Scorecard.where('matchkey=? and inning= ?', params[:id], @inning).sum(:wicket)
 
 			#batting side players
-			@batsmankeys = Team.where('teamid= ?', @batting_side).collect {|b| b.playerkey}
+			@batsmankeys = Team.where('teamid= ?', @batting_side).collect {|b| b.playerid}
 			
 
 			@battingposition = [1,2,3,4,5,6,7,8,9,10,11]
@@ -866,7 +863,7 @@ class ScorecardsController < ApplicationController
 					break
 				end
 				
-				player = Player.find_by_id(b)
+				player = Player.find_by_clientkey_and_formatkey_and_playerid(current_user.id,@match.formatkey,b)
 				#this is the last entry id of the bastman b
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', params[:id],@inning,b).maximum(:id)
@@ -949,13 +946,13 @@ class ScorecardsController < ApplicationController
 			
 			@fielders = {}
 			@fielders[-2] = ''
-			@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerkey}
+			@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
 			
 			@fieldingside = []
 			pos = 0
 			counter = 0
 			@fieldingkeys.each do |b|
-				player = Player.find_by_id(b)
+				player = Player.find_by_clientkey_and_formatkey_and_playerid(current_user.id,@match.formatkey,b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
 				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
@@ -994,7 +991,7 @@ class ScorecardsController < ApplicationController
 					temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
 					b[:bowlingposition] = temp
 					@bowlers << b
-					@wktakingbowlers[b[:playerkey]] = b[:name]
+					@wktakingbowlers[b[:playerid]] = b[:name]
 					counter= counter + 1
 				end
 			end
@@ -1026,7 +1023,7 @@ class ScorecardsController < ApplicationController
 			@wickets1 =  Scorecard.where('matchkey=? and inning= ?', params[:id], @inning).sum(:wicket)
 
 			#batting side players
-			@batsmankeys1 = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerkey}
+			@batsmankeys1 = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
 			
 
 			@battingposition = [1,2,3,4,5,6,7,8,9,10,11]
@@ -1044,7 +1041,7 @@ class ScorecardsController < ApplicationController
 				if counter >11
 					break
 				end
-				player = Player.find_by_id(b)
+				player = Player.find_by_clientkey_and_formatkey_and_playerid(current_user.id,@match.formatkey,b)
 				#this is the last entry id of the bastman b
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', params[:id],@inning,b).maximum(:id)
@@ -1125,13 +1122,13 @@ class ScorecardsController < ApplicationController
 			
 			@fielders1 = {}
 			@fielders1[-2] = ''
-			@fieldingkeys1 = Team.where('teamid= ?',@batting_side ).collect {|b| b.playerkey}
+			@fieldingkeys1 = Team.where('teamid= ?',@batting_side ).collect {|b| b.playerid}
 			
 			@fieldingside1 = []
 			pos = 0
 			counter = 0
 			@fieldingkeys1.each do |b|
-				player = Player.find_by_id(b)
+				player = Player.find_by_clientkey_and_formatkey_and_playerid(current_user.id,@match.formatkey,b)
 				playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).maximum(:id)
 				playerlastentry = Scorecard.find_by_id(playerlastentry_id)
 				stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', params[:id],@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
@@ -1171,7 +1168,7 @@ class ScorecardsController < ApplicationController
 					temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
 					b[:bowlingposition] = temp
 					@bowlers1 << b
-					@wktakingbowlers1[b[:playerkey]] = [b[:name]]
+					@wktakingbowlers1[b[:playerid]] = [b[:name]]
 					counter= counter + 1
 				end
 			end

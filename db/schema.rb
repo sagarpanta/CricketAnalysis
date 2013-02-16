@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130128022018) do
+ActiveRecord::Schema.define(:version => 20130207173842) do
+
+  create_table "attachments", :force => true do |t|
+    t.string "filename"
+    t.string "content_type"
+    t.binary "data"
+  end
 
   create_table "battings", :force => true do |t|
     t.integer  "teamkey"
@@ -154,26 +160,44 @@ ActiveRecord::Schema.define(:version => 20130128022018) do
   end
 
   create_table "externals", :force => true do |t|
-    t.integer  "_over"
-    t.integer  "ballnum"
-    t.string   "striker"
-    t.string   "nonstriker"
-    t.string   "bowler"
-    t.string   "fielder"
-    t.integer  "runs"
-    t.integer  "extras"
-    t.string   "balltype"
-    t.string   "shottype"
-    t.string   "line"
-    t.string   "length"
-    t.string   "uncomfortable"
-    t.string   "wicket"
-    t.string   "beaten"
-    t.string   "releaseshot"
-    t.string   "bowlingend"
-    t.string   "bowlingside"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.integer  "OverNo"
+    t.integer  "BallNo"
+    t.integer  "InningsNo"
+    t.string   "StrikerName"
+    t.string   "StrikerBatType"
+    t.string   "NonStrikerName"
+    t.string   "NonStrikerBatType"
+    t.string   "BowlerName"
+    t.string   "BowlType"
+    t.string   "FielderName"
+    t.integer  "Runs"
+    t.integer  "Extras"
+    t.string   "BallType"
+    t.string   "ShotName"
+    t.string   "Line"
+    t.string   "Length"
+    t.integer  "IsUncomfortable"
+    t.integer  "IsWickettakingBall"
+    t.integer  "IsWicket"
+    t.integer  "IsBeaten"
+    t.integer  "IsReleaseshot"
+    t.integer  "IsWide"
+    t.integer  "IsNoBall"
+    t.integer  "IsBye"
+    t.integer  "IsLegBye"
+    t.integer  "IsFour"
+    t.integer  "IsSix"
+    t.string   "BowlingEnd"
+    t.string   "BowlingDirection"
+    t.integer  "Day"
+    t.integer  "SpellNo"
+    t.string   "WicketType"
+    t.integer  "SessionNo"
+    t.string   "Region"
+    t.integer  "PlayingOrder"
+    t.string   "OutBatsmanName"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "fieldings", :force => true do |t|
@@ -370,6 +394,7 @@ ActiveRecord::Schema.define(:version => 20130128022018) do
     t.integer  "batsmanid"
     t.integer  "currentbowlerid"
     t.integer  "angle"
+    t.string   "videoloc"
   end
 
   add_index "scorecards", ["id", "clientkey", "ballnum", "formatkey", "tournamentkey", "venuekey", "inning", "matchkey", "outtypekey", "batsmankey", "currentnonstrikerkey", "currentbowlerkey", "battingposition", "bowlingposition", "cr", "dismissedbatsmankey"], :name => "UIX_Scorecards_Evrythng", :unique => true

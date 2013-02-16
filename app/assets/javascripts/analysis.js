@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	$(".chzn-select").chosen();	
 	var analysis = $('#analysis_analysiskey').val();
 	
 	var countrykey = [''];
@@ -64,6 +65,9 @@ $(document).ready(function(){
 	var firstXballs = -2;
 	var frequency = 0;
 	var frequency_click = 0;
+	
+	var video = 0;
+	var video_click = 0;
 	
 	$(document).on('click', '#lastXballs',function(){
 		firstXballs = $('#firstXballs').val();
@@ -217,7 +221,7 @@ $(document).ready(function(){
 		analysis = $(this).val();
 	});
 	
-	$('#country_countrykey').chosen().change(function() {
+	$('#country_countrykey').change(function() {
 		countrykey =  $(this).val() || [''];	
 		attributes = product(countrykey, formatkey, playertypename, battingstylename, bowlingtypename, bowlingstylename);
 		items = attributes.length;
@@ -247,8 +251,9 @@ $(document).ready(function(){
 			}
 		}
 		console.log(selector.substring(0,selector.length-1));
-		$('#batsman_batsmankey').children('option').hide();
-		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).show();
+		//$('#batsman_batsmankey').children('option').hide();
+		$('#batsman_batsmankey').children('option').attr('disabled' , 'disabled');
+		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		$('#batsman_batsmankey').trigger("liszt:updated");
 	});
 	
@@ -283,23 +288,23 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#inning_inningkey').children('option').hide();
+		$('#inning_inningkey').children('option').attr('disabled', 'disabled');
 		var testmatch = 0;
 		for(i=0;i<=formatkey.length;i++){
 			console.log(formatkey[i]);
 			if(formatkey[i]=="12"){
 				testmatch = 1;
-				$('#inning_inningkey').children('option').show();
+				$('#inning_inningkey').children('option').removeAttr('disabled');
 				console.log($('#inning_inningkey').children('option'));
 			}
 			if(formatkey[i]!="12" && testmatch!="1"){
-				$('#inning_inningkey').find('[value="1"],[value="2"]').show();
+				$('#inning_inningkey').find('[value="1"],[value="2"]').removeAttr('disabled');
 				console.log($('#inning_inningkey').children('option'));
 			}
 		}
 		
-		$('#batsman_batsmankey').children('option').hide();
-		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).show();
+		$('#batsman_batsmankey').children('option').attr('disabled' , 'disabled');
+		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		$('#inning_inningkey').trigger("liszt:updated");
 		$('#batsman_batsmankey').trigger("liszt:updated");
 		
@@ -374,8 +379,8 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#batsman_batsmankey').children('option').hide();
-		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).show();
+		$('#batsman_batsmankey').children('option').attr('disabled' , 'disabled');
+		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		
 		$('#batsman_batsmankey').trigger("liszt:updated");
 	});
@@ -419,8 +424,8 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#batsman_batsmankey').children('option').hide();
-		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).show();
+		$('#batsman_batsmankey').children('option').attr('disabled' , 'disabled');
+		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		
 		$('#batsman_batsmankey').trigger("liszt:updated");
 		
@@ -457,8 +462,8 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#batsman_batsmankey').children('option').hide();
-		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).show();
+		$('#batsman_batsmankey').children('option').attr('disabled' , 'disabled');
+		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		
 		$('#batsman_batsmankey').trigger("liszt:updated");
 	});
@@ -495,13 +500,13 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#batsman_batsmankey').children('option').hide();
-		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).show();
+		$('#batsman_batsmankey').children('option').attr('disabled' , 'disabled');
+		$('#batsman_batsmankey').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		
 		$('#batsman_batsmankey').trigger("liszt:updated");
 	});
 	
-	$('#batsman_batsmankey').chosen().change(function() {
+	$('#batsman_batsmankey').change(function() {
 		batsmankey = $(this).val() || [''];
 	});
 	
@@ -532,7 +537,7 @@ $(document).ready(function(){
 
 
 
-	$('#country_countrykey1').chosen().change(function() {
+	$('#country_countrykey1').change(function() {
 		countrykey1 =  $(this).val() || [''];	
 		attributes = product(countrykey1, formatkey1, playertypename1, battingstylename1, bowlingtypename1, bowlingstylename1);
 		items = attributes.length;
@@ -561,15 +566,15 @@ $(document).ready(function(){
 				}
 			}
 		}
-		console.log(selector.substring(0,selector.length-1));
-		$('#bowler_bowlerkey1').children('option').hide();
-		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).show();
+		console.log(selector.substring(0,selector.length-1));		
+		$('#bowler_bowlerkey1').children('option').attr('disabled' , 'disabled');
+		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		$('#bowler_bowlerkey1').trigger("liszt:updated");
 	});
 	
 	
 	
-	$('#matchformat_matchformatkey1').chosen().change(function() {
+	$('#matchformat_matchformatkey1').change(function() {
 		formatkey1 =  $(this).val() || [''];
 		attributes = product(countrykey1, formatkey1, playertypename1,  battingstylename1, bowlingtypename1, bowlingstylename1);
 		items = attributes.length;
@@ -598,23 +603,23 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#inning_inningkey1').children('option').hide();
+		$('#inning_inningkey1').children('option').attr('disabled', 'disabled');
 		var testmatch = 0;
 		for(i=0;i<=formatkey1.length;i++){
 			console.log(formatkey1[i]);
 			if(formatkey1[i]=="12"){
 				testmatch = 1;
-				$('#inning_inningkey1').children('option').show();
+				$('#inning_inningkey1').children('option').removeAttr('disabled');
 				console.log($('#inning_inningkey1').children('option'));
 			}
 			if(formatkey1[i]!="12" && testmatch!="1"){
-				$('#inning_inningkey1').find('[value="1"],[value="2"]').show();
+				$('#inning_inningkey1').find('[value="1"],[value="2"]').removeAttr('disabled');
 				console.log($('#inning_inningkey1').children('option'));
 			}
 		}
 		console.log(selector.substring(0,selector.length-1));
-		$('#bowler_bowlerkey1').children('option').hide();
-		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).show();
+		$('#bowler_bowlerkey1').children('option').attr('disabled' , 'disabled');
+		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		$('#inning_inningkey1').trigger("liszt:updated");
 		$('#bowler_bowlerkey1').trigger("liszt:updated");
 		
@@ -710,9 +715,8 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#bowler_bowlerkey1').children('option').hide();
-		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).show();
-		
+		$('#bowler_bowlerkey1').children('option').attr('disabled' , 'disabled');
+		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		$('#bowler_bowlerkey1').trigger("liszt:updated");
 	});
 	
@@ -755,8 +759,8 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#bowler_bowlerkey1').children('option').hide();
-		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).show();
+		$('#bowler_bowlerkey1').children('option').attr('disabled' , 'disabled');
+		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		$('#bowler_bowlerkey1').trigger("liszt:updated");
 		
 	});
@@ -793,8 +797,8 @@ $(document).ready(function(){
 			}
 		}
 		console.log(selector.substring(0,selector.length-1));
-		$('#bowler_bowlerkey1').children('option').hide();
-		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).show();
+		$('#bowler_bowlerkey1').children('option').attr('disabled' , 'disabled');
+		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		$('#bowler_bowlerkey1').trigger("liszt:updated");
 	});
 	
@@ -830,14 +834,14 @@ $(document).ready(function(){
 				}
 			}
 		}
-		$('#bowler_bowlerkey1').children('option').hide();
-		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).show();
+		$('#bowler_bowlerkey1').children('option').attr('disabled' , 'disabled');
+		$('#bowler_bowlerkey1').children(selector.substring(0,selector.length-1)).removeAttr('disabled');
 		$('#bowler_bowlerkey1').trigger("liszt:updated");
 	});
 	
 
 	
-	$('#bowler_bowlerkey1').chosen().change(function() {
+	$('#bowler_bowlerkey1').change(function() {
 		bowlerkey1 = $(this).val() || [''];
 		console.log(bowlerkey);
 	});
@@ -887,6 +891,24 @@ $(document).ready(function(){
 	});
 	
 	
+	$('#showVideo').on('click', function(){
+		video_click += 1;
+		if (video_click%2==1){
+			video = 1;
+			$(this).css('opacity', '0.7');
+			
+			$('#container').html($('.replay').html());
+		}
+		else{
+			video = 0;
+			$(this).css('opacity', '1');
+			$('#container').html(container);
+		}
+		console.log(video_click);
+	});
+	
+	
+	
 	$('.tabletype a').on('click', function(){
 		$('.tabletype a').css('opacity', '1');
 		$(this).css('opacity', '0.7');
@@ -895,13 +917,13 @@ $(document).ready(function(){
 	
 	$('.tabletype a').on('mouseover', function(){
 		//no color change
-		$('.tabletype a').css('background-color', '#19197D');
+		$(this).css('background-color', '#19197D');
 	});
 	
 	$('.tabletype a').on('mouseout', function(){
 		//
-		$('.tabletype a').css('background-color', '#19197D');
-		$('.tabletype a').css('opacity', '1');
+		$(this).css('background-color', '#19197D');
+		$(this).css('opacity', '1');
 	});
 	
 
@@ -958,7 +980,7 @@ $(document).ready(function(){
 		
 
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,pckey:pitchconditionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey1:spellkey1, pckey1:pitchconditionkey1,ankey1:anglekey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs, fxb:firstXballs, fq:frequency}};
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,pckey:pitchconditionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey1:spellkey1, pckey1:pitchconditionkey1,ankey1:anglekey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs, fxb:firstXballs, fq:frequency, vid:video}};
 			$.ajax({
 				url: '/generate.json',
 				type: 'get',
@@ -966,10 +988,20 @@ $(document).ready(function(){
 				cache: false,
 				success: function(data, textStatus, jqXHR ) { 
 					console.log('successful');
-					google_chart_function(data);
-					google_table_function(data);
-					$('#container').show();
-					$('#table_div').show();
+					if (video==1){
+						
+						for(var i=0; i<data.length; i++){
+							replayVideo(0, data[i]['val']);
+							console.log('************************************************:  ' + data[i]['val']);
+						}
+						
+					}
+					else{
+						google_chart_function(data);
+						google_table_function(data);
+						$('#container').show();
+						$('#table_div').show();
+					}
 
 				},
 				error: function(jqXHR, textStatus, errorThrown){ 
@@ -1035,7 +1067,7 @@ $(document).ready(function(){
 		}
 		
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,pckey:pitchconditionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey1:spellkey1, pckey1:pitchconditionkey1,ankey1:anglekey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs, fxb:firstXballs, fq:frequency}};
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,pckey:pitchconditionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey1:spellkey1, pckey1:pitchconditionkey1,ankey1:anglekey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs, fxb:firstXballs, fq:frequency, vid:video}};
 			$.ajax({
 				url: '/generate.json',
 				type: 'get',
@@ -1044,10 +1076,15 @@ $(document).ready(function(){
 				success: function(data, textStatus, jqXHR ) { 
 					console.log('successful');	
 
-					google_chart_function(data);
-					google_table_function(data);
-					$('#container').show();
-					$('#table_div').show();
+					if (video==1){
+						replayVideo(0, data[i]['val']);
+					}
+					else{
+						google_chart_function(data);
+						google_table_function(data);
+						$('#container').show();
+						$('#table_div').show();
+					}	
 					
 				},
 				error: function(jqXHR, textStatus, errorThrown){ 
@@ -1056,6 +1093,100 @@ $(document).ready(function(){
 				}
 			});
 		}
+	});
+	
+	
+	//***************************************************
+		var fileSystem = null; // file system 
+		var error = 0; // if file system API error
+		var frames = 0; // index for the image files (files0 files1 etc)
+		var _files = []; // store the path of the images recoreded
+		
+		function errorHandler(err){
+		error =1 ;
+		 var msg = 'An error occured: ';
+			switch (err.code) {
+				case FileError.NOT_FOUND_ERR:
+					msg += 'File or directory not found';
+					break;
+		 
+				case FileError.NOT_READABLE_ERR:
+					msg += 'File or directory not readable';
+					break;
+		 
+				case FileError.PATH_EXISTS_ERR:
+					msg += 'File or directory already exists';
+					break;
+		 
+				case FileError.TYPE_MISMATCH_ERR:
+					msg += 'Invalid filetype';
+					break;
+		 
+				default:
+					msg += 'Unknown Error';
+					break;
+			};
+		 
+		 console.log(msg);
+		};
+	
+	function onInitFs(fs) {
+		fileSystem = fs;
+		fs.root.getDirectory('Video', {create: true, exclusive:false}, function(dirEntry) {
+			console.log('You have just created the ' + dirEntry.name + ' directory.');
+			
+			var page = $('#analysis_page').html();
+			if(page!= undefined){
+				//document.getElementById('_runs').addEventListener('click', replayVideo, false);
+			}
+	 
+			fs.root.getDirectory('Video', {}, function(dirEntry){
+			  var dirReader = dirEntry.createReader();
+			  dirReader.readEntries(function(entries) {
+				for(var i = 0; i < entries.length; i++) {
+				  var entry = entries[i];
+				  if (entry.isDirectory){
+					console.log('Directory: ' + entry.fullPath);
+				  }
+				  else if (entry.isFile){
+					//console.log('File: ' + entry.fullPath);
+				  // remove comment to delete all files
+					_files.push(entry.fullPath);
+					frames = parseInt(entry.fullPath[entry.fullPath.length-1]);
+				  }
+				}
+				_files = _files.sort();
+			  }, errorHandler);
+			}, errorHandler);
+		}, errorHandler);
+	}
+	
+	
+		var replayVideo = function(idx, filename_part) {
+			// reads through all the images and show them (image path stored in _files)
+			if(idx.clientX) idx = 0;
+			if(_files[idx] === undefined) {
+				alert('nothing to play');
+				return;
+			}
+			var img = document.getElementById('replay-screen');
+			fileSystem.root.getFile(_files[idx], {}, function(fileEntry) {
+				fileEntry.file(function(file) {
+					var reader = new FileReader();
+					reader.onloadend = function(e) {
+						if(_files[idx].indexOf(filename_part) != -1){img.src = this.result; console.log(_files[idx]);}
+						if(++idx < _files.length)
+							setInterval(replayVideo(idx, filename_part), 2*1000); // y u no work !?
+					};
+					reader.readAsText(file);
+				}, errorHandler);
+			}, errorHandler);
+		}
+
+	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+	//window.requestFileSystem(window.TEMPORARY, 10*1024*1024, initFs, errorHandler);
+	window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024*1024, function(grantedBytes) {
+		window.requestFileSystem(PERSISTENT, grantedBytes, onInitFs, errorHandler);
 	});
 	
 		

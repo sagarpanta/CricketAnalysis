@@ -226,10 +226,23 @@ class PlayersController < ApplicationController
   # PUT /players/1
   # PUT /players/1.json
   def update
-	begin
+	
 		if signed_in?
 			@current_client = current_user.username
 			@player = Player.find(params[:id])
+			
+			parameters = {'clientkey'=>params[:player][:clientkey].to_i,
+					  'playerid'=>params[:player][:playerid].to_i,
+					  'fname'=>params[:player][:fname],
+					  'lname'=>params[:player][:lname],
+					  'dob'=>params[:player][:dob],
+					  'playertype'=>params[:player][:playertype],
+					  'battingstyle'=>params[:player][:battingstyle],
+					  'bowlingstyle'=>params[:player][:bowlingstyle],
+					  'bowlingtype'=>params[:player][:bowlingtype],
+					  'formatkey'=>params[:player][:formatkey][1].to_i,
+					  'countrykey'=>params[:player][:countrykey].to_i
+					  }
 			
 =begin			if @player.battingstyle != params[:player][:battingstyle] or @player.bowlingstyle != params[:player][:bowlingstyle] or @player.bowlingtype != params[:player][:bowlingtype] or @player.playertype != params[:player][:playertype]
 				@player.update_attribute(:wh_current, 0)
@@ -241,7 +254,7 @@ class PlayersController < ApplicationController
 				end
 =end
 			respond_to do |format|
-			  if @player.update_attributes(params[:player])
+			  if @player.update_attributes(parameters)
 				format.html { redirect_to @player, notice: 'Player was successfully updated.' }
 				format.js {render 'success_update.js.erb'}
 				format.json { head :no_content }
@@ -254,12 +267,7 @@ class PlayersController < ApplicationController
 		else
 			redirect_to signin_path	
 		end
-	rescue => e
-		 @message = e.message
-		 @client = current_user
-		 @caught_at = 'players#update'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
+
   end
 
   # DELETE /players/1

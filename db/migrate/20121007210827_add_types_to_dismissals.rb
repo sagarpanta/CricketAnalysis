@@ -1,6 +1,6 @@
 class AddTypesToDismissals < ActiveRecord::Migration
 	TYPES = [
-			{:dismissaltype => 'bold'},
+			{:dismissaltype => 'bowled'},
 			{:dismissaltype => 'caught'},
 			{:dismissaltype => 'stumped'},
 			{:dismissaltype => 'run out'},

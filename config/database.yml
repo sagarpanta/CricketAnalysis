@@ -20,7 +20,7 @@ development:
   database: CricketAnalysis
   pool: 5
   username: postgres
-  password: p@ssw0rd
+  password: password
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -37,4 +37,4 @@ production:
   database: CricketAnalysis
   pool: 5
   username: postgres
-  password: p@ssw0rd
+  password: password

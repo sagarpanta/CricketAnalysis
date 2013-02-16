@@ -83,11 +83,11 @@ font-weight:bold;
 background-color:#19197D
 }
 
-.tabletype{
+#tabletype{
 background-color:#19197D;
 }
 
-.tabletype a{
+#tabletype a{
 font-family:"Arial";
 color:white;
 text-align:center;
@@ -100,8 +100,7 @@ height:100%;
 }
 
 
-
-#last, #xballs, #frequency{
+#last, #xballs, #frequency, #showVideo{
 font-family:"Arial";
 color:white;
 text-align:center;
@@ -112,3 +111,4 @@ background-color:#19197D
 .analysis_table{
 	overflow:auto;
 }
+

@@ -1,6 +1,12 @@
 CricketAnalysis::Application.routes.draw do
-  resources :externals
-  match 'upload', :to=> 'externals#upload'
+  
+  resources :attachments
+
+  resources :externals do
+	collection {post :upload}
+  end
+  
+  #match 'upload', :to=> 'externals#upload'
 
   resources :clientconfigs
   match 'settings', :to=> 'clientconfigs#settings'

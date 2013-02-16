@@ -1,4 +1,4 @@
-
+<div id="analysis_page" style="display:none">1</div>
 <div id="userkey" style="display:none"><%= current_user.id %></div>
 
 
@@ -119,10 +119,10 @@
 	</tr>
 	<tr>
 		<td class="identifier">Batsman:</td>	 	
-		<td class="slct"><%= select 'batsman' , 'batsmankey', @players.collect {|c| [c.playerid.to_s+' '+c.fullname, c.id, {'data-countrykey'=>c.countrykey,'data-format'=>c.formatkey, 'data-playertype'=>c.playertype, 'data-battingstyle'=>c.battingstyle, 'data-bowlingstyle'=>c.bowlingstyle, 'data-bowlingtype'=>c.bowlingtype, 'data-wh_current'=>c.wh_current}] },{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batsman/en', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="slct"><%= select 'batsman' , 'batsmankey', @players.collect {|c| [c.playerid.to_s+' '+c.fullname, c.playerid, {'data-countrykey'=>c.countrykey,'data-format'=>c.formatkey, 'data-playertype'=>c.playertype, 'data-battingstyle'=>c.battingstyle, 'data-bowlingstyle'=>c.bowlingstyle, 'data-bowlingtype'=>c.bowlingtype, 'data-wh_current'=>c.wh_current}] },{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Batsman/en', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		<td class="middle"></td>
 		<td class="identifier1">Bowler:</td>	 	
-		<td class="slct1"><%= select 'bowler' , 'bowlerkey1', @players.collect {|c| [c.playerid.to_s+' '+c.fullname, c.id, {'data-countrykey'=>c.countrykey,'data-format'=>c.formatkey, 'data-playertype'=>c.playertype, 'data-battingstyle'=>c.battingstyle, 'data-bowlingstyle'=>c.bowlingstyle,'data-bowlingtype'=>c.bowlingtype, 'data-wh_current'=>c.wh_current}] },{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowler/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
+		<td class="slct1"><%= select 'bowler' , 'bowlerkey1', @players.collect {|c| [c.playerid.to_s+' '+c.fullname, c.playerid, {'data-countrykey'=>c.countrykey,'data-format'=>c.formatkey, 'data-playertype'=>c.playertype, 'data-battingstyle'=>c.battingstyle, 'data-bowlingstyle'=>c.bowlingstyle,'data-bowlingtype'=>c.bowlingtype, 'data-wh_current'=>c.wh_current}] },{}, {:class=>'chzn-select', 'data-placeholder'=>'Select Bowler/s', 'multiple style'=>'width:250px' , :tabindex=>"4"} %></td>
 		
 	</tr>
 	<tr>
@@ -182,7 +182,7 @@
 		<td class="charttype">Column</td>
 		<td class="charttype">Line</td>
 		<td class="charttype">Pie</td>
-		<td class="tabletype"><a href="#" class="big-link" data-reveal-id="myModal">Table</td>
+		<td id="tabletype"><a href="#" class="big-link" data-reveal-id="myModal">Table</td>
 	<tr>
 	</tr>
 		<td></td>
@@ -194,13 +194,13 @@
 		<td><%= text_field_tag 'lastXmatches' %></td>
 		<td></td>
 		<td></td>
-		<td></td>
+		<td id="showVideo">Video</td>
 		<td id="frequency">Frequency</td>
 		
 	</tr>
 	<tr>
 		<td></td>
-		<td class="metric" data-metric="runs" >Runs</td>
+		<td class="metric" id="_runs" data-metric="runs" >Runs</td>
 		<td class="metric" data-metric="avg" >Avg</td>
 		<td class="metric" data-metric="sr">SR</td>
 		<td class="metric" data-metric="dbx" >BBX</td>
@@ -281,6 +281,12 @@
 		<td class="groups" id="groupbyangle" data-group="angle">Angle</td></tr>
 </table>
 <div id="myModal" class="reveal-modal analysis_table"></div>
+
+
+<div class="replay" style="display:none">
+	<img width=360 height=360 src="" id="replay-screen">
+</div>
+
 
 
 

@@ -17,6 +17,7 @@
 <div id="totalscore" style="display:none"><%= @runs %></div>
 <div id="inningkey" style="display:none"><%= @inning %>Inning</div>
 <div id="clientkey" style="display:none"><%= current_user.id %></div>
+<div id="id" style="display:none"><%= @next_id %></div>
 
 <div id="directionkey" style="display:none"></div>
 
@@ -215,35 +216,35 @@
 
 <table id="direction">
 		<tbody>
-			<tr>
+			<tr data-order='a1'>
 				<th scope="row">2Square Leg</th>
 				<td>20%</td>
 			</tr>
-			<tr>
+			<tr data-order='a2'>
 				<th scope="row">1Fine Leg</th>
 				<td>25%</td>
 			</tr>
-			<tr>
+			<tr data-order='a3'>
 				<th scope="row">8Third Man</th>
 				<td>25%</td>
 			</tr>
-			<tr>
+			<tr data-order='a4'>
 				<th scope="row">7Point</th>
 				<td>20%</td>
 			</tr>
-			<tr>
+			<tr data-order='a5'>
 				<th scope="row">6Cover</th>
 				<td>25%</td>
 			</tr>
-			<tr>
+			<tr data-order='a6'>
 				<th scope="row">5Long Off</th>
 				<td>20%</td>
 			</tr>
-			<tr>
+			<tr data-order='a7'>
 				<th scope="row" data-directionkey="7">4Long On</th>
 				<td>20%</td>
 			</tr>
-			<tr>
+			<tr data-order='a8'>
 				<th scope="row" data-directionkey="8">3Mid Wicket</th>
 				<td>25%</td>
 			</tr>
@@ -252,6 +253,17 @@
 
 <div class="scorecard"><%= link_to '2nd Inning' , {:controller=>"scorecards", :action=>"match_scorecard_two", :id=>@match.id} %>
 <%= link_to 'Current Match Status' , {:controller=>"matches", :action=>"match_status", :id=>@match.id} %>
+</div>
+
+<div class="vid">
+	<video id="video" autoplay></video>
+	<canvas id="canvas" style="display:none"></canvas>
+</div>
+
+<div class="row">
+		<div class="span6 offset4">
+			<a href="#" id="delete-replay" class="btn btn-primary btn-large">Delete Replay</a>
+		</div>
 </div>
     
 	

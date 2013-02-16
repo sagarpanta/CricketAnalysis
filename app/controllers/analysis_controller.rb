@@ -89,11 +89,11 @@ class AnalysisController < ApplicationController
 	begin
 		query = '	Select c1.country as grp2, count(distinct mat.id) as won , count(distinct mat1.id) as lost 
 					from scorecards s 
-					inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey 
-					inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey 
+					inner join players p on p.clientkey = s.clientkey and p.playerid = s.batsmankey 
+					inner join teams tm on s.clientkey = tm.clientkey and tm.playerid = s.batsmankey 
 					 
 					inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey 
-					inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey 
+					inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerid = s.currentbowlerkey 
 
 					LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey and tm1.teamid = mat.teamidtwo
 					LEFT join (select * from matches where winnerkey<>-2) mat1 on tm.clientkey = mat1.clientkey and tm.teamid <> mat1.winnerkey and tm1.teamid = mat1.teamidtwo
@@ -124,9 +124,11 @@ class AnalysisController < ApplicationController
   
 
   def generate
-	begin
+	
 		lastXmatches = params[:filters][:lxm].to_i
+		vid = params[:filters][:vid].to_i
 		fq = params[:filters][:fq].to_i
+	
 		
 		if lastXmatches == -2
 			matchcount = Scorecard.count('distinct matchkey')
@@ -141,10 +143,10 @@ class AnalysisController < ApplicationController
 			scorecards = ' scorecards '
 			ballnumber_betn = '0 and 300'
 		elsif lastXballs>0
-			scorecards = ' (select (rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
+			scorecards = ' (select (rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle, videoloc from scorecards) '
 			ballnumber_betn = '0 and '+lastXballs.to_s
 		elsif firstXballs > 0
-			scorecards = ' (select (rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards) '
+			scorecards = ' (select (rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle, videoloc from scorecards) '
 			ballnumber_betn = '0 and '+firstXballs.to_s
 		end
 	
@@ -383,7 +385,7 @@ class AnalysisController < ApplicationController
 			_group1['direction'] = 's.direction'
 			_group1['spell'] = 's.spell'
 			_group1['condition'] = 'mat.pitchcondition'
-			_group1['angle'] = "case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2  then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' end"
+			_group1['angle'] = "case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2 then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
 		
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -418,22 +420,21 @@ class AnalysisController < ApplicationController
 			_group2['direction'] = ',s.direction'
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat.pitchcondition'
-			_group2['angle'] = ",case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2  then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' end"
-
-			
+			_group2['angle'] = ",case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2 then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
+						
 			
 			if metric == 'c_nonstrike'
-				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.currentnonstrikerkey and s.formatkey = p.formatkey '
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.playerid = s.currentnonstrikerkey and s.formatkey = p.formatkey '
 			elsif metric == 'dsmsl'
-				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.dismissedbatsmankey and s.formatkey = p.formatkey '
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.playerid = s.dismissedbatsmankey and s.formatkey = p.formatkey '
 			elsif metric != 'dsmsl' and metric != 'c_nonstrike'
-				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey and s.formatkey = p.formatkey '
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.playerid = s.batsmankey and s.formatkey = p.formatkey '
 			end 
-			nonstriker_part = ' inner join players p2 on p2.id = s.currentbowlerkey and p2.clientkey = s.clientkey '
+			nonstriker_part = ' inner join players p2 on p2.playerid = s.currentbowlerkey and p2.clientkey = s.clientkey '
 			country_part = ' inner join countries cn on p.countrykey = cn.id	and p.clientkey = cn.clientkey '
 			tournament_part = ' inner join tournaments t on s.clientkey = t.clientkey and s.tournamentkey = t.id '
 			venue_part =' inner join venues v on s.clientkey = v.clientkey and s.venuekey = v.id '
-			team_part = ' inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey and s.formatkey = tm.formatkey '
+			team_part = ' inner join teams tm on s.clientkey = tm.clientkey and tm.playerid = s.batsmankey and s.formatkey = tm.formatkey '
 			teamtype_part = ' inner join team_types tt on tm.teamtypekey = tt.id '
 			coach_part= ' inner join coaches c on tm.coachkey = c.id and tm.clientkey = c.clientkey '
 			manager_part= ' inner join managers m on tm.managerkey = m.id and tm.clientkey = m.clientkey '
@@ -445,15 +446,15 @@ class AnalysisController < ApplicationController
 			#teamidone is always the client who logs in
 			#mtchloser_part = ' inner join (select distinct teamid, clientkey from teams) tms on s.clientkey = tms.clientkey and s.teamidone = tms.teamid inner join (select teamidone, matchlost = case when winnerkey = teamidtwo then 1 else 0 end from matches) mw on s.teamoneid = mw.teamidone '
 			
-			bowler_part = ' inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey and s.formatkey = p1.formatkey '
+			bowler_part = ' inner join players p1 on s.currentbowlerkey = p1.playerid and s.clientkey = p1.clientkey and s.formatkey = p1.formatkey '
 			countryagainst_part = ' inner join countries cn1 on p1.countrykey = cn1.id and p1.clientkey = cn1.clientkey '
-			teamagainst_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey and s.formatkey = tm1.formatkey ' 
+			teamagainst_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerid = s.currentbowlerkey and s.formatkey = tm1.formatkey ' 
 			teamtypeagainst_part = ' inner join team_types tt1 on tm1.teamtypekey = tt1.id '
 			coachagainst_part= ' inner join coaches c1 on tm1.coachkey = c1.id	and tm1.clientkey = c1.clientkey '
 			manageragainst_part= ' inner join managers m1 on tm1.managerkey = m1.id and tm1.clientkey = m1.clientkey '
 			#dismissal_part = ' inner join dismissals d on d.id = s.outtypekey inner join players p3 on s.dismissedbatsmankey = p3.id and s.clientkey = p3.clientkey ' 
 			dismissal_part = ' inner join dismissals d on d.id = s.outtypekey ' 
-			pship_part = ' inner join players p2 on s.currentnonstrikerkey = p2.id and s.clientkey = p2.clientkey and s.formatkey = p2.formatkey '
+			pship_part = ' inner join players p2 on s.currentnonstrikerkey = p2.playerid and s.clientkey = p2.clientkey and s.formatkey = p2.formatkey '
 			shottype_part = ' inner join shottypes st on s.shottype = st.id '
 			line_part = ' inner join lines l on s.line = l.id '
 			length_part = ' inner join lengths ln on s.length = ln.id '
@@ -899,7 +900,7 @@ class AnalysisController < ApplicationController
 			_group1['direction'] = 's.direction'
 			_group1['spell'] = 's.spell'
 			_group1['condition'] = 'mat1.pitchcondition'
-			_group1['angle'] = "case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2  then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' end"
+			_group1['angle'] = "case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2 then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
 
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -934,21 +935,21 @@ class AnalysisController < ApplicationController
 			_group2['direction'] = ',s.direction'
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat1.pitchcondition'
-			_group2['angle'] = ",case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2  then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' end"
+			_group2['angle'] = ",case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2 then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
 
 			if metric == 'c_nonstrike'
-				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.currentnonstrikerkey and s.formatkey = p.formatkey '
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.playerid = s.currentnonstrikerkey and s.formatkey = p.formatkey '
 			elsif metric == 'dsmsl'
-				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.dismissedbatsmankey and s.formatkey = p.formatkey '
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.playerid = s.dismissedbatsmankey and s.formatkey = p.formatkey '
 			elsif metric != 'dsmsl' and metric != 'c_nonstrike'
-				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.id = s.batsmankey and s.formatkey = p.formatkey '
+				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.playerid = s.batsmankey and s.formatkey = p.formatkey '
 			end 
 
-			nonstriker_part = ' inner join players p2 on p2.id = s.currentbowlerkey and p2.clientkey = s.clientkey '
+			nonstriker_part = ' inner join players p2 on p2.playerid = s.currentbowlerkey and p2.clientkey = s.clientkey '
 			country_part = ' inner join countries cn1	on p1.countrykey = cn1.id	and p1.clientkey = cn1.clientkey '
 			tournament_part = ' inner join tournaments t1	on s.clientkey = t1.clientkey and s.tournamentkey = t1.id '
 			venue_part =' inner join venues v1 on s.clientkey = v1.clientkey and s.venuekey = v1.id '
-			team_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerkey = s.currentbowlerkey and s.formatkey = tm1.formatkey ' 
+			team_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerid = s.currentbowlerkey and s.formatkey = tm1.formatkey ' 
 			teamtype_part = ' inner join team_types tt1 on tm1.teamtypekey = tt1.id '
 			coach_part= ' inner join coaches c1 on tm1.coachkey = c1.id	and tm1.clientkey = c1.clientkey '
 			manager_part= ' inner join managers m1 on tm1.managerkey = m1.id and tm1.clientkey = m1.clientkey '
@@ -956,15 +957,15 @@ class AnalysisController < ApplicationController
 			matchtype_part = ' inner join match_types mt on mt.id = mat.matchtypekey '
 			format_part = ' inner join formats f1 on f1.id = s.formatkey '
 			
-			bowler_part = ' inner join players p1 on s.currentbowlerkey = p1.id and s.clientkey = p1.clientkey and s.formatkey = p1.formatkey '
+			bowler_part = ' inner join players p1 on s.currentbowlerkey = p1.playerid and s.clientkey = p1.clientkey and s.formatkey = p1.formatkey '
 			countryagainst_part = ' inner join countries cn on p.countrykey = cn.id and p.clientkey = cn.clientkey '
-			teamagainst_part = ' inner join teams tm on s.clientkey = tm.clientkey and tm.playerkey = s.batsmankey and s.formatkey = tm.formatkey '
+			teamagainst_part = ' inner join teams tm on s.clientkey = tm.clientkey and tm.playerid = s.batsmankey and s.formatkey = tm.formatkey '
 			teamtypeagainst_part = ' inner join team_types tt on tm.teamtypekey = tt.id '
 			coachagainst_part= ' inner join coaches c on tm.coachkey = c.id	and tm.clientkey = c.clientkey '
 			manageragainst_part= ' inner join managers m on tm.managerkey = m.id and tm.clientkey = m.clientkey '
 			#dismissal_part = ' inner join dismissals d on d.id = s.outtypekey inner join players p3 on s.dismissedbatsmankey = p3.players and s.clientkey = p3.clientkey and s.formatkey = p3.formatkey ' 
 			dismissal_part = ' inner join dismissals d on d.id = s.outtypekey ' 
-			pship_part = ' inner join players p2 on s.currentnonstrikerkey = p2.id and s.clientkey = p2.clientkey and s.formatkey = p2.formatkey '
+			pship_part = ' inner join players p2 on s.currentnonstrikerkey = p2.playerid and s.clientkey = p2.clientkey and s.formatkey = p2.formatkey '
 			length_part = ' inner join lengths ln on s.length = ln.id '
 			shottype_part = ' inner join shottypes st on s.shottype = st.id '
 			line_part = ' inner join lines l on s.line = l.id '
@@ -1320,13 +1321,13 @@ class AnalysisController < ApplicationController
 		###################################   bbr  bbb   dbx dbr dbb sql string variable definitions #############################################	
 			
 			if lastXballs == -2 and firstXballs==-2
-				scorecards = '(select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
+				scorecards = '(select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join +')'
 				varB=','
 			elsif lastXballs>0
-				scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join+') '
+				scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join+') '
 				varB = varA
 			elsif firstXballs>0
-				scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join+') '
+				scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join+') '
 				varB = varA
 			end
 			
@@ -1800,102 +1801,136 @@ class AnalysisController < ApplicationController
 		############################################### end of variable definitions #####################################################3	
 	
 		if fq ==0 
+			if vid == 0
 			
-			if metric == 'runs'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'avg'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))											
-			elsif metric == 'sr'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'dsmsl'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(wicket) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'bbh'
-				@chartdata = Scorecard.find_by_sql(bbr)
-			elsif metric == 'bbb'
-				@chartdata = Scorecard.find_by_sql(bbb)
-			elsif metric == 'dbx'
-				@chartdata = Scorecard.find_by_sql(dbx)
-			elsif metric == 'c_strike'
-				#@client = current_user
-				#ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
-				@chartdata = Scorecard.find_by_sql(cstrike)
-			#does not work with batting position because batting pos is only for current striker.
-			#The current scorecard id has batting position which is only for current strikerkey
-			elsif metric == 'c_nonstrike'
-				#@client = current_user
-				#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
-				@chartdata = Scorecard.find_by_sql(cnonstrike)
-			elsif metric == 'consistency'
-				@chartdata = Scorecard.find_by_sql(consistency)
-			elsif metric == 'inns'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'zero'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(zeros) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'one'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ones) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'two'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(twos) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'three'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(threes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'four'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(fours) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'six'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(sixes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'wides'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'noballs'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(noballs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'byes'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(byes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'legbyes'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(legbyes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'extras'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides+noballs+byes+legbyes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'econ'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides+noballs+runs)/(SUM(ballsdelivered)/6+SUM(ballsdelivered)%6/6.0) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'bavg'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket) = 0 then 0 else  sum(wides+noballs+runs)/(1.0*SUM(wicket)) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'fifties'
-				if group1=='batsman' or group2=='batsman'
-					@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', s.matchkey, case when sum(runs)>=50 and sum(runs)<100 then 1 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+ (group2 != ''? ',grp2':''))	
+				if metric == 'runs'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'avg'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket)=0 then 0 else sum(runs)/sum(wicket) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))											
+				elsif metric == 'sr'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  case when sum(ballsfaced)=0 then 0 else sum(runs)/(1.0*sum(ballsfaced))*100 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'dsmsl'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(wicket) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'bbh'
+					@chartdata = Scorecard.find_by_sql(bbr)
+				elsif metric == 'bbb'
+					@chartdata = Scorecard.find_by_sql(bbb)
+				elsif metric == 'dbx'
+					@chartdata = Scorecard.find_by_sql(dbx)
+				elsif metric == 'c_strike'
+					#@client = current_user
+					#ClientMailer.Error_Delivery(cstrike, @client, 'cstrike').deliver
+					@chartdata = Scorecard.find_by_sql(cstrike)
+				#does not work with batting position because batting pos is only for current striker.
+				#The current scorecard id has batting position which is only for current strikerkey
+				elsif metric == 'c_nonstrike'
+					#@client = current_user
+					#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
+					@chartdata = Scorecard.find_by_sql(cnonstrike)
+				elsif metric == 'consistency'
+					@chartdata = Scorecard.find_by_sql(consistency)
+				elsif metric == 'inns'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'zero'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(zeros) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'one'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ones) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'two'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(twos) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'three'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(threes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'four'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(fours) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'six'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(sixes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'wides'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'noballs'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(noballs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'byes'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(byes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'legbyes'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(legbyes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'extras'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides+noballs+byes+legbyes) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'econ'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(wides+noballs+runs)/(SUM(ballsdelivered)/6+SUM(ballsdelivered)%6/6.0) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'bavg'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', case when sum(wicket) = 0 then 0 else  sum(wides+noballs+runs)/(1.0*SUM(wicket)) end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'fifties'
+					if group1=='batsman' or group2=='batsman'
+						@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', s.matchkey, case when sum(runs)>=50 and sum(runs)<100 then 1 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+ (group2 != ''? ',grp2':''))	
+					end
+				elsif metric == 'hundreds'
+					if group1=='batsman' or group2=='batsman'
+						@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', s.matchkey, case when sum(runs)>=100 then 1 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+ (group2 != ''? ',grp2':''))	
+					end
+				elsif metric == 'mtchwon'
+					#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'mtchlost'
+					#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match_lost+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'noofdels'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'noofshots'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0 group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'mishits'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+				elsif metric == 'slugs'
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(case when s.shottype in (49,50,51,56) then 1 else 0 end) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0 group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 				end
-			elsif metric == 'hundreds'
-				if group1=='batsman' or group2=='batsman'
-					@chartdata = Scorecard.find_by_sql('select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', count(distinct val) as val from (Select grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', s.matchkey, case when sum(runs)>=100 then 1 end as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+')A group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+ (group2 != ''? ',grp2':''))	
-				end
-			elsif metric == 'mtchwon'
-				#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'mtchlost'
-				#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match_lost+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'noofdels'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'noofshots'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0 group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'mishits'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(case when s.shottype between 28 and 43 or s.shottype in (7,10) then 1 else 0 end) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
-			elsif metric == 'slugs'
-				@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(case when s.shottype in (49,50,51,56) then 1 else 0 end) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0 group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+			else
+				
+				if metric == 'runs'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0')
+				elsif metric == 'dsmsl'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and dismissedbatsmankey>0')
+				elsif metric == 'zero'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and zeros>0')
+				elsif metric == 'one'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and ones>0')
+				elsif metric == 'two'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and twos>0')
+				elsif metric == 'three'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and threes>0')	
+				elsif metric == 'four'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and fours>0')	
+				elsif metric == 'six'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and sixes>0')	
+				elsif metric == 'wides'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides>0')
+				elsif metric == 'noballs'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and noballs>0')	
+				elsif metric == 'byes'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and byes>0')	
+				elsif metric == 'legbyes'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and legbyes>0')	
+				elsif metric == 'extras'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and (wides+noballs+byes+legbyes)>0')	
+				elsif metric == 'mishits'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and (s.shottype between 28 and 43 or s.shottype in (7,10))')	
+				elsif metric == 'slugs'
+					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and s.shottype in (49,50,51,56)')
+				end			
+			
+			
 			end
 		else
 			@chartdata = Scorecard.find_by_sql(frequency_sc)
 		end
-	
-		@chartdata = @chartdata == []? nil:@chartdata
 		
-		@data = Scorecard.getChartData(@chartdata, group1, group2, metric)
-		
+		if vid == 0
+			@chartdata = @chartdata == []? nil:@chartdata
+			@data = Scorecard.getChartData(@chartdata, group1, group2, metric)
+		else
+			@data = @chartdata
+		end
 		respond_to do |format|
 		  format.json {render json:@data}
 		  format.pdf 
 		end
-	rescue => e
-		 @message = e.message
-		 @client = current_user
-		 @caught_at = 'analysis#generate'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
+
 
   end
   

@@ -2,7 +2,7 @@
 	Upload Scorecard
 </h2>
 
-<%= form_tag upload_externals_path , :multipart=>true  do %>
+<%= form_tag '/attachments' , :multipart=>true  do %>
   <div class="fields">
     Tournament: <br />
     <%= select_tag('tournamentkey', options_for_select(@tournaments)) %>
@@ -16,10 +16,9 @@
     <%= select_tag 'matchkey', options_for_select(@matches) %>
   </div>
   <div class="fields">
-	<%= file_field_tag :file %>
-    <%= submit_tag "Import" %>
+	<%= file_field_tag 'attachment' %>
+    <%= submit_tag "Send Attachment" %>
   </div> 
 <% end %>
 
 
-	

@@ -12,6 +12,7 @@
 <div id="matchkey" style="display:none"><%= @match.id %></div>
 <div id="formatkey" style="display:none"><%= @formatarr[1] %></div>
 <div id="overs" style="display:none"><%= @overs %></div>
+<div id="id" style="display:none"><%= @next_id %></div>
 <div id="wicket" style="display:none"><%= @wickets %></div>
 <div id="totalscore" style="display:none"><%= @runs %></div>
 <div id="inningkey" style="display:none"><%= @inning %>Inning</div>
@@ -260,4 +261,17 @@
 <%= link_to 'Current Match Status' , {:controller=>"matches", :action=>"match_status", :id=>@match.id} %>
 <%= link_to 'Export Scorecard' ,  {:controller=>"scorecards", :action=>"scorecard", :id=>@match.id, :format=> 'pdf'} %>
 </div>
+
+
+<div class="vid">
+	<video id="video" autoplay></video>
+	<canvas id="canvas" style="display:none"></canvas>
+</div>
+
+<div class="row">
+		<div class="span6 offset4">
+			<a href="#" id="delete-replay" class="btn btn-primary btn-large">Delete Replay</a>
+		</div>
+</div>
+
     
