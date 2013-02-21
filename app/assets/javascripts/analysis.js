@@ -2,6 +2,8 @@ $(document).ready(function(){
 	$(".chzn-select").chosen();	
 	var analysis = $('#analysis_analysiskey').val();
 	
+	var mapdata;
+	
 	var countrykey = [''];
 	var formatkey = [''];
 	var tournamentkey = [''];
@@ -200,7 +202,7 @@ $(document).ready(function(){
 			cache: false,
 			success: function(data, textStatus, jqXHR ) { 
 				console.log('successful');
-				
+				mapdata = data;
 				google_map_function(data);
 				$('#container').show();
 
@@ -902,7 +904,7 @@ $(document).ready(function(){
 		else{
 			video = 0;
 			$(this).css('opacity', '1');
-			$('#container').html(container);
+			google_map_function(mapdata);
 		}
 		console.log(video_click);
 	});
@@ -926,9 +928,78 @@ $(document).ready(function(){
 		$(this).css('opacity', '1');
 	});
 	
-
+	
+	//******************Videos from external application (for eg T20 Pro) *****************
+	
+	var URL = window.URL || window.webkitURL;
+	var videoNode;
+	var sources = [];
+	var sources_names = [];
+	var playable = [];
+	var imageplayable = [];
 	
 
+	var inputNode = document.getElementById('t20provideoinput');
+	//var groupElement = document.getElementsByClassName('metric')[0];
+	var triggerElement = document.getElementById('trigger');
+
+	var loadSelectedFiles = function playSelectedFileInit(event) {
+			for(var i=0; i<this.files.length; i++){
+				var file = this.files[i];
+
+				var type = file.type;
+
+				var fileURL = URL.createObjectURL(file);
+
+				sources.push(fileURL);
+				sources_names.push(file.name);
+			}
+			
+			//console.log(sources_names);
+			//console.log(sources);
+							
+		};
+		
+	var playExternalVideos = function(vid_array){
+		var j = 1;
+		var playlist = [];
+		$('#container').remove('#t20provideo');
+		$('#container').html('<video id="t20provideo" autoplay></video>');
+		var videoNode = document.querySelector('video');
+		var counter = 0;
+		for (var i=0;i<vid_array.length; i++){
+
+			if ($.inArray(vid_array[i], sources_names) > -1){
+				playlist.push(sources[$.inArray(vid_array[i], sources_names)]);
+			}
+		}	
+		
+		videoNode.src = playlist[0];
+		videoNode.load();
+		videoNode.play();
+		videoNode.addEventListener('ended', function(){
+			if (j==playlist.length){
+				playable = [];
+				playlist = [];
+				j = 1;
+			}
+		   //videoNode.src = sources[j++];	
+		   if (j< playlist.length){
+				videoNode.src = playlist[j++];
+				videoNode.load();
+				videoNode.play();
+		    }
+		}, false);
+	};
+																																																																																																																																																																																																																																																																																									  
+					   
+		if (inputNode != null) { 
+			inputNode.addEventListener('change', loadSelectedFiles, false);
+		}
+
+	
+	//*******************************************************************************
+	
 	var metricclickcount = 0;
 	var groupclickcount = 0;
 
@@ -989,12 +1060,27 @@ $(document).ready(function(){
 				success: function(data, textStatus, jqXHR ) { 
 					console.log('successful');
 					if (video==1){
-						
+						playable = [];
+						imageplayable = [];
 						for(var i=0; i<data.length; i++){
-							replayVideo(0, data[i]['val']);
-							console.log('************************************************:  ' + data[i]['val']);
+							var _length = data[i]['val'].length;
+							if (data[i]['val'].substring(_length-3, _length) == 'mp4') {
+								playable.push(data[i]['val']);
+							}
+							else{
+								imageplayable.push(data[i]['val']);
+								//replayVideo(0, data[i]['val']);
+							}	
 						}
-						
+						$('#container').html($('.replay').html());
+						for (var i=0; i<imageplayable.length;i++){
+							replayVideo(0, imageplayable[i], i, data.length-1);
+						}
+						//playExternalVideos(playable);
+						if (imageplayable.length == 0){
+							replayVideo(0, 'nonimage', 0,0);
+						}
+	
 					}
 					else{
 						google_chart_function(data);
@@ -1032,7 +1118,6 @@ $(document).ready(function(){
 			$(this).css('background-color', 'steelblue');
 			groupclickcount = 1;
 			group1 = group;
-			
 		}
 		else if ((groupclickcount > 2 && metricclickcount == 1) || (groupclickcount== 2 && metricclickcount > 1)) {
 			$('.groups,.metric').css('background-color', '#383838');
@@ -1162,11 +1247,12 @@ $(document).ready(function(){
 	}
 	
 	
-		var replayVideo = function(idx, filename_part) {
+		var replayVideo = function(idx, filename_part, i, len) {
 			// reads through all the images and show them (image path stored in _files)
 			if(idx.clientX) idx = 0;
-			if(_files[idx] === undefined) {
-				alert('nothing to play');
+			if(_files[idx] === undefined || (i==len && idx==_files.length)) {
+				playExternalVideos(playable);
+				//alert('nothing to play');
 				return;
 			}
 			var img = document.getElementById('replay-screen');
@@ -1174,9 +1260,13 @@ $(document).ready(function(){
 				fileEntry.file(function(file) {
 					var reader = new FileReader();
 					reader.onloadend = function(e) {
-						if(_files[idx].indexOf(filename_part) != -1){img.src = this.result; console.log(_files[idx]);}
-						if(++idx < _files.length)
-							setInterval(replayVideo(idx, filename_part), 2*1000); // y u no work !?
+						if(_files[idx].indexOf(filename_part) != -1){img.src = this.result; console.log(_files[idx].indexOf(filename_part));}
+						if(++idx <= _files.length)
+							{setInterval(replayVideo(idx, filename_part), 2*1000);} // y u no work !?
+						/*if(idx == _files.length){
+							playExternalVideos(playable);
+						}*/
+							
 					};
 					reader.readAsText(file);
 				}, errorHandler);

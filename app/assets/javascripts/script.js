@@ -234,7 +234,7 @@ $(document).ready(function(){
 				function draw(v, bc, w, h){
 					 bc.drawImage(v, 0, 0, w, h);
 						
-						var stringData=canvas.toDataURL();
+						var stringData=canvas.toDataURL("image/png");
 						if(fs !== null) {
 							writeToFile(_filename + pad(frames.toString(),10), stringData);
 							frames = frames + 1;
@@ -255,7 +255,7 @@ $(document).ready(function(){
 
 		window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 		//window.requestFileSystem(window.TEMPORARY, 10*1024*1024, initFs, errorHandler);
-		window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024*1024, function(grantedBytes) {
+		window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024*1024*1024, function(grantedBytes) {
 			window.requestFileSystem(PERSISTENT, grantedBytes, initFs, errorHandler);
 		});
 	
