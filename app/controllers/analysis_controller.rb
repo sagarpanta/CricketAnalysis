@@ -1909,7 +1909,7 @@ class AnalysisController < ApplicationController
 					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and (wides+noballs+byes+legbyes)>0')	
 				elsif metric == 'noofdels'
 					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn)	
-				if metric == 'noofshots'
+				elsif metric == 'noofshots'
 					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and runs>0')
 				elsif metric == 'mishits'
 					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and (s.shottype between 28 and 43 or s.shottype in (7,10))')	
