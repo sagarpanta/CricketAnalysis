@@ -411,6 +411,302 @@ class MatchesController < ApplicationController
 	end
   end 
   
+  def public
+	@clients = Client.where("username != 'admin'")
+	@matches = Match.find_by_sql('select * from (select dense_rank() over (partition by clientkey order by matchdate desc) _rank, * from matches)m where _rank<=10')
+	
+	respond_to do |format|
+	  format.html # index.html.erb
+	  format.json { render json: @matches }
+	end
+  end
   
+  
+  def scorecard
+	paramsid = 3
+	@match = Match.find_by_id(paramsid)
 
+	#####common entry for all records
+	@tournament = Tournament.find_by_id(@match.tournamentkey)
+	@venue = Venue.find_by_id(@match.venuekey)
+	@format = Format.find_by_id(@match.formatkey)
+	@formatarr = []
+	@formatarr << @format.name << @format.id
+	
+	
+	@batting_side = 0
+	@fielding_side = 0
+	
+	@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone, 1)
+	@teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
+	
+	if @match.tosswon == @match.teamidone
+		if @match.electedto == 'Bat'
+			#@teamone = Team.find_by_teamid(@match.teamidone)
+			#@teamtwo = Team.find_by_teamid(@match.teamidtwo)
+			@batting_side = @match.teamidone
+			@fielding_side = @match.teamidtwo
+		else
+			#@teamone = Team.find_by_teamid(@match.teamidtwo)
+			#@teamtwo = Team.find_by_teamid(@match.teamidone)
+			@batting_side = @match.teamidtwo
+			@fielding_side = @match.teamidone
+		end
+	else
+		if @match.electedto == 'Bat'
+			#@teamone = Team.find_by_teamid(@match.teamidtwo)
+			#@teamtwo = Team.find_by_teamid(@match.teamidone)
+			@batting_side = @match.teamidtwo
+			@fielding_side = @match.teamidone
+		else
+			#@teamone = Team.find_by_teamid(@match.teamidone)
+			#@teamtwo = Team.find_by_teamid(@match.teamidtwo)
+			@batting_side = @match.teamidone
+			@fielding_side = @match.teamidtwo
+		end
+	end
+		
+	@inning = 1
+	
+	#####Score calculation
+	@runs = Scorecard.first.nil? ? 0:Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).select('sum(runs+wides+noballs+legbyes+byes) as scores')[0][:scores]
+	@runs = @runs.nil? ? 0:@runs
+	ballsdelivered = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).sum(:ballsdelivered)
+	@overs = ballsdelivered/6 + ballsdelivered%6/10.0
+	@wickets =  Scorecard.where('matchkey=? and inning= ?', paramsid, @inning).sum(:wicket)
+
+
+	#batting side players
+	@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerid}
+				
+	
+	#beginning of calculation of current bowler or batsman or non striker or fielder in action
+	#maxid is the last entry id of Scorecard
+	@maxid = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.where('matchkey = ? and inning=?', paramsid, @inning).maximum(:id)
+	@currentstrikerkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).batsmankey
+	@currentnonstrikerkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).currentnonstrikerkey
+	@strikerposition =  Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).battingposition
+	@maxidwherenonstrikerisstriker = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.where('matchkey = ? and inning=? and currentstrikerkey = ?', paramsid, @inning, @currentnonstrikerkey).maximum(:id)
+	@nonstrikerposition = Scorecard.find_by_id(@maxidwherenonstrikerisstriker).nil? ? -2:Scorecard.find_by_id(@maxidwherenonstrikerisstriker).battingposition
+	@currentbowlerkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).currentbowlerkey
+	@currentbowlingside = Scorecard.where('matchkey=? and inning = ? and currentbowlerkey=?', paramsid, @inning, @currentbowlerkey).first.nil? ? -2:Scorecard.find_by_id(@maxid).side
+	@lastrun = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).runs
+	@lastbye = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).byes
+	@lastlbye = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).legbyes
+	@lastnoball = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).noballs
+	@lastwide = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).wides
+	@battingposition = [1,2,3,4,5,6,7,8,9,10,11]
+	@bowlingposition = [1,2,3,4,5,6,7,8,9,10,11]
+	@venue = Venue.find_all_by_id(@match.venuekey)
+	
+	
+	#last batting end and last bowling end
+	@battingendkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? 0:Scorecard.find_by_id(@maxid).battingendkey
+	@bowlingendkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? 1:Scorecard.find_by_id(@maxid).bowlingendkey	
+	@battingend = []
+	
+	@battingend << (@battingendkey ==0? {'value'=> @battingendkey, 'name'=> @venue[0].endone}:{'value'=> @battingendkey, 'name'=> @venue[0].endtwo} )
+	@battingend << (@bowlingendkey==1?  {'value'=>@bowlingendkey, 'name'=>@venue[0].endtwo}:{'value'=>@bowlingendkey, 'name'=>@venue[0].endone})
+
+	@battingendname = @battingend[@battingendkey]
+	@bowlingendname = @battingend[@bowlingendkey]
+	
+	#if it is an over and the last runs taken is not one or three or five and it is not zero ball with some wides or noballs, 
+	#then swap the striker and non striker, and swap the batting end and bowling end
+	if ballsdelivered%6!=0 and (@lastrun%2==1 or @lastbye%2== 1 or @lastlbye%2 == 1)
+		temp = @currentstrikerkey
+		@currentstrikerkey = @currentnonstrikerkey
+		@currentnonstrikerkey = temp
+		
+		temp1 = @battingendkey
+		@battingendkey = @bowlingendkey
+		@bowlingendkey = temp1
+	elsif ballsdelivered%6!=0 and (@lastrun%2==0 and @lastbye%2 == 0 and @lastlbye%2 == 0)
+		@currentstrikerkey = @currentstrikerkey
+		@currentnonstrikerkey = @currentnonstrikerkey
+	elsif ballsdelivered%6==0 and ((@lastnoball == 0 and (@lastrun%2==1 or @lastbye%2 == 1 or @lastlbye%2 == 1)) or (@lastwide%2==1 or @lastwide==4) or (@lastnoball==1 and (@lastbye%2==0 and @lastlbye%2==0 and @lastrun%2==0)))
+		@currentstrikerkey = @currentstrikerkey
+		@currentnonstrikerkey = @currentnonstrikerkey
+	elsif ballsdelivered%6==0 and ((@lastnoball>0 and (@lastbye%2==1 or @lastlbye%2==1 or @lastrun%2==1)) or (@lastnoball == 0 and (@lastrun%2==0 and @lastbye%2== 0 and @lastlbye%2 == 0)) or (@lastwide%2==0 and (@lastwide != 1 or @lastwide!=4)))
+		temp = @currentstrikerkey
+		@currentstrikerkey = @currentnonstrikerkey
+		@currentnonstrikerkey = temp
+	end	
+	
+	if ballsdelivered%6==0 and (@lastwide==0 and @lastnoball ==0)
+		temp1 = @battingendkey
+		@battingendkey = @bowlingendkey
+		@bowlingendkey = temp1
+	end
+
+	#counter is the way to add pre populated position to the batsmen.
+	@batsmen = []
+	counter = 1
+	pos = 0
+	@batsmankeys.each do |b|	
+		if counter >11
+			break
+		end
+		player = Player.find_by_clientkey_and_formatkey_and_playerid(params[:clientkey], @format.id, b)
+		#this is the last entry id of the bastman b
+		playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', paramsid,@inning,b).maximum(:id)
+		playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', paramsid,@inning,b).maximum(:id)
+		
+		#get the stats of batsman b so far.
+		stats_query = 'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced,  case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
+						from
+						(
+						select 
+						runs, 
+						zeros,
+						case when runs>0 then ones else 0 end as ones, 
+						case when runs>0 then twos else 0 end twos, 
+						case when runs>0 then threes else 0 end threes, 
+						case when runs>0 then fours else 0 end fours, 
+						case when runs>0 then fives else 0 end fives, 
+						case when runs>0 then sixes else 0 end sixes, 
+						ballsfaced 
+						from scorecards where matchkey = '+paramsid.to_s+' and clientkey = '+params[:clientkey].to_s+' and batsmankey = '+b.to_s+' and inning='+@inning.to_s+'
+						)A
+						'
+		stats = Scorecard.find_by_sql(stats_query)
+		
+
+		
+		hilite = ''
+		if @currentstrikerkey == b
+			hilite='hilite'
+		elsif @currentnonstrikerkey == b
+			hilite='hilite-nonstriker'
+		end
+
+			
+		#get the last entry of the batsman b and get his information
+		playerlastentry = Scorecard.find_by_id(playerlastentry_id)
+		playerlastentry_as_NS = Scorecard.find_by_id(playerlastentry_id_as_nonstriker)
+		
+		#dismissed batsman key (dbk)
+		dbk = playerlastentry.nil? ? -2:playerlastentry[:dismissedbatsmankey]
+		dbk1 = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:dismissedbatsmankey]
+		
+		if dbk == b
+			outtypekey = playerlastentry.nil? ? -2:playerlastentry[:outtypekey]
+			wktakingbowlerkey = playerlastentry.nil? ? -2:playerlastentry[:bowlerkey]
+			fielderkey = playerlastentry.nil? ? -2:playerlastentry[:fielderkey]
+			disabled = outtypekey<=0? false : true				
+		elsif dbk1==b
+			outtypekey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:outtypekey]
+			fielderkey = playerlastentry_as_NS.nil? ? -2:playerlastentry_as_NS[:fielderkey]
+			wktakingbowlerkey = -2
+			disabled = outtypekey<=0? false : true							
+		else
+			#outtypekey is set to -2 but not others like wktakingbowlerkey because bold is the first element
+			#of the select tag where as empty is the first element of the select tag for wktakingbowlerkey
+			outtypekey = -2
+		end
+		
+
+		@batsmen << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :bts=>player.battingstyle,
+					 :counter=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
+					 :battingposition=>playerlastentry.nil? ? 11:playerlastentry[:battingposition], 
+					 :outtypekey=> outtypekey , 
+					 :fielderkey =>fielderkey, 
+					 :bowlerkey=>playerlastentry.nil? ? -2:playerlastentry[:bowlerkey], 
+					 :wktakingbowlerkey=>wktakingbowlerkey,
+					 :runs=> stats.nil? ? '':stats[0][:runs],
+					 :ballsfaced=>  stats.nil? ? '':stats[0][:ballsfaced],
+					 :strikerate=> stats.nil? ? '':stats[0][:strikerate],
+					 :zeros=>  stats.nil? ? '':stats[0][:zeros],
+					 :ones=>  stats.nil? ? '':stats[0][:ones],
+					 :twos=>  stats.nil? ? '':stats[0][:twos],
+					 :threes=>  stats.nil? ? '':stats[0][:threes],
+					 :fours=>  stats.nil? ? '':stats[0][:fours],
+					 :fives=>  stats.nil? ? '':stats[0][:fives],
+					 :sixes=>  stats.nil? ? '':stats[0][:sixes],
+					 :hilite=> hilite,
+					 :disabled=>disabled}
+		counter= counter + 1
+		pos+=1
+		
+	end
+	
+	@batsmen = Scorecard.sortPlayers(@batsmen)
+	
+	#types of dismissals. Add -2 to the entry, which is the default value 
+	#i.e. the batsman has not played yet or is still no out.
+	#same with the fielder and wicket taking bowlers
+	@dismissals = Dismissal.all.collect{|d| [d.dismissaltype, d.id]}
+	@dismissals << ['', -2]
+	
+	@fielders = [['', -2]]
+	@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
+	
+	@fieldingside = []
+	pos = 0
+	counter = 0
+	@fieldingkeys.each do |b|
+		player = Player.find_by_clientkey_and_formatkey_and_playerid(params[:clientkey], @format.id, b)
+		playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', paramsid,@inning,b).maximum(:id)
+		playerlastentry = Scorecard.find_by_id(playerlastentry_id)
+		stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', paramsid,@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
+		wickets_stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=? and outtypekey not in (4,5,6,7)', paramsid,@inning,b).select('sum(wicket) as wickets') 
+		
+		hilite = ''
+		otw = ''
+		rtw = ''
+		if @currentbowlerkey == b
+			hilite = 'hilite'
+			if @currentbowlingside == 1 
+				otw = 'side'
+				rtw = ''
+			else 
+				otw = ''
+				rtw = 'side'
+			end
+		else
+			hilite = ''
+		end
+		
+		@fieldingside << {:name=> player.fullname, :playerkey=>b, :playerid=>player.playerid, :playertype=> player.playertype,
+						 :bowlingposition=>playerlastentry.nil? ? nil:playerlastentry[:bowlingposition], 
+						 :runs=> stats.nil? ? '':stats[0][:runs].nil? ? '':stats[0][:runs],
+						 :spell=> stats.nil? ? '':stats[0][:spell].nil? ? 0:stats[0][:spell],
+						 :overs=>  stats.nil? ? '':stats[0][:ballsdelivered].nil? ? '':stats[0][:ballsdelivered]/6 + stats[0][:ballsdelivered]%6/10.0,
+						 :maidens=> stats.nil? ? '':stats[0][:maidens].nil? ? '':stats[0][:maidens],
+						 :zeros=>  stats.nil? ? '':stats[0][:zeros].nil? ? '':stats[0][:zeros],
+						 :ones=>  stats.nil? ? '':stats[0][:ones].nil? ? '':stats[0][:ones],
+						 :twos=>  stats.nil? ? '':stats[0][:twos].nil? ? '':stats[0][:twos],
+						 :threes=>  stats.nil? ? '':stats[0][:threes].nil? ? '':stats[0][:threes],
+						 :fours=>  stats.nil? ? '':stats[0][:fours].nil? ? '':stats[0][:fours],
+						 :fives=>  stats.nil? ? '':stats[0][:fives].nil? ? '':stats[0][:fives],
+						 :sixes=>  stats.nil? ? '':stats[0][:sixes].nil? ? '':stats[0][:sixes],
+						 :wides=> stats.nil? ? '':stats[0][:wides].nil? ? '':stats[0][:wides],
+						 :noballs=> stats.nil? ? '':stats[0][:noballs].nil? ? '':stats[0][:noballs],
+						 :others=> stats.nil? ? '':stats[0][:others].nil? ? '':stats[0][:others],
+						 :wickets=> wickets_stats.nil? ? '':wickets_stats[0][:wickets].nil? ? '':wickets_stats[0][:wickets],
+						 :economy=> stats.nil? ? '':stats[0][:economy].nil? ? '':stats[0][:economy],
+						 :hilite=> hilite,
+						 :otw=>otw,
+						 :rtw=>rtw}
+		@fielders << [player.fullname, b]
+		pos = pos+1
+		counter = counter + 1
+	end
+	
+		
+	@bowlers = []
+	@wktakingbowlers = [['', -2]]
+	counter = 1
+	@fieldingside.each do |b|
+		if b[:playertype] == 'Bowler' or b[:playertype] == 'All Rounder'
+			temp = b[:bowlingposition].nil? ? 11:b[:bowlingposition]
+			b[:bowlingposition] = temp
+			@bowlers << b
+			@wktakingbowlers << [b[:name],b[:playerid]]
+			counter= counter + 1
+		end
+	end
+	@bowlers = @bowlers.sort_by{|b| b[:bowlingposition]}
+  end
+  
 end

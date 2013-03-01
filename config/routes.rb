@@ -40,7 +40,7 @@ CricketAnalysis::Application.routes.draw do
   resources :scorecards
   match 'scorecard_first_inning' , :to=>'scorecards#match_scorecard_one'
   match 'scorecard_second_inning' , :to=>'scorecards#match_scorecard_two'
-  #match 'scorecard' , :to=>'scorecards#scorecard'
+  match 'scorecard' , :to=>'scorecards#scorecard'
 
   
   resources :countries
@@ -58,7 +58,8 @@ CricketAnalysis::Application.routes.draw do
   match 'match_status' , :to=> 'matches#match_status'
   match 'match_details' , :to=> 'matches#match_details'
   match 'pitchconditions' , :to=> 'matches#pitchconditions'
-  match 'test' , :to=> 'matches#test'
+  match 'public' , :to=> 'matches#public'
+  match 'public/scorecard', :to=>'matches#scorecard'
 
   resources :tournaments
 

@@ -165,4 +165,10 @@ $(document).ready(function(){
 		pitch_clicked = 0;
 		console.log('hellow hou are you');
 	});	
+	
+	$('#public_client_clientkey').change(function(){
+		$('.public_match').hide();
+		var clientkey = $(this).val();
+		$('[data-clientkey="'+clientkey+'"]').show();
+	});
 });

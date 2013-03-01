@@ -3,11 +3,6 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
-
-
-
-
-
 table#matches{
 	position:relative;
 	margin-left:auto;
@@ -104,4 +99,55 @@ table#matches tr th{
 	width:200px;
 	text-align:left;
 	font-weight:bold;
+}
+
+#public_clients{
+	text-align:center;
+}
+
+
+table#public_match_table{
+	position:relative;
+	margin:20px auto;
+}
+
+
+table#public_match_table tr th{	
+	color:white;
+}
+
+#public_match_table tr th{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.9;
+	font-size:11px;
+	font-family:"verdana";
+	font-weight:bold;
+	text-align:center;
+	width:100px;
+}
+
+
+#public_match_table tr td{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+	width:100px;
+}
+
+#public_match_table tr td a{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+	width:100px;
 }
