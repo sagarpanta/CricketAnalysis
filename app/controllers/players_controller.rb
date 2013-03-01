@@ -210,7 +210,7 @@ class PlayersController < ApplicationController
 		#@player = Player.new(params[:player])
 		
 		respond_to do |format|
-		  if success='passed'
+		  if success=='passed'
 			format.html { redirect_to players_path }
 			format.js {render 'success_create.js.erb'}
 			#format.json { render json: @player, status: :created, location: @player }

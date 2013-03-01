@@ -34,7 +34,7 @@ class ExternalsController < ApplicationController
 		@venues << ['', -2]
 		@venues = @venues.sort_by{|k| k[0]}
 		
-		@matches = Match.find_by_sql("select distinct m.id, t.teamname||' - '||t1.teamname as match from matches m inner join (select distinct teamid, clientkey, teamname from teams) t on m.teamidone=t.teamid and m.clientkey = t.clientkey inner join (select distinct teamid, clientkey, teamname from teams) t1 on m.teamidtwo=t1.teamid and m.clientkey = t1.clientkey where m.clientkey = "+current_user.id.to_s+ " order by m.id desc").collect {|m| [ m.match,m.id]}
+		@matches = Match.find_by_sql("select distinct m.id, to_char(created_at, 'YYYY-MM-DD')||'  '||t.teamname||' - '||t1.teamname as match from matches m inner join (select distinct teamid, clientkey, teamname from teams) t on m.teamidone=t.teamid and m.clientkey = t.clientkey inner join (select distinct teamid, clientkey, teamname from teams) t1 on m.teamidtwo=t1.teamid and m.clientkey = t1.clientkey where m.clientkey = "+current_user.id.to_s+ " order by m.id desc").collect {|m| [ m.match,m.id]}
 		@matches << ['', -2]
 		@matches = @matches.sort_by{|k| k[0]}
 

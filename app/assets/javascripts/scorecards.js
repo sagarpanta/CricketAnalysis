@@ -6,14 +6,21 @@ $(document).ready(function(){
 	function pad(str, max) {
 		return str.length < max ? pad("0" + str, max) : str;
 	}
+	
+	var right_handed_direction = '<tbody><tr data-order="a1"><th scope="row">2Square Leg</th><td>20%</td></tr><tr data-order="a2"><th scope="row">1Fine Leg</th><td>25%</td></tr><tr data-order="a3"><th scope="row">8Third Man</th><td>25%</td></tr><tr data-order="a4"><th scope="row">7Point</th><td>20%</td></tr><tr data-order="a5"><th scope="row">6Cover</th><td>25%</td></tr><tr data-order="a6"><th scope="row">5Long Off</th>	<td>20%</td></tr><tr data-order="a7"><th scope="row" data-directionkey="7">4Long On</th><td>20%</td></tr><tr data-order="a8"><th scope="row" data-directionkey="8">3Mid Wicket</th><td>25%</td></tr></tbody>';
+	var left_handed_direction = '<tbody><tr data-order="a1"><th scope="row">7Point</th><td>20%</td></tr><tr data-order="a2"><th scope="row">8Third Man</th><td>25%</td></tr><tr data-order="a3"><th scope="row">1Fine Leg</th><td>25%</td></tr><tr data-order="a4"><th scope="row">2Square Leg</th><td>20%</td></tr><tr data-order="a5"><th scope="row">3Mid Wicket</th><td>25%</td></tr><tr data-order="a6"><th scope="row">4Long On</th><td>20%</td></tr><tr data-order="a7"><th scope="row" data-directionkey="7">5Long Off</th><td>20%</td></tr><tr data-order="a8"><th scope="row" data-directionkey="8">6Cover</th><td>25%</td></tr></tbody>';
+		
 		
 	if (laststriker_bts == 'Left Handed'){
 		$('#myModal table tr').each(function(index, el){
 			$(this).children('td').reverseOrder();
 		});
 		$('#stumps img').css('margin-left', '-46px');
+		
+		$('#direction').html(left_handed_direction);
 	}
 	
+
 	$('.Batsman').on('click', function(){
 		if (dblclicked%2 == 0){
 			$('.Batsman').removeClass('hilite');
@@ -28,12 +35,14 @@ $(document).ready(function(){
 					$(this).children('td').reverseOrder();
 				});	
 				$('#stumps img').css('margin-left', '-26px');
+				$('#direction').html(right_handed_direction);
 			}
 			else if (bts=='Left Handed' && (laststriker_bts=='Right Handed' || laststriker_bts==undefined)){
 				$('#myModal table tr').each(function(index, el){
 					$(this).children('td').reverseOrder();
 				});
 				$('#stumps img').css('margin-left', '-46px');	
+				$('#direction').html(left_handed_direction);
 			}
 			laststriker_bts = bts;
 			
@@ -854,12 +863,14 @@ $(document).ready(function(){
 					$(this).children('td').reverseOrder();
 				});	
 				$('#stumps img').css('margin-left', '-26px');
+				$('#direction').html(right_handed_direction);
 			}
 			else if (bts=='Left Handed' && (laststriker_bts=='Right Handed' || laststriker_bts==undefined)){
 				$('#myModal table tr').each(function(index, el){
 					$(this).children('td').reverseOrder();
 				});
-				$('#stumps img').css('margin-left', '-46px');	
+				$('#stumps img').css('margin-left', '-46px');
+				$('#direction').html(left_handed_direction);	
 			}
 			laststriker_bts = bts;
 

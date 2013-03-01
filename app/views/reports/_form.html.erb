@@ -1,0 +1,225 @@
+<%= form_for(@report) do |f| %>
+  <% if @report.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@report.errors.count, "error") %> prohibited this report from being saved:</h2>
+
+      <ul>
+      <% @report.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :akey %><br />
+    <%= f.text_field :akey %>
+  </div>
+  <div class="field">
+    <%= f.label :ckey %><br />
+    <%= f.text_field :ckey %>
+  </div>
+  <div class="field">
+    <%= f.label :fkey %><br />
+    <%= f.text_field :fkey %>
+  </div>
+  <div class="field">
+    <%= f.label :tkey %><br />
+    <%= f.text_field :tkey %>
+  </div>
+  <div class="field">
+    <%= f.label :inn %><br />
+    <%= f.text_field :inn %>
+  </div>
+  <div class="field">
+    <%= f.label :vkey %><br />
+    <%= f.text_field :vkey %>
+  </div>
+  <div class="field">
+    <%= f.label :ttkey %><br />
+    <%= f.text_field :ttkey %>
+  </div>
+  <div class="field">
+    <%= f.label :tmkey %><br />
+    <%= f.text_field :tmkey %>
+  </div>
+  <div class="field">
+    <%= f.label :mtkey %><br />
+    <%= f.text_field :mtkey %>
+  </div>
+  <div class="field">
+    <%= f.label :chkey %><br />
+    <%= f.text_field :chkey %>
+  </div>
+  <div class="field">
+    <%= f.label :mkey %><br />
+    <%= f.text_field :mkey %>
+  </div>
+  <div class="field">
+    <%= f.label :ptname %><br />
+    <%= f.text_field :ptname %>
+  </div>
+  <div class="field">
+    <%= f.label :ekey %><br />
+    <%= f.text_field :ekey %>
+  </div>
+  <div class="field">
+    <%= f.label :btkey %><br />
+    <%= f.text_field :btkey %>
+  </div>
+  <div class="field">
+    <%= f.label :bts %><br />
+    <%= f.text_field :bts %>
+  </div>
+  <div class="field">
+    <%= f.label :bp %><br />
+    <%= f.text_field :bp %>
+  </div>
+  <div class="field">
+    <%= f.label :st %><br />
+    <%= f.text_field :st %>
+  </div>
+  <div class="field">
+    <%= f.label :sd %><br />
+    <%= f.text_field :sd %>
+  </div>
+  <div class="field">
+    <%= f.label :pckey %><br />
+    <%= f.text_field :pckey %>
+  </div>
+  <div class="field">
+    <%= f.label :ckey1 %><br />
+    <%= f.text_field :ckey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :fkey1 %><br />
+    <%= f.text_field :fkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :tkey1 %><br />
+    <%= f.text_field :tkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :inn1 %><br />
+    <%= f.text_field :inn1 %>
+  </div>
+  <div class="field">
+    <%= f.label :vkey1 %><br />
+    <%= f.text_field :vkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :ttkey1 %><br />
+    <%= f.text_field :ttkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :tmkey1 %><br />
+    <%= f.text_field :tmkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :mtkey1 %><br />
+    <%= f.text_field :mtkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :chkey1 %><br />
+    <%= f.text_field :chkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :mkey1 %><br />
+    <%= f.text_field :mkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :ptname1 %><br />
+    <%= f.text_field :ptname1 %>
+  </div>
+  <div class="field">
+    <%= f.label :ekey1 %><br />
+    <%= f.text_field :ekey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :blkey1 %><br />
+    <%= f.text_field :blkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :bts1 %><br />
+    <%= f.text_field :bts1 %>
+  </div>
+  <div class="field">
+    <%= f.label :bls1 %><br />
+    <%= f.text_field :bls1 %>
+  </div>
+  <div class="field">
+    <%= f.label :btn1 %><br />
+    <%= f.text_field :btn1 %>
+  </div>
+  <div class="field">
+    <%= f.label :blp1 %><br />
+    <%= f.text_field :blp1 %>
+  </div>
+  <div class="field">
+    <%= f.label :lk1 %><br />
+    <%= f.text_field :lk1 %>
+  </div>
+  <div class="field">
+    <%= f.label :lnk1 %><br />
+    <%= f.text_field :lnk1 %>
+  </div>
+  <div class="field">
+    <%= f.label :bskey1 %><br />
+    <%= f.text_field :bskey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :spkey1 %><br />
+    <%= f.text_field :spkey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :pckey1 %><br />
+    <%= f.text_field :pckey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :ankey1 %><br />
+    <%= f.text_field :ankey1 %>
+  </div>
+  <div class="field">
+    <%= f.label :group1 %><br />
+    <%= f.text_field :group1 %>
+  </div>
+  <div class="field">
+    <%= f.label :group2 %><br />
+    <%= f.text_field :group2 %>
+  </div>
+  <div class="field">
+    <%= f.label :metric %><br />
+    <%= f.text_field :metric %>
+  </div>
+  <div class="field">
+    <%= f.label :lxm %><br />
+    <%= f.number_field :lxm %>
+  </div>
+  <div class="field">
+    <%= f.label :lxb %><br />
+    <%= f.number_field :lxb %>
+  </div>
+  <div class="field">
+    <%= f.label :fxb %><br />
+    <%= f.number_field :fxb %>
+  </div>
+  <div class="field">
+    <%= f.label :fq %><br />
+    <%= f.number_field :fq %>
+  </div>
+  <div class="field">
+    <%= f.label :vid %><br />
+    <%= f.text_field :vid %>
+  </div>
+  <div class="field">
+    <%= f.label :reportname %><br />
+    <%= f.text_field :reportname %>
+  </div>
+  <div class="field">
+    <%= f.label :bp1 %><br />
+    <%= f.text_field :bp1 %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,88 @@
+// Place all the styles related to the Reports controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+table#reports{
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+table#reports tr th{	
+	color:white;
+}
+
+#reports tr th{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.9;
+	font-size:11px;
+	font-family:"verdana";
+	font-weight:bold;
+	text-align:center;
+}
+
+
+#reports tr td{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+}
+
+#reports tr td a{
+	border-bottom:1px solid white;
+	background-color:black;
+	opacity:0.6;
+	color:white;
+	font-size:10px;
+	font-weight:bold;
+	font-family:"verdana";
+	text-align:center;
+}
+
+#reportcontainer{
+	margin-top:100px;
+}
+
+#charttable{
+	position:relative;
+	margin-top:185px;
+	width:600px;
+	min-height:200px;
+	margin-left:auto;
+	margin-right:auto;
+	overflow:auto;
+}
+
+.back_to_reports{
+	position:relative;
+	text-align:center
+}
+
+#filters{
+	margin-top:10px;
+	color:Black;
+	font-weight:bold;
+}
+
+#filters table{
+margin:0 auto;
+border-spacing:0px;
+
+}
+
+#filters table tr td{
+	min-width:100px;
+	width:auto;
+	border:1px solid black;
+	background:#eee;
+}
+

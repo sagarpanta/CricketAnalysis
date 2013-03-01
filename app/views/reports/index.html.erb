@@ -17,29 +17,34 @@
 		<li data-link='matches' class="<%= @matchorder %>"><span class="pretty" title="Match"><%=  image_tag('/assets/match.png') %></span></li>
 	</ul>
 </h2>
+<h3></h3>
 
-<table id="countries" cellspacing="0" cellpadding="0" >
+<div id="clientid" style="display:none"><%= current_user.id %></div>
+<div id="filters"></div>
+<table id="reports" cellspacing="0" cellpadding="0" >
   <tr>
-    <th>Client</th>
-    <th>Country</th>
-	<th>Abbreviation</th>
-    <th></th>
-    <th></th>
-    <th></th>
+	<th width="400px">Report Name</th>
+	<th width="80px"></th>
+	<th width="80px"></th>
   </tr>
 
-<% @countries.each do |country| %>
-  <tr>
-    <td><%= country.clientkey %></td>
-    <td><%= country.country %></td>
-	<td><%= country.country_s %></td>
-    <td><%= link_to 'Edit', edit_country_path(country) %></td>
-    <td><%= link_to 'Destroy', country, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  
+<% @reports.each do |report| %>
+  <tr class="playerdata">
+	<td width="400px"><%= report.reportname %></td>
+	<td width="80px" class="view_report" data-id=<%= report.id %>>Show</td>
+	<td width="80px"><%= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
 <% end %>
 </table>
-<div id="newcountry"><%= link_to 'New Country', new_country_path %></div>
 
+
+<div id="reportcontainer" style="width: 800px; max-height: 200px;display:none;"></div>
+<div id="charttable" style="display:none"></div>
+
+<div class='back_to_reports' style="display:none">
+<%= image_tag '/assets/back.png' %>
+</div>
 
 
 

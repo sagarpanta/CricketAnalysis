@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	var pie;
 	Raphael.fn.pieChart = function (cx, cy, r, values, labels, stroke) {
 		var paper = this,
 			rad = Math.PI / 180,
@@ -45,8 +46,11 @@ $(document).ready(function(){
 		}
 		return chart;
 	};
-
-	$(function () {
+	
+	$('#runs a,#wides a,#noballs,#legbyes a ').on('click', function(){
+		pie.remove();
+		pie = Raphael("holder", 400, 400);
+		Raphael("holder").remove();
 		var values = [],
 			labels = [];
 		$("#direction tbody tr").each(function () {
@@ -61,8 +65,30 @@ $(document).ready(function(){
 		var pos = $("#holder").position();
 		var pos_of_shot = $('.dialog_td3').position();
 		
-		Raphael("holder", 400, 400).pieChart(200,200, 60, values, labels, "#fff");
-		$('#holder').offset({ top: pos_of_shot.top+80, left: width/2-200});		
+		pie.pieChart(200,200, 60, values, labels, "#fff");
+		$('#holder').offset({ top: pos_of_shot.top+80, left: width/2-200});			
+	
 	});
+	
+	var id_in_scorecard= $('#id').html(); 
+	if(id_in_scorecard != undefined){
+		pie = Raphael("holder", 400, 400);
+		var values = [],
+			labels = [];
+		$("#direction tbody tr").each(function () {
+			var td_val = parseInt($(this).children('td').text());
+			var th_val = $(this).children('th').text();
+			values.push(parseInt(td_val, 10));
+			labels.push(th_val);
+		});
+		$("#direction").hide();
+		var width = $(window).width();
+		var height = $(window).height();
+		var pos = $("#holder").position();
+		var pos_of_shot = $('.dialog_td3').position();
+		pie.pieChart(200,200, 60, values, labels, "#fff");
+		$('#holder').offset({ top: pos_of_shot.top+80, left: width/2-200});	
+	}
+		
 
 });

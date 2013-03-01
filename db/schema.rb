@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130207173842) do
+ActiveRecord::Schema.define(:version => 20130223055659) do
 
   create_table "attachments", :force => true do |t|
     t.string "filename"
@@ -332,6 +332,65 @@ ActiveRecord::Schema.define(:version => 20130207173842) do
 
   add_index "players", ["id", "clientkey", "battingstyle", "bowlingstyle", "bowlingtype", "playertype", "fullname"], :name => "UIX_Players_Evrything", :unique => true
   add_index "players", ["id", "clientkey"], :name => "index_players_on_id_and_clientkey", :unique => true
+
+  create_table "reports", :force => true do |t|
+    t.string   "clnkey"
+    t.string   "akey"
+    t.string   "ckey"
+    t.string   "fkey"
+    t.string   "tkey"
+    t.string   "inn"
+    t.string   "vkey"
+    t.string   "ttkey"
+    t.string   "tmkey"
+    t.string   "mtkey"
+    t.string   "chkey"
+    t.string   "mkey"
+    t.string   "ptname"
+    t.string   "ekey"
+    t.string   "btkey"
+    t.string   "bts"
+    t.string   "bp"
+    t.string   "st"
+    t.string   "sd"
+    t.string   "pckey"
+    t.string   "ckey1"
+    t.string   "fkey1"
+    t.string   "tkey1"
+    t.string   "inn1"
+    t.string   "vkey1"
+    t.string   "ttkey1"
+    t.string   "tmkey1"
+    t.string   "mtkey1"
+    t.string   "chkey1"
+    t.string   "mkey1"
+    t.string   "ptname1"
+    t.string   "ekey1"
+    t.string   "blkey1"
+    t.string   "bts1"
+    t.string   "bls1"
+    t.string   "btn1"
+    t.string   "blp1"
+    t.string   "lk1"
+    t.string   "lnk1"
+    t.string   "bskey1"
+    t.string   "spkey1"
+    t.string   "pckey1"
+    t.string   "ankey1"
+    t.string   "group1"
+    t.string   "group2"
+    t.string   "metric"
+    t.integer  "lxm"
+    t.integer  "lxb"
+    t.integer  "fxb"
+    t.integer  "fq"
+    t.string   "vid"
+    t.string   "reportname"
+    t.string   "bp1"
+    t.string   "charttype"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "right_lefts", :force => true do |t|
     t.string   "rightorleft"

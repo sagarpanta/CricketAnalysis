@@ -1,4 +1,3 @@
-#require 'csv'
 class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
@@ -411,4 +410,7 @@ class MatchesController < ApplicationController
 		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
 	end
   end 
+  
+  
+
 end

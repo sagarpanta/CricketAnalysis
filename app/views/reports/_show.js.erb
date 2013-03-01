@@ -1,0 +1,16 @@
+console.log('i m in show.js.erb');
+
+var _table = '<table><tbody><tr>';
+var counter = 1;
+<% @selected_filters.each do |key, value| %>
+	if counter%3<>0{
+		_table = _table + '<td><%= key %>: <%= value %></td>';
+	}
+	_table = _table + '</tr><tr>';
+	counter = counter+1;
+<% end %>
+_table = _table+'</tr></tbody></table>';
+
+
+$('#filters').html(_table);
+

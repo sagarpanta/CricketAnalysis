@@ -3,6 +3,7 @@ $(document).ready(function(){
 	var analysis = $('#analysis_analysiskey').val();
 	
 	var mapdata;
+	var jsonObj_store = {};
 	
 	var countrykey = [''];
 	var formatkey = [''];
@@ -875,6 +876,7 @@ $(document).ready(function(){
 		else if (charttype == 'Pie'){
 			charttype = 'pie';
 		}
+
 		$('.charttype').css('opacity', '1');
 		$(this).css('opacity', '0.7');
 	});
@@ -900,10 +902,12 @@ $(document).ready(function(){
 			$(this).css('opacity', '0.7');
 			
 			$('#container').html($('.replay').html());
+			$('#container').css('background-image', "url(/assets/canvas_bg.png)").css('background-size', '100% 100%');
 		}
 		else{
 			video = 0;
 			$(this).css('opacity', '1');
+			$('#container').css('background-image', "none");
 			google_map_function(mapdata);
 		}
 		console.log(video_click);
@@ -926,6 +930,53 @@ $(document).ready(function(){
 		//
 		$(this).css('background-color', '#19197D');
 		$(this).css('opacity', '1');
+	});
+
+	$('.savetype a').on('click', function(){
+		$('.savetype a').css('opacity', '1');
+		$(this).css('opacity', '0.7');
+	});
+	
+	
+	$('.savetype a').on('mouseover', function(){
+		//no color change
+		$(this).css('background-color', '#19197D');
+	});
+	
+	$('.savetype a').on('mouseout', function(){
+		$(this).css('background-color', '#19197D');
+		$(this).css('opacity', '1');
+	});	
+
+	$('#submit_report img').on('mouseover', function(){	
+		$(this).attr('src','/assets/button-over.png');	
+	});
+
+	$('#submit_report img').on('mouseout', function(){
+		$(this).attr('src','/assets/button.png');	
+	});
+	
+	$('#submit_report img').on('click', function(){
+		if (jsonObj_store['report']['akey'] == 'Batting' || jsonObj_store['report']['akey'] == 'Bowling') {	
+			jsonObj_store['report']['reportname'] = $('#save').val();
+			$.ajax({
+				url: '/reports',
+				type: 'post',
+				data: jsonObj_store,
+				cache: false,
+				success: function(data, textStatus, jqXHR ) { 
+					console.log('successful');
+				},
+				error: function(jqXHR, textStatus, errorThrown){ 
+					console.log('unsuccessful');
+					$(this).attr('src','/assets/button.png');	
+				}
+			});		
+		}
+		else{
+			alert('Cannot Save Report. Please Select Group/s and Metric');s
+		}
+		
 	});
 	
 	
@@ -963,6 +1014,7 @@ $(document).ready(function(){
 	var playExternalVideos = function(vid_array){
 		var j = 1;
 		var playlist = [];
+		
 		$('#container').remove('#t20provideo');
 		$('#container').html('<video id="t20provideo" autoplay></video>');
 		var videoNode = document.querySelector('video');
@@ -1051,13 +1103,15 @@ $(document).ready(function(){
 		
 
 		if (groupclickcount == 2 && metricclickcount == 1){
-			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,pckey:pitchconditionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey1:spellkey1, pckey1:pitchconditionkey1,ankey1:anglekey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs, fxb:firstXballs, fq:frequency, vid:video}};
+			jsonObj = {filters:{akey:analysis,ckey:countrykey, fkey:formatkey, tkey:tournamentkey, inn:inningkey,vkey:venuekey, ttkey:teamtypekey, tmkey:teamkey, mtkey:matchtypekey, chkey:coachkey, mkey:managerkey, ptname:playertypename, ekey:endkey, btkey:batsmankey, bts:battingstylename, bp:battingposition, st:shottypekey, sd:shotdirectionkey,pckey:pitchconditionkey,ckey1:countrykey1, fkey1:formatkey1, tkey1:tournamentkey1, inn1:inningkey1,vkey1:venuekey1, ttkey1:teamtypekey1, tmkey1:teamkey1, mtkey1:matchtypekey1, chkey1:coachkey1, mkey1:managerkey1, ptname1:playertypename1, ekey1:endkey1, blkey1:bowlerkey1, bts1:battingstylename1, bls1:bowlingstylename1, btn1:bowlingtypename1, bp1:battingposition1, blp1:bowlingposition1,  lk1:linekey1, lnk1:lengthkey1, bskey1:sidekey1, spkey1:spellkey1, pckey1:pitchconditionkey1,ankey1:anglekey1,group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs, fxb:firstXballs, fq:frequency, vid:video}};	
+			var userkey = $('#userkey').html(); 
 			$.ajax({
 				url: '/generate.json',
 				type: 'get',
 				data: jsonObj,
 				cache: false,
 				success: function(data, textStatus, jqXHR ) { 
+					jsonObj_store={report:{clnkey:userkey, akey:analysis,ckey:countrykey.join(), fkey:formatkey.join(), tkey:tournamentkey.join(), inn:inningkey.join(),vkey:venuekey.join(), ttkey:teamtypekey.join(), tmkey:teamkey.join(), mtkey:matchtypekey.join(), chkey:coachkey.join(), mkey:managerkey.join(), ptname:playertypename.join(), ekey:endkey.join(), btkey:batsmankey.join(), bts:battingstylename.join(), bp:battingposition.join(), st:shottypekey.join(), sd:shotdirectionkey.join(),pckey:pitchconditionkey.join(),ckey1:countrykey1.join(), fkey1:formatkey1.join(), tkey1:tournamentkey1.join(), inn1:inningkey1.join(),vkey1:venuekey1.join(), ttkey1:teamtypekey1.join(), tmkey1:teamkey1.join(), mtkey1:matchtypekey1.join(), chkey1:coachkey1.join(), mkey1:managerkey1.join(), ptname1:playertypename1.join(), ekey1:endkey1.join(), blkey1:bowlerkey1.join(), bts1:battingstylename1.join(), bls1:bowlingstylename1.join(), btn1:bowlingtypename1.join(), bp1:battingposition1.join(), blp1:bowlingposition1.join(),  lk1:linekey1.join(), lnk1:lengthkey1.join(), bskey1:sidekey1.join(), spkey1:spellkey1.join(), pckey1:pitchconditionkey1.join(),ankey1:anglekey1.join(),group1:group1, group2:group2, metric:metric, lxm:lastXmatches, lxb:lastXballs, fxb:firstXballs, fq:frequency, vid:video, charttype:charttype}};	
 					console.log('successful');
 					if (video==1){
 						playable = [];

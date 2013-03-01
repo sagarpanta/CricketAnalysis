@@ -1,0 +1,109 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  akey: 
+  ckey: 
+  fkey: 
+  tkey: 
+  inn: 
+  vkey: 
+  ttkey: 
+  tmkey: 
+  mtkey: 
+  chkey: 
+  mkey: 
+  ptname: 
+  ekey: 
+  btkey: 
+  bts: 
+  bp: 
+  st: 
+  sd: 
+  pckey: 
+  ckey1: 
+  fkey1: 
+  tkey1: 
+  inn1: 
+  vkey1: 
+  ttkey1: 
+  tmkey1: 
+  mtkey1: 
+  chkey1: 
+  mkey1: 
+  ptname1: 
+  ekey1: 
+  blkey1: 
+  bts1: 
+  bls1: 
+  btn1: 
+  blp1: 
+  lk1: 
+  lnk1: 
+  bskey1: 
+  spkey1: 
+  pckey1: 
+  ankey1: 
+  group1: MyString
+  group2: MyString
+  metric: MyString
+  lxm: 1
+  lxb: 1
+  fxb: 1
+  fq: 1
+  vid: MyString
+  reportname: MyString
+  bp1: 
+
+two:
+  akey: 
+  ckey: 
+  fkey: 
+  tkey: 
+  inn: 
+  vkey: 
+  ttkey: 
+  tmkey: 
+  mtkey: 
+  chkey: 
+  mkey: 
+  ptname: 
+  ekey: 
+  btkey: 
+  bts: 
+  bp: 
+  st: 
+  sd: 
+  pckey: 
+  ckey1: 
+  fkey1: 
+  tkey1: 
+  inn1: 
+  vkey1: 
+  ttkey1: 
+  tmkey1: 
+  mtkey1: 
+  chkey1: 
+  mkey1: 
+  ptname1: 
+  ekey1: 
+  blkey1: 
+  bts1: 
+  bls1: 
+  btn1: 
+  blp1: 
+  lk1: 
+  lnk1: 
+  bskey1: 
+  spkey1: 
+  pckey1: 
+  ankey1: 
+  group1: MyString
+  group2: MyString
+  metric: MyString
+  lxm: 1
+  lxb: 1
+  fxb: 1
+  fq: 1
+  vid: MyString
+  reportname: MyString
+  bp1: 

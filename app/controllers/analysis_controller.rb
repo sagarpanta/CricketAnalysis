@@ -71,7 +71,7 @@ class AnalysisController < ApplicationController
 			@lengths = Length.all
 			@shottypes = Shottype.all
 			@sides = [{'side'=>'RTW', 'val'=>0}, {'side'=>'OTW', 'val'=>1}]
-			@angles = [{'angle'=>'Rt|Lf' , 'val'=>0},{'angle'=>'Rt|St' , 'val'=>1},{'angle'=>'Rt|Rt' , 'val'=>2},{'angle'=>'St|Lf' , 'val'=>3},{'angle'=>'St|St' , 'val'=>4},{'angle'=>'St|Rt' , 'val'=>5},{'angle'=>'Lf|Lf' , 'val'=>6},{'angle'=>'Lf|St' , 'val'=>7},{'angle'=>'Lf|Rt' , 'val'=>8}]
+			@angles = [{'angle'=>'Rt|Lf' , 'val'=>1},{'angle'=>'Rt|St' , 'val'=>2},{'angle'=>'Rt|Rt' , 'val'=>3},{'angle'=>'St|Lf' , 'val'=>4},{'angle'=>'St|St' , 'val'=>5},{'angle'=>'St|Rt' , 'val'=>6},{'angle'=>'Lf|Lf' , 'val'=>7},{'angle'=>'Lf|St' , 'val'=>8},{'angle'=>'Lf|Rt' , 'val'=>9},     {'angle'=>'CLf' , 'val'=>10},{'angle'=>'CLf|St' , 'val'=>11},{'angle'=>'CLf|Rt' , 'val'=>12},{'angle'=>'CRt|Lf' , 'val'=>13},{'angle'=>'CRt|St' , 'val'=>14},{'angle'=>'CRt' , 'val'=>15},{'angle'=>'OutSwinger' , 'val'=>100},{'angle'=>'InSwinger' , 'val'=>101},{'angle'=>'Reverse Swing' , 'val'=>102},{'angle'=>'LegCutter' , 'val'=>103},{'angle'=>'OffCutter' , 'val'=>104},{'angle'=>'InCutter' , 'val'=>104},{'angle'=>'SlowerBall' , 'val'=>105},{'angle'=>'NipBacker' , 'val'=>106},{'angle'=>'Straighter' , 'val'=>107},{'angle'=>'Straight Ball' , 'val'=>107},{'angle'=>'StraightBall' , 'val'=>107},{'angle'=>'Leg Spin' , 'val'=>108},{'angle'=>'Off Spin' , 'val'=>109},{'angle'=>'Flipper' , 'val'=>110},{'angle'=>'Top Spinner' , 'val'=>111},{'angle'=>'Googly' , 'val'=>112},{'angle'=>'Doosra' , 'val'=>113}]
 			@directions = Scorecard.where('clientkey=?', current_user.id).select('distinct direction')
 		else 
 			redirect_to signin_path
@@ -124,7 +124,6 @@ class AnalysisController < ApplicationController
   
 
   def generate
-	
 		lastXmatches = params[:filters][:lxm].to_i
 		vid = params[:filters][:vid].to_i
 		fq = params[:filters][:fq].to_i
@@ -385,7 +384,7 @@ class AnalysisController < ApplicationController
 			_group1['direction'] = 's.direction'
 			_group1['spell'] = 's.spell'
 			_group1['condition'] = 'mat.pitchcondition'
-			_group1['angle'] = "case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2 then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
+			_group1['angle'] = "case s.angle when 1  then 'Rt|Lf' when 2  then 'Rt|St' when 3 then 'Rt|Rt' when 4  then 'St|Lf' when 5  then 'St|St' when 6  then 'St|Rt' when 7  then 'Lf|Lf' when 8  then 'Lf|St' when 9  then 'Lf|Rt' when 10 then 'CLf' when 11 then 'CLf|St' when 12 then 'CLf|Rt' when 13 then 'CRt' when 14 then 'CRt|St' when 15 then 'CRt|Lf' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
 		
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -420,7 +419,7 @@ class AnalysisController < ApplicationController
 			_group2['direction'] = ',s.direction'
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat.pitchcondition'
-			_group2['angle'] = ",case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2 then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
+			_group2['angle'] = ",case s.angle when 1  then 'Rt|Lf' when 2  then 'Rt|St' when 3 then 'Rt|Rt' when 4  then 'St|Lf' when 5  then 'St|St' when 6  then 'St|Rt' when 7  then 'Lf|Lf' when 8  then 'Lf|St' when 9  then 'Lf|Rt' when 10 then 'CLf' when 11 then 'CLf|St' when 12 then 'CLf|Rt' when 13 then 'CRt' when 14 then 'CRt|St' when 15 then 'CRt|Lf' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
 						
 			
 			if metric == 'c_nonstrike'
@@ -900,7 +899,7 @@ class AnalysisController < ApplicationController
 			_group1['direction'] = 's.direction'
 			_group1['spell'] = 's.spell'
 			_group1['condition'] = 'mat1.pitchcondition'
-			_group1['angle'] = "case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2 then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
+			_group1['angle'] = "case s.angle when 1  then 'Rt|Lf' when 2  then 'Rt|St' when 3 then 'Rt|Rt' when 4  then 'St|Lf' when 5  then 'St|St' when 6  then 'St|Rt' when 7  then 'Lf|Lf' when 8  then 'Lf|St' when 9  then 'Lf|Rt' when 10 then 'CLf' when 11 then 'CLf|St' when 12 then 'CLf|Rt' when 13 then 'CRt' when 14 then 'CRt|St' when 15 then 'CRt|Lf' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
 
 			_group2['bts'] = ',p.battingstyle'
 			_group2['bls'] = ',p1.bowlingstyle'
@@ -935,7 +934,7 @@ class AnalysisController < ApplicationController
 			_group2['direction'] = ',s.direction'
 			_group2['spell'] = ',s.spell'
 			_group2['condition'] = ',mat1.pitchcondition'
-			_group2['angle'] = ",case s.angle when 0  then 'Rt|Lf' when 1  then 'Rt|St' when 2 then 'Rt|Rt' when 3  then 'St|Lf' when 4  then 'St|St' when 5  then 'St|Rt' when 6  then 'Lf|Lf' when 7  then 'Lf|St' when 8  then 'Lf|Rt' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
+			_group2['angle'] = ",case s.angle when 1  then 'Rt|Lf' when 2  then 'Rt|St' when 3 then 'Rt|Rt' when 4  then 'St|Lf' when 5  then 'St|St' when 6  then 'St|Rt' when 7  then 'Lf|Lf' when 8  then 'Lf|St' when 9  then 'Lf|Rt' when 10 then 'CLf' when 11 then 'CLf|St' when 12 then 'CLf|Rt' when 13 then 'CRt' when 14 then 'CRt|St' when 15 then 'CRt|Lf' when 100 then 'OutSwinger' when 101 then 'InSwinger' when 102 then 'Reverse Swing' when 103 then 'LegCutter' when 104 then 'OffCutter' when 104 then 'InCutter' when 105 then 'SlowerBall' when 106 then 'NipBacker' when 107 then 'Straighter' when 107 then 'Straight Ball' when 107 then 'StraightBall' when 108 then 'Leg Spin' when 109 then 'Off Spin' when 110 then 'Flipper' when 111 then 'Top Spinner' when 112 then 'Googly' when 113 then 'Doosra' end"
 
 			if metric == 'c_nonstrike'
 				batsman_part = ' inner join players p on p.clientkey = s.clientkey and p.playerid = s.currentnonstrikerkey and s.formatkey = p.formatkey '
