@@ -32,8 +32,12 @@ gem 'pdfkit'
 
 gem 'pry'
 
-
-gem 'thin'
+platforms :ruby do # linux
+  gem 'unicorn'
+end
+platforms :mswin do 
+  gem 'thin'
+end
 gem 'pg'
 
 
