@@ -29,15 +29,16 @@ gem 'roo'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'pdfkit'
+gem 'dalli'
 
 gem 'pry'
 
 platforms :ruby do # linux
   gem 'unicorn'
 end
-platforms :mswin do 
-  gem 'thin'
-end
+
+#gem 'thin'
+
 gem 'pg'
 
 

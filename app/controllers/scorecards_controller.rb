@@ -441,7 +441,6 @@ class ScorecardsController < ApplicationController
 				counter = counter + 1
 			end
 			
-				
 			@bowlers = []
 			@wktakingbowlers = [['', -2]]
 			counter = 1

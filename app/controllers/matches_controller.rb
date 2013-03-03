@@ -1,4 +1,6 @@
 class MatchesController < ApplicationController
+
+	caches_page :scorecard
   # GET /matches
   # GET /matches.json
   def index
@@ -424,21 +426,33 @@ class MatchesController < ApplicationController
   
   def scorecard
 	paramsid = 3
-	@match = Match.find_by_id(paramsid)
+	
+	@match = Rails.cache.fetch('_match', :expires_in=>1.minute) do
+				match = Match.find_by_id(paramsid)
+			end
 
 	#####common entry for all records
-	@tournament = Tournament.find_by_id(@match.tournamentkey)
-	@venue = Venue.find_by_id(@match.venuekey)
-	@format = Format.find_by_id(@match.formatkey)
+	@tournament = Rails.cache.fetch('_tournament', :expires_in=>1.minute) do
+					tournament = Tournament.find_by_id(@match.tournamentkey)
+				  end
+	@venue = Rails.cache.fetch('_venue', :expires_in=>1.minute) do
+				venue = Venue.find_all_by_id(@match.venuekey)
+			end
+	@format = Rails.cache.fetch('_format', :expires_in=>1.minute) do
+					format = Format.find_by_id(@match.formatkey)
+			 end
 	@formatarr = []
 	@formatarr << @format.name << @format.id
-	
 	
 	@batting_side = 0
 	@fielding_side = 0
 	
-	@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone, 1)
-	@teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
+	@teamone = Rails.cache.fetch('_teamone', :expires_in=>1.minute) do
+					teamone = Team.find_by_teamid_and_wh_current(@match.teamidone, 1)
+				end
+	@teamtwo = Rails.cache.fetch('_teamtwo', :expires_in=>1.minute) do
+					teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
+			   end
 	
 	if @match.tosswon == @match.teamidone
 		if @match.electedto == 'Bat'
@@ -469,40 +483,78 @@ class MatchesController < ApplicationController
 	@inning = 1
 	
 	#####Score calculation
-	@runs = Scorecard.first.nil? ? 0:Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).select('sum(runs+wides+noballs+legbyes+byes) as scores')[0][:scores]
+	@runs = Rails.cache.fetch('_runs', :expires_in=>1.minute) do
+				Scorecard.first.nil? ? 0:Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).select('sum(runs+wides+noballs+legbyes+byes) as scores')[0][:scores]
+		    end
 	@runs = @runs.nil? ? 0:@runs
-	ballsdelivered = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).sum(:ballsdelivered)
+	ballsdelivered = Rails.cache.fetch('_ballsdelivered', :expires_in=>1.minute) do
+						Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).sum(:ballsdelivered)
+					 end
 	@overs = ballsdelivered/6 + ballsdelivered%6/10.0
-	@wickets =  Scorecard.where('matchkey=? and inning= ?', paramsid, @inning).sum(:wicket)
+	@wickets =  Rails.cache.fetch('_wickets', :expires_in=>1.minute) do
+					Scorecard.where('matchkey=? and inning= ?', paramsid, @inning).sum(:wicket)
+				end
 
 
 	#batting side players
-	@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerid}
+	@batsmankeys = Rails.cache.fetch('_batsmankeys', :expires_in=>1.minute) do
+						batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerid}
+					end
 				
 	
 	#beginning of calculation of current bowler or batsman or non striker or fielder in action
 	#maxid is the last entry id of Scorecard
-	@maxid = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.where('matchkey = ? and inning=?', paramsid, @inning).maximum(:id)
-	@currentstrikerkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).batsmankey
-	@currentnonstrikerkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).currentnonstrikerkey
-	@strikerposition =  Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).battingposition
-	@maxidwherenonstrikerisstriker = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.where('matchkey = ? and inning=? and currentstrikerkey = ?', paramsid, @inning, @currentnonstrikerkey).maximum(:id)
-	@nonstrikerposition = Scorecard.find_by_id(@maxidwherenonstrikerisstriker).nil? ? -2:Scorecard.find_by_id(@maxidwherenonstrikerisstriker).battingposition
-	@currentbowlerkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).currentbowlerkey
-	@currentbowlingside = Scorecard.where('matchkey=? and inning = ? and currentbowlerkey=?', paramsid, @inning, @currentbowlerkey).first.nil? ? -2:Scorecard.find_by_id(@maxid).side
-	@lastrun = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).runs
-	@lastbye = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).byes
-	@lastlbye = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).legbyes
-	@lastnoball = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).noballs
-	@lastwide = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).wides
+	@maxid = Rails.cache.fetch('_maxid', :expires_in=>1.minute) do
+				maxid = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.where('matchkey = ? and inning=?', paramsid, @inning).maximum(:id)
+			 end
+	@currentstrikerkey = Rails.cache.fetch('_cstriker', :expires_in=>1.minute) do
+							Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).batsmankey
+						end
+	@currentnonstrikerkey = Rails.cache.fetch('_cnonstriker', :expires_in=>1.minute) do
+								Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).currentnonstrikerkey
+							end
+	@strikerposition =  Rails.cache.fetch('_strikerpos', :expires_in=>1.minute) do
+							Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).battingposition
+						end
+	@maxidwherenonstrikerisstriker = Rails.cache.fetch('_maxidwherenonstrikerisstriker', :expires_in=>1.minute) do
+										Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.where('matchkey = ? and inning=? and currentstrikerkey = ?', paramsid, @inning, @currentnonstrikerkey).maximum(:id)
+									end
+	@nonstrikerposition = Rails.cache.fetch('_nonstrikerpos', :expires_in=>1.minute) do
+							Scorecard.find_by_id(@maxidwherenonstrikerisstriker).nil? ? -2:Scorecard.find_by_id(@maxidwherenonstrikerisstriker).battingposition
+						end
+	@currentbowlerkey = Rails.cache.fetch('_cbowler', :expires_in=>1.minute) do
+							Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).currentbowlerkey
+						end
+	@currentbowlingside = Rails.cache.fetch('_cbowlingside', :expires_in=>1.minute) do
+							Scorecard.where('matchkey=? and inning = ? and currentbowlerkey=?', paramsid, @inning, @currentbowlerkey).first.nil? ? -2:Scorecard.find_by_id(@maxid).side
+						end
+	@lastrun = Rails.cache.fetch('_lastrun', :expires_in=>1.minute) do
+				Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).runs
+			end
+	@lastbye = Rails.cache.fetch('_lastbye', :expires_in=>1.minute) do
+				Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).byes
+			end
+	@lastlbye = Rails.cache.fetch('_lastlbye', :expires_in=>1.minute) do
+					Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).legbyes
+				end
+	@lastnoball = Rails.cache.fetch('_lastnoball', :expires_in=>1.minute) do
+					Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).noballs
+				  end
+	@lastwide = Rails.cache.fetch('_lastwide', :expires_in=>1.minute) do
+					Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? -2:Scorecard.find_by_id(@maxid).wides
+				end
 	@battingposition = [1,2,3,4,5,6,7,8,9,10,11]
 	@bowlingposition = [1,2,3,4,5,6,7,8,9,10,11]
-	@venue = Venue.find_all_by_id(@match.venuekey)
+
 	
 	
 	#last batting end and last bowling end
-	@battingendkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? 0:Scorecard.find_by_id(@maxid).battingendkey
-	@bowlingendkey = Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? 1:Scorecard.find_by_id(@maxid).bowlingendkey	
+	@battingendkey = Rails.cache.fetch('_battingend', :expires_in=>1.minute) do
+						Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? 0:Scorecard.find_by_id(@maxid).battingendkey
+					end
+	@bowlingendkey = Rails.cache.fetch('_bowlingend', :expires_in=>1.minute) do
+						Scorecard.where('matchkey=? and inning = ?', paramsid, @inning).first.nil? ? 1:Scorecard.find_by_id(@maxid).bowlingendkey	
+					end
 	@battingend = []
 	
 	@battingend << (@battingendkey ==0? {'value'=> @battingendkey, 'name'=> @venue[0].endone}:{'value'=> @battingendkey, 'name'=> @venue[0].endtwo} )
@@ -547,10 +599,16 @@ class MatchesController < ApplicationController
 		if counter >11
 			break
 		end
-		player = Player.find_by_clientkey_and_formatkey_and_playerid(params[:clientkey], @format.id, b)
+		player = Rails.cache.fetch("_player_#{b}", :expires_in=>1.minute) do
+					Player.find_by_clientkey_and_formatkey_and_playerid(params[:clientkey], @format.id, b)
+				end
 		#this is the last entry id of the bastman b
-		playerlastentry_id = Scorecard.where('matchkey=? and inning=? and batsmankey=?', paramsid,@inning,b).maximum(:id)
-		playerlastentry_id_as_nonstriker = Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', paramsid,@inning,b).maximum(:id)
+		playerlastentry_id = Rails.cache.fetch("_ple_id#{b}", :expires_in=>1.minute) do
+								Scorecard.where('matchkey=? and inning=? and batsmankey=?', paramsid,@inning,b).maximum(:id)
+							end
+		playerlastentry_id_as_nonstriker = Rails.cache.fetch("_ple_id_as_ns#{b}", :expires_in=>1.minute) do
+												Scorecard.where('matchkey=? and inning=? and currentnonstrikerkey=?', paramsid,@inning,b).maximum(:id)
+											end
 		
 		#get the stats of batsman b so far.
 		stats_query = 'select SUM(runs) as runs, sum(zeros) as zeros, SUM(ones) as ones, SUM(twos) as twos, SUM(threes) as threes, SUM(fours) as fours, SUM(fives) as fives, SUM(sixes) as sixes, SUM(ballsfaced) as ballsfaced,  case when sum(ballsfaced) = 0 then 0 else sum(runs)/(sum(ballsfaced)*1.0)*100 end as strikerate
@@ -569,7 +627,9 @@ class MatchesController < ApplicationController
 						from scorecards where matchkey = '+paramsid.to_s+' and clientkey = '+params[:clientkey].to_s+' and batsmankey = '+b.to_s+' and inning='+@inning.to_s+'
 						)A
 						'
-		stats = Scorecard.find_by_sql(stats_query)
+		stats = Rails.cache.fetch("_stats#{paramsid}_#{params[:clientkey]}_#{b}_#{@inning}", :expires_in=>1.minute) do
+					Scorecard.find_by_sql(stats_query)
+				end
 		
 
 		
@@ -582,8 +642,12 @@ class MatchesController < ApplicationController
 
 			
 		#get the last entry of the batsman b and get his information
-		playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-		playerlastentry_as_NS = Scorecard.find_by_id(playerlastentry_id_as_nonstriker)
+		playerlastentry = Rails.cache.fetch('_ple1', :expires_in=>1.minute) do
+							Scorecard.find_by_id(playerlastentry_id)
+						end
+		playerlastentry_as_NS = Rails.cache.fetch('_pls_as_ns1', :expires_in=>1.minute) do
+									Scorecard.find_by_id(playerlastentry_id_as_nonstriker)
+								end
 		
 		#dismissed batsman key (dbk)
 		dbk = playerlastentry.nil? ? -2:playerlastentry[:dismissedbatsmankey]
@@ -635,21 +699,35 @@ class MatchesController < ApplicationController
 	#types of dismissals. Add -2 to the entry, which is the default value 
 	#i.e. the batsman has not played yet or is still no out.
 	#same with the fielder and wicket taking bowlers
-	@dismissals = Dismissal.all.collect{|d| [d.dismissaltype, d.id]}
+	@dismissals = Rails.cache.fetch('_dismissals', :expires_in=>1.minute) do
+					Dismissal.all.collect{|d| [d.dismissaltype, d.id]}
+				end
 	@dismissals << ['', -2]
 	
 	@fielders = [['', -2]]
-	@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
+	@fieldingkeys = Rails.cache.fetch('_fieldingkeys', :expires_in=>1.minute) do
+						Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
+					end
 	
 	@fieldingside = []
 	pos = 0
 	counter = 0
 	@fieldingkeys.each do |b|
-		player = Player.find_by_clientkey_and_formatkey_and_playerid(params[:clientkey], @format.id, b)
-		playerlastentry_id = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', paramsid,@inning,b).maximum(:id)
-		playerlastentry = Scorecard.find_by_id(playerlastentry_id)
-		stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', paramsid,@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
-		wickets_stats = Scorecard.where('matchkey=? and inning=? and currentbowlerkey=? and outtypekey not in (4,5,6,7)', paramsid,@inning,b).select('sum(wicket) as wickets') 
+		player = Rails.cache.fetch("_player#{b}", :expires_in=>1.minute) do
+					Player.find_by_clientkey_and_formatkey_and_playerid(params[:clientkey], @format.id, b)
+				end
+		playerlastentry_id = Rails.cache.fetch("_ple_id#{b}", :expires_in=>1.minute) do
+								Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', paramsid,@inning,b).maximum(:id)
+							end
+		playerlastentry = Rails.cache.fetch("_ple#{b}", :expires_in=>1.minute) do
+							Scorecard.find_by_id(playerlastentry_id)
+						end
+		stats = Rails.cache.fetch("_stats#{paramsid}_#{@inning}_#{b}", :expires_in=>1.minute) do
+					Scorecard.where('matchkey=? and inning=? and currentbowlerkey=?', paramsid,@inning,b).select('sum(runs+wides+noballs) as runs, sum(wides) as wides, sum(noballs) as noballs, sum(byes+legbyes) as others,sum(zeros) as zeros, sum(ones) as ones, sum(twos) as twos, sum(threes) as threes, sum(fours) as fours, sum(fives) as fives, sum(sixes) as sixes, sum(sevens) as sevens, sum(eights) , sum(maiden) as maidens, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets, max(spell) as spell, case when sum(ballsdelivered) = 0 then 0 else sum(runs+wides+noballs)/(sum(ballsdelivered)/6.0) end as economy') 
+				end
+		wickets_stats = Rails.cache.fetch("_wicketstats#{paramsid}_#{@inning}_#{b}", :expires_in=>1.minute) do
+							Scorecard.where('matchkey=? and inning=? and currentbowlerkey=? and outtypekey not in (4,5,6,7)', paramsid,@inning,b).select('sum(wicket) as wickets') 
+						end
 		
 		hilite = ''
 		otw = ''
