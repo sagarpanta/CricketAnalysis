@@ -31,13 +31,13 @@ gem 'jquery-ui-rails'
 gem 'pdfkit'
 gem 'dalli'
 
-gem 'pry'
+#gem 'pry'
 
-platforms :ruby do # linux
-  gem 'unicorn'
-end
+#platforms :ruby do # linux
+#  gem 'unicorn'
+#end
 
-#gem 'thin'
+gem 'thin'
 
 gem 'pg'
 
