@@ -394,7 +394,6 @@ class MatchesController < ApplicationController
   
   
   def firstinning
-	params[:id] = 1
 	maxentry = Scorecard.find(:all, :conditions=>["clientkey=? and inning=?",params[:clientkey],1]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@clientkey = params[:clientkey]
@@ -455,7 +454,6 @@ class MatchesController < ApplicationController
   end
   
   def secondinning
-	params[:id] = 1
 	maxentry = Scorecard.find(:all, :conditions=>["clientkey=? and inning=?",params[:clientkey],2]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@maxdate = maxentry.nil? ? '1/1/2999':maxentry.updated_at
