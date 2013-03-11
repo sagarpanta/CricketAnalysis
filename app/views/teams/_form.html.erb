@@ -4,7 +4,7 @@
 	<%= text_field_tag 'clientkey' , value=current_user.id, :hidden=>true %>
   </div>
   
-  <table>
+  <table cellspacing="5">
 	<tr>
 		<td class="caption">Country</td>
 		<td class="fields"><%= select('countrykey' ,'team' ,@countries ,{}, {:id =>'country_select'}) %></td>
@@ -52,7 +52,7 @@
 
 
  <div id="teammaxid" style="display:none"><%= Team.maxteamid(current_user.id) %></div>
-  <table>
+  <table cellspacing="5">
 	<tr>
 		<td class="caption">Team Name</td>
 		<td class="fields"><%= text_field 'team', 'teamname', :size=>20 %></td>

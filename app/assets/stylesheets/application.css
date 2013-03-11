@@ -46,10 +46,11 @@ h5{
 	position:absolute;
 	top:0;
 	margin-top:-1px;
-	margin-left:-10px;
+	margin-left:30px;
 	margin-right:-10px;
 	background: -webkit-gradient(linear, left top, left bottom, from(#BCED91), to(#3A6629));
-	width:100%
+	width:97%;
+	height:30px;
 }
 
 h3{
@@ -65,7 +66,8 @@ h3{
 	top:50px;
 	margin-left:-10px;
 	width:100%;
-	z-index:999
+	z-index:999;
+
 }
 
 .ctabl{
@@ -252,10 +254,11 @@ form{
 
 
 .caption{
-	width:100px;
+	width:150px;
 	text-align:right;
 	color:white;
-	font-weight:bold
+	font-weight:bold;
+
 }
 
 .fields{

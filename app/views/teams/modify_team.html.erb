@@ -25,7 +25,7 @@
 	<%= text_field_tag 'clientkey' , value=current_user.id, :hidden=>true %>
   </div>
   
-  <table>
+  <table cellspacing="5">
 	<tr>
 		<td class="caption1">Country</td>
 		<td class="fields1"><%= select 'countrykey' ,'team' ,@countries , :selected=>@country_selected %></td>
@@ -70,7 +70,7 @@
   
 
  
-  <table>
+  <table cellspacing="5">
   	<tr>
 		<td class="caption1">Team Name</td>
 		<td class="fields1"><%= text_field 'team', 'teamname' , :value=> @teamname %></td>

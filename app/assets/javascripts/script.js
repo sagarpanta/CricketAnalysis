@@ -185,12 +185,14 @@ $(document).ready(function(){
 		});
 		 
 		
+		navigator.getUserMedia_ = navigator.webkitGetUserMedia;
 		var _options={};
-		if (navigator.webkitGetUserMedia != undefined || navigator.webkitGetUserMedia != null) {
+		if (navigator.getUserMeidia_ !=null) {
+			alert(navigator.webkitGetUserMedia);
 			_options = 	{video:true};
 			$('.scrollproperty').html('enabled');
-		}
-		navigator.webkitGetUserMedia(options, function(stream) {
+			
+			navigator.webkitGetUserMedia(_options, function(stream) {
 			console.log('after');
 			video.src = window.webkitURL.createObjectURL(stream);
 			video.controls = true;
@@ -200,6 +202,8 @@ $(document).ready(function(){
 			}, function(){
 				alert('no support for webkitGetUserMedia()');
 		});
+		}
+		
 		
 		//Finds y value of given object
 		function findPos(obj) {

@@ -12,7 +12,8 @@ font-family:"Arial";
 color:darkgrey;
 text-align:center;
 font-weight:bold;
-background-color:#383838
+background-color:#383838;
+height:25px;
 }
 
 td.enable, td.groups {
@@ -20,7 +21,8 @@ font-family:"Arial";
 color:white;
 text-align:center;
 font-weight:bold;
-background-color:#383838
+background-color:#383838;
+height:25px;
 }
 
 
@@ -56,9 +58,7 @@ h1 {
 	height:70px;
 }
 
-td.metric{
-	width:102px
-}
+
 
 td.groups{
 width:102px;
@@ -72,6 +72,7 @@ width:102px;
 #chart{
 	position:relative;
 	margin-top:30px;
+	width:100%;
 	
 }
 

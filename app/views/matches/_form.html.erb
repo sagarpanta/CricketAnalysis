@@ -14,7 +14,7 @@
   <div class="field">
     <%= f.number_field :clientkey, :value=> current_user.id, :hidden=>true %>
   </div>
-  <table align="center">
+  <table align="center" cellspacing="10">
 	<tr>
 		<td class="caption">Tournament</td>
 		<td class="fields"><%= f.select :tournamentkey, @tournaments %></td>
