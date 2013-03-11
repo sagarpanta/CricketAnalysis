@@ -37,6 +37,7 @@ class CreateExternals < ActiveRecord::Migration
 	  t.string :Region
 	  t.integer :PlayingOrder
 	  t.string :OutBatsmanName
+	  t.string :VideoFile
 	
       t.timestamps
     end

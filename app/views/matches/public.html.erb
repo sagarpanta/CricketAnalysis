@@ -1,3 +1,4 @@
+<div class="x" style="display:none">1</div>
 <h2>Choose One From The List</h2>
 
 <div id="public_clients"><%= select 'public_client', 'clientkey', @clients.collect {|c| [c.country, c.id]}, {}, {:class=>'chzn-select', 'data-placeholder'=>'Analysis of ...', 'single style'=>'width:250px' , :tabindex=>"4"} %></div>
@@ -31,7 +32,8 @@
     <td><%= match.getWinner(match.clientkey) %></td>
     <td><%= match.details %></td>
     <td><%= match.getFormat %></td>
-	<td><%= link_to 'Scorecard', {:controller=>'matches', :action=>'scorecard' , :id=>match.id, :clientkey=>match.clientkey} %></td>
+	<td><%= link_to '1st Inning', {:controller=>'matches', :action=>'firstinning' , :id=>match.id, :clientkey=>match.clientkey} %></td>
+	<td><%= link_to '2nd Inning', {:controller=>'matches', :action=>'secondinning' , :id=>match.id, :clientkey=>match.clientkey} %></td>
   </tr>
 <% end %>
 </table>

@@ -1,5 +1,5 @@
 class External < ActiveRecord::Base
-  attr_accessible :InningsNo, :OverNo, :BallNo, :StrikerName , :NonStrikerName , :BowlerName, :FielderName  , :Runs, :Extras, :BallType, :ShotName, :Line, :Length, :IsUncomfortable, :IsWickettakingBall, :IsWicket , :IsBeaten, :IsReleaseshot, :IsWide, :IsNoBall, :IsBye, :IsLegBye , :IsFour, :IsSix, :BowlingEnd, :BowlingDirection, :Day, :SpellNo, :WicketType, :SessionNo, :Region, :PlayingOrder, :OutBatsmanName, :StrikerBatType, :NonStrikerBatType, :BowlType, :PlayingOrder
+  attr_accessible :InningsNo, :OverNo, :BallNo, :StrikerName , :NonStrikerName , :BowlerName, :FielderName  , :Runs, :Extras, :BallType, :ShotName, :Line, :Length, :IsUncomfortable, :IsWickettakingBall, :IsWicket , :IsBeaten, :IsReleaseshot, :IsWide, :IsNoBall, :IsBye, :IsLegBye , :IsFour, :IsSix, :BowlingEnd, :BowlingDirection, :Day, :SpellNo, :WicketType, :SessionNo, :Region, :PlayingOrder, :OutBatsmanName, :StrikerBatType, :NonStrikerBatType, :BowlType, :PlayingOrder, :VideoFile
   
   
 	def self.import(file)

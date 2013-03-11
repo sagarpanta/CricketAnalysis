@@ -185,9 +185,12 @@ $(document).ready(function(){
 		});
 		 
 		
-	
-
-		navigator.webkitGetUserMedia({video:true}, function(stream) {
+		var _options={};
+		if navigator.webkitGetUserMedia != null {
+			_options = 	{video:true};
+			$('.scrollproperty').html('enabled');
+		}
+		navigator.webkitGetUserMedia(options, function(stream) {
 			console.log('after');
 			video.src = window.webkitURL.createObjectURL(stream);
 			video.controls = true;

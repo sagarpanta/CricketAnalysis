@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130223055659) do
+ActiveRecord::Schema.define(:version => 20130303191737) do
 
   create_table "attachments", :force => true do |t|
     t.string "filename"
@@ -45,6 +45,44 @@ ActiveRecord::Schema.define(:version => 20130223055659) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
   end
+
+  create_table "battingscorecards", :force => true do |t|
+    t.integer  "clientkey"
+    t.string   "teamname"
+    t.string   "batsman"
+    t.integer  "batsmankey"
+    t.integer  "position"
+    t.string   "fielder"
+    t.integer  "fielderkey"
+    t.string   "outtype"
+    t.integer  "outtypekey"
+    t.string   "bowler"
+    t.integer  "bowlerkey"
+    t.integer  "runs"
+    t.integer  "ballsfaced"
+    t.float    "strikerate"
+    t.integer  "zeros"
+    t.integer  "ones"
+    t.integer  "twos"
+    t.integer  "threes"
+    t.integer  "fours"
+    t.integer  "fives"
+    t.integer  "sixes"
+    t.integer  "played"
+    t.integer  "matchkey"
+    t.string   "match"
+    t.integer  "tournamentkey"
+    t.string   "tournament"
+    t.integer  "inning"
+    t.integer  "formatkey"
+    t.string   "format"
+    t.string   "hilite"
+    t.string   "nonstrikerkey"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "battingscorecards", ["id", "clientkey", "batsmankey", "matchkey", "inning"], :name => "UIX_battingcorecards", :unique => true
 
   create_table "bowling_styles", :force => true do |t|
     t.string   "style"
@@ -82,6 +120,46 @@ ActiveRecord::Schema.define(:version => 20130223055659) do
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
   end
+
+  create_table "bowlingscorecards", :force => true do |t|
+    t.integer  "clientkey"
+    t.string   "teamname"
+    t.string   "bowler"
+    t.integer  "bowlerkey"
+    t.integer  "position"
+    t.float    "overs"
+    t.integer  "runs"
+    t.integer  "maidens"
+    t.integer  "wickets"
+    t.float    "economy"
+    t.integer  "zeros"
+    t.integer  "ones"
+    t.integer  "twos"
+    t.integer  "threes"
+    t.integer  "fours"
+    t.integer  "fives"
+    t.integer  "sixes"
+    t.integer  "wides"
+    t.integer  "noballs"
+    t.integer  "byes"
+    t.integer  "legbyes"
+    t.integer  "last_run"
+    t.integer  "bowled"
+    t.integer  "matchkey"
+    t.string   "match"
+    t.integer  "tournamentkey"
+    t.string   "tournament"
+    t.integer  "inning"
+    t.integer  "formatkey"
+    t.string   "format"
+    t.string   "hilite"
+    t.float    "totalovers"
+    t.integer  "wicketsgone"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "bowlingscorecards", ["id", "clientkey", "bowlerkey", "matchkey", "inning"], :name => "UIX_bowlingscorecards", :unique => true
 
   create_table "clientconfigs", :force => true do |t|
     t.integer  "clientkey"
@@ -196,6 +274,7 @@ ActiveRecord::Schema.define(:version => 20130223055659) do
     t.string   "Region"
     t.integer  "PlayingOrder"
     t.string   "OutBatsmanName"
+    t.string   "VideoFile"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
   end

@@ -31,7 +31,7 @@ gem 'jquery-ui-rails'
 gem 'pdfkit'
 gem 'dalli'
 
-#gem 'pry'
+gem 'pry'
 
 #platforms :ruby do # linux
 #  gem 'unicorn'

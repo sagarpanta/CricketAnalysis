@@ -59,7 +59,8 @@ CricketAnalysis::Application.routes.draw do
   match 'match_details' , :to=> 'matches#match_details'
   match 'pitchconditions' , :to=> 'matches#pitchconditions'
   match 'public' , :to=> 'matches#public'
-  match 'public/scorecard', :to=>'matches#scorecard'
+  match 'public/firstinning', :to=>'matches#firstinning'
+  match 'public/secondinning', :to=>'matches#secondinning'
 
   resources :tournaments
 

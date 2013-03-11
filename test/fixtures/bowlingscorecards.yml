@@ -1,0 +1,55 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  bowler: MyString
+  bowlerkey: 1
+  position: 1
+  overs: 1.5
+  runs: 1
+  maidens: 1
+  wickets: 1
+  economy: 1.5
+  zeros: 1
+  ones: 1
+  twos: 1
+  threes: 1
+  fours: 1
+  fives: 1
+  sixes: 1
+  wides: 1
+  noballs: 1
+  bowled: 1
+  matchkey: 1
+  match: MyString
+  tournamentkey: 1
+  tournament: MyString
+  inning: 1
+  formatkey: 1
+  format: MyString
+
+two:
+  bowler: MyString
+  bowlerkey: 1
+  position: 1
+  overs: 1.5
+  runs: 1
+  maidens: 1
+  wickets: 1
+  economy: 1.5
+  zeros: 1
+  ones: 1
+  twos: 1
+  threes: 1
+  fours: 1
+  fives: 1
+  sixes: 1
+  wides: 1
+  noballs: 1
+  bowled: 1
+  matchkey: 1
+  match: MyString
+  tournamentkey: 1
+  tournament: MyString
+  inning: 1
+  formatkey: 1
+  format: MyString

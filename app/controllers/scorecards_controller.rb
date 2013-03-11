@@ -78,11 +78,16 @@ class ScorecardsController < ApplicationController
   # POST /scorecards
   # POST /scorecards.json
   def create
-	begin
+		
 		@scorecard = Scorecard.new(params[:scorecard])
 
 		respond_to do |format|
 		  if @scorecard.save
+			if @scorecard.inning == 1
+				expire_action(:controller => 'matches', :action => 'firstinning' , :id=>@scorecard.matchkey, :clientkey=> @scorecard.clientkey)
+			else
+				expire_action(:controller => 'matches', :action => 'secondinning' , :id=>@scorecard.matchkey, :clientkey=> @scorecard.clientkey)
+			end
 			runs = Scorecard.where('clientkey = ? and matchkey = ? and batsmankey =? ', current_user.id, @scorecard.matchkey, @scorecard.batsmankey).sum(:runs)
 			if runs>=0 and runs<=10
 				cr = '0-10'
@@ -100,18 +105,88 @@ class ScorecardsController < ApplicationController
 			
 			Scorecard.where('clientkey = ? and matchkey = ? and batsmankey =? ', current_user.id, @scorecard.matchkey, @scorecard.batsmankey).update_all(:cr => cr)
 			
+			batting_stats = Battingscorecard.find_by_batsmankey_and_matchkey_and_inning(@scorecard.batsmankey, @scorecard.matchkey, @scorecard.inning)
+			bowling_stats = Bowlingscorecard.find_by_bowlerkey_and_matchkey_and_inning(@scorecard.currentbowlerkey, @scorecard.matchkey, @scorecard.inning)
 
+			bowler =  Rails.cache.fetch("bowler_#{@scorecard.bowlerkey}_#{@scorecard.formatkey}", :expires_in=>24.hours) do
+				Player.find_all_by_playerid_and_formatkey(@scorecard.bowlerkey, @scorecard.formatkey)
+			end
+
+			bowlername = bowler[0].nil? ? '':bowler[0].fname[0]+' '+bowler[0].lname
+			fielder = Rails.cache.fetch("fielder_#{@scorecard.fielderkey}_#{@scorecard.formatkey}", :expires_in=>24.hours) do
+				Player.find_all_by_playerid_and_formatkey(@scorecard.fielderkey, @scorecard.formatkey)
+			end
+			fieldername = fielder[0].nil? ? '':fielder[0].fname[0]+' '+fielder[0].lname
+			
+			outtype = Rails.cache.fetch("dismissals_#{@scorecard.outtypekey}", :expires_in=>1.day) do
+				Dismissal.find_all_by_id(@scorecard.outtypekey)
+			end
+			
+			outtypename = outtype[0].nil? ? '':outtype[0].dismissaltype
+			currentbowlerovers = bowling_stats.overs.nil? ? 0.0:bowling_stats.overs 
+			#add 1 ball as 0.1 to the current bowler overs
+			# for eg add  3.5 + 0.1 = 3.4 
+			# but if the new overs becomes 3.6, make it 4.0
+			newcurrentbowlerovers = currentbowlerovers + @scorecard.ballsdelivered/10.0
+			
+			if (newcurrentbowlerovers*10)%10 == 6
+				newcurrentbowlerovers = newcurrentbowlerovers.to_int+1.0
+			end
+			
+			newcurrentbowlerovers_decimal = ((newcurrentbowlerovers - newcurrentbowlerovers.to_int)*10)/6.0 +newcurrentbowlerovers.to_int
+			totalovers = @scorecard.ballnum%6/10.0 + @scorecard.ballnum/6
+			
+			hilite = {}
+			
+			if @scorecard.ballnum%6!=0 and (@scorecard.runs%2==1 or @scorecard.byes%2== 1 or @scorecard.legbyes%2 == 1)
+				hilite[@scorecard.currentnonstrikerkey] = 'hilite'
+				hilite[@scorecard.batsmankey] = 'hilite-nonstriker'
+			elsif @scorecard.ballnum%6!=0 and (@scorecard.runs%2==0 and @scorecard.byes%2 == 0 and @scorecard.legbyes%2 == 0)
+				hilite[@scorecard.batsmankey] = 'hilite'
+				hilite[@scorecard.currentnonstrikerkey] = 'hilite-nonstriker'
+			elsif @scorecard.ballnum%6==0 and ((@scorecard.noballs == 0 and (@scorecard.runs%2==1 or @scorecard.byes%2 == 1 or @scorecard.legbyes%2 == 1)) or (@scorecard.wides%2==1 or @scorecard.wides==4) or (@scorecard.noballs==1 and (@scorecard.runs%2==0 and @scorecard.legbyes%2==0 and @scorecard.runs%2==0)))
+				hilite[@scorecard.batsmankey] = 'hilite'
+				hilite[@scorecard.currentnonstrikerkey] = 'hilite-nonstriker'
+			elsif @scorecard.ballnum%6==0 and ((@scorecard.noballs>0 and (@scorecard.byes%2==1 or @scorecard.legbyes%2==1 or @scorecard.runs%2==1)) or (@scorecard.noballs == 0 and (@scorecard.runs%2==0 and @scorecard.byes%2== 0 and @scorecard.legbyes%2 == 0)) or (@scorecard.wides%2==0 and (@scorecard.wides != 1 or @scorecard.wides!=4)))
+				hilite[@scorecard.currentnonstrikerkey] = 'hilite'
+				hilite[@scorecard.batsmankey] = 'hilite-nonstriker'
+			end
+			
+
+			ballsfaced = batting_stats.ballsfaced.nil? ? 0:batting_stats.ballsfaced
+			zeros = batting_stats.zeros.nil? ? 0:batting_stats.zeros
+			runs = batting_stats.runs.nil? ? 0:batting_stats.runs
+			fours = batting_stats.fours.nil? ? 0:batting_stats.fours
+			sixes = batting_stats.sixes.nil? ? 0:batting_stats.sixes
+			
+			bruns = bowling_stats.runs.nil? ? 0:bowling_stats.runs
+			bzeros = bowling_stats.zeros.nil? ? 0:bowling_stats.zeros
+			bfours = bowling_stats.fours.nil? ? 0:bowling_stats.fours
+			bsixes = bowling_stats.sixes.nil? ? 0:bowling_stats.sixes
+			bwides = bowling_stats.wides.nil? ? 0:bowling_stats.wides
+			bnoballs = bowling_stats.noballs.nil? ? 0:bowling_stats.noballs
+			bwickets = bowling_stats.wickets.nil? ? 0:bowling_stats.wickets
+			bmaidens = bowling_stats.maidens.nil? ? 0:bowling_stats.maidens
+			blast_run = @scorecard.runs+@scorecard.byes+@scorecard.legbyes+@scorecard.noballs+@scorecard.wides
+			bwicketsgone = bowling_stats.wickets.nil? ? 0:bowling_stats.wickets
+			
+			
+			#Battingscorecard.where('matchkey = ? and batsmankey =? and inning=?', @scorecard.matchkey, @scorecard.batsmankey, @scorecard.inning).update_all(:position=>@scorecard.battingposition, :runs=>@scorecard.runs+batting_stats.runs, :ballsfaced=>batting_stats.ballsfaced+@scorecard.ballsfaced, :strikerate=> batting_stats.ballsfaced+@scorecard.ballsfaced == 0? 0:(batting_stats.runs+@scorecard.runs)/(1.0*(batting_stats.ballsfaced+@scorecard.ballsfaced)), :zeros=>@scorecard.zeros+batting_stats.zeros, :ones=>batting_stats.ones+@scorecard.ones, :twos=>batting_stats.twos+@scorecard.twos, :threes=>batting_stats.threes+@scorecard.threes, :fours=>batting_stats.fours+@scorecard.fours, :fives=>@scorecard.fives+batting_stats.fives, :sixes=>batting_stats.sixes+@scorecard.sixes, :played=>1, :hilite=>hilite[@scorecard.batsmankey])
+			Battingscorecard.where('matchkey = ? and batsmankey =? and inning=?', @scorecard.matchkey, @scorecard.currentstrikerkey, @scorecard.inning).update_all(:position=>@scorecard.battingposition, :runs=>@scorecard.runs+runs, :ballsfaced=>ballsfaced+@scorecard.ballsfaced, :strikerate=> ballsfaced+@scorecard.ballsfaced == 0? 0:(runs+@scorecard.runs)/(1.0*(ballsfaced+@scorecard.ballsfaced)), :zeros=>zeros+@scorecard.zeros, :fours=>fours+@scorecard.fours, :sixes=>sixes+@scorecard.sixes, :played=>1, :updated_at=>Time.now, :hilite=>hilite[@scorecard.batsmankey], :nonstrikerkey=>@scorecard.currentnonstrikerkey)
+			Battingscorecard.where('matchkey = ? and batsmankey =? and inning=?', @scorecard.matchkey, @scorecard.currentnonstrikerkey, @scorecard.inning).update_all(:played=>1, :hilite=>hilite[@scorecard.currentnonstrikerkey])
+			
+			if @scorecard.outtypekey>0
+				Battingscorecard.where('matchkey = ? and batsmankey =? and inning=?', @scorecard.matchkey, @scorecard.dismissedbatsmankey, @scorecard.inning).update_all(:fielder=>fieldername, :fielderkey=>@scorecard.fielderkey, :outtype=>outtypename, :outtypekey=>@scorecard.outtypekey, :bowler=>bowlername, :bowlerkey=>@scorecard.bowlerkey, :hilite=>'', :updated_at=>Time.now,)
+				bwicketsgone = bwicketsgone+1
+			end
+			Bowlingscorecard.where('matchkey = ? and inning=?', @scorecard.matchkey, @scorecard.inning).update_all(:hilite=>'')
+			Bowlingscorecard.where('matchkey = ? and bowlerkey =? and inning=?', @scorecard.matchkey, @scorecard.currentbowlerkey,@scorecard.inning).update_all(:position=>@scorecard.bowlingposition, :overs=>newcurrentbowlerovers,:runs=>@scorecard.runs+@scorecard.wides+@scorecard.noballs+bruns, :maidens=>bmaidens+@scorecard.maiden, :wickets=>@scorecard.wicket+bwickets, :economy=>newcurrentbowlerovers_decimal==0? 0:(@scorecard.runs+@scorecard.wides+@scorecard.noballs+bruns)/newcurrentbowlerovers_decimal, :zeros=>@scorecard.zeros+bzeros,  :zeros=>bzeros+@scorecard.zeros,:fours=>bfours+@scorecard.fours, :sixes=>bsixes+@scorecard.sixes, :wides=>bwides+@scorecard.wides,:noballs=>bnoballs+@scorecard.noballs, :totalovers=>totalovers, :wicketsgone=>bwicketsgone,:last_run=>blast_run, :bowled=>1, :hilite=>'hilite', :updated_at=>Time.now)	
+		
 			format.json { render json: @scorecard, status: :created, location: @scorecard }
 		  else
 			format.json { render json: @scorecard.errors, status: :unprocessable_entity }
 		  end
 		end
-	rescue => e
-		 @message = e.message
-		 @client = current_user
-		 @caught_at = 'scorecards#create'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
   end
 
   # PUT /scorecards/1
@@ -530,7 +605,7 @@ class ScorecardsController < ApplicationController
 			@lastball = @lastball.nil? ? 0:@lastball
 			@overs = ballsdelivered/6 + ballsdelivered%6/10.0
 			id = Scorecard.maximum(:id)
-			@next_id = id.nil? ? 1:(@id+1)
+			@next_id = id.nil? ? 1:(id+1)
 			
 			@wickets =  Scorecard.where('matchkey=? and inning= ?', params[:id], @inning).sum(:wicket)
 			@overballnum = (ballsdelivered%6 == 0 and ballsdelivered>0)? 6:ballsdelivered%6  #-ve 1 because to use in between in the next sql

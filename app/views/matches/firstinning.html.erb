@@ -1,0 +1,120 @@
+<div class="x" style="display:none">1</div>
+<div class="cmi" style="display:none"><%= @clientkey %>_<%= @match.id %>_1</div>
+<div class="max_date" style="display:none"><%= @maxdate %></div>
+<div class="scorecard_clientkey" style="display:none"><%= @clientkey %></div>
+<div class="scorecard_matchkey" style="display:none"><%= @match.id %></div>
+
+<div id="tournament"><%= @tournament.name %></div>
+<div id="team"><%= @teams[0]['teamname'] %> vs <%= @teams[1]['teamname'] %></div>
+<div id="venue"><%= @format.name %> @ <%= @venue.venuename %></div>
+<div id="inning"><%= @inning==1? 'First ':'Second ' %>Inning</div>
+<div id="scores" data-score="<%= @clientkey %>_<%= @match.id %>_1">Score:<%= @runs %>/<%= @wickets %><br/>Overs:<%= @overs %></div>
+
+<div id="last18balls_1">
+	<table>
+		<tr>
+		<% counter = @counts %>
+		<% @last18balls.each do |l| %>
+			<% if l.ballnum%6==1 %>
+				
+				<td class="last_18_cell_1" style="border-right:1px solid black" data-counter=<%= counter %> ><%= l.runs %></td>
+			<% else %>
+				<td class="last_18_cell_1" data-counter=<%= counter %>><%= l.runs %></td>
+			<% end %>
+			<% counter = counter-1 %>
+		<% end %>
+		</tr>
+	</table>
+</div>
+<div id="publicscorecard_1">
+		<div>
+			<table class="tbl_bat_firstInning_<%= @match.id %>" cellspacing=0 cellpadding=0 >
+				<tbody>
+					<th class="p_Batting_summary_1">Batsman</th>
+					<th class="p_Batting_summary_1"></th>
+					<th class="p_Batting_summary_1"></th>
+					<th class="p_Batting_summary_1"></th>
+					<th class="p_Batting_summary_1">Runs</th>
+					<th class="p_Batting_summary_1">Balls Faced</th>
+					<th class="p_Batting_summary_1">Zeros</th>
+					<th class="p_Batting_summary_1">Strike Rate</th>
+					<th class="p_Batting_summary_1">4's</th>
+					<th class="p_Batting_summary_1">6's</th>
+
+					<% @batsmen.each do |b| %>
+						<tr class="<%= b.hilite %>" data-key="<%= @match.id %>_inning1_<%= b.batsmankey %>" data-pos=<%= b.position %>>
+							<td class="p_Batting_summary_1" style="width:100px;"><%= b.batsman %></td>
+							<td class="p_Batting_summary_1"><%= b.outtype %></td>
+							<td class="p_Batting_summary_1"><%= b.fielder %></td>
+							<td class="p_Batting_summary_1"><%= b.bowler %></td>
+							<td class="p_Batting_summary_1"><%= b.runs %></td>	
+							<td class="p_Batting_summary_1"><%= b.ballsfaced %></td>
+							<td class="p_Batting_summary_1"><%= b.zeros %></td>	
+							<td class="p_Batting_summary_1"><%= b.strikerate.nil? ? nil:number_with_precision(b.strikerate*100,:precision=>1).to_s+'%' %></td>
+							<td class="p_Batting_summary_1"><%= b.fours %></td>
+							<td class="p_Batting_summary_1"><%= b.sixes %></td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+		
+		<div>
+			<table class="tbl_bowl_firstInning_<%= @match.id %>" cellspacing=0 cellpadding=0>
+				<tbody>
+					<th class="p_Bowling_summary_1">Bowlers</th>
+					<th class="p_Bowling_summary_1">Overs</th>
+					<th class="p_Bowling_summary_1">Runs</th>
+					<th class="p_Bowling_summary_1">Maidens</th>
+					<th class="p_Bowling_summary_1">Wickets</th>
+					<th class="p_Bowling_summary_1">Economy</th>
+					<th class="p_Bowling_summary_1">4's</th>
+					<th class="p_Bowling_summary_1">6's</th>
+					<th class="p_Bowling_summary_1">WD</th>
+					<th class="p_Bowling_summary_1">NB</th>
+					
+					<% @bowlers.each do |b| %>
+							<tr class="<%= b.hilite %>" data-key="<%= @match.id %>_inning1_<%= b.bowlerkey %>" data-pos=<%= b.position %>>
+								<td class="p_Bowling_summary_1"><%= b.bowler %></td>
+								<td class="p_Bowling_summary_1"><%= b.overs %></td>
+								<td class="p_Bowling_summary_1"><%= b.runs %></td>
+								<td class="p_Bowling_summary_1"><%= b.maidens %></td>
+								<td class="p_Bowling_summary_1"><%= b.wickets %></td>
+								<td class="p_Bowling_summary_1"><%= b.economy.nil? ? nil:number_with_precision(b.economy, :precision => 1) %></td>
+								<td class="p_Bowling_summary_1"><%= b.fours %></td>
+								<td class="p_Bowling_summary_1"><%= b.sixes %></td>
+								<td class="p_Bowling_summary_1"><%= b.wides %></td>
+								<td class="p_Bowling_summary_1"><%= b.noballs %></td>
+							</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+</div>
+
+<div id="bishal_imgs_left">
+<ul>
+	<li><%= link_to image_tag('/assets/olympics.png'), 'http://www.bishals.com' %></li>
+	<li><%= link_to image_tag('/assets/shiva.png'), 'http://www.bishals.com' %></li>
+	<li><%= link_to image_tag('/assets/ILC.png'), 'http://www.bishals.com' %></li>
+	<li><%= link_to image_tag('/assets/flag.png'), 'http://www.bishals.com' %></li>
+	<li><%= link_to image_tag('/assets/CAN.png'), 'http://www.bishals.com' %></li>
+</ul>
+</div>
+
+<div id="bishal_imgs_right">
+<ul>
+	<li><%= link_to image_tag('/assets/olympics.png'), 'http://www.bishals.com' %></li>
+	<li><%= link_to image_tag('/assets/shiva.png'), 'http://www.bishals.com' %></li>
+	<li><%= link_to image_tag('/assets/ILC.png'), 'http://www.bishals.com' %></li>
+	<li><%= link_to image_tag('/assets/flag.png'), 'http://www.bishals.com' %></li>
+	<li><%= link_to image_tag('/assets/CAN.png'), 'http://www.bishals.com' %></li>
+</ul>
+</div>
+
+
+<div class="scorecard"><%= link_to 'Second Inning',{:controller=>'matches', :action=>'secondinning', :id=>@match.id, :clientkey=>@clientkey} %></div>
+
+
+	
+	

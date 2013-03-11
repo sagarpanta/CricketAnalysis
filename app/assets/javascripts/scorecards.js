@@ -2,6 +2,7 @@ $(document).ready(function(){
 
 	var dblclicked = 0;
 	var laststriker_bts = $('.Batsman.hilite').attr('data-bts');
+	var scrollproperty = $('.scrollproperty').html();
 	
 	function pad(str, max) {
 		return str.length < max ? pad("0" + str, max) : str;
@@ -828,8 +829,9 @@ $(document).ready(function(){
 				$('.area').css('background-color', 'black').css('opacity', 0.6).css('color', 'white');
 		
 				rclicked = 0, wclicked = 0, nclicked, bclicked= 0, lbclicked = 0;
-				
-				$('html, body').animate({scrollTop:  $(".scorecard").offset().top},1000);
+				if (scrollproperty == 'enabled'){
+					$('html, body').animate({scrollTop:  $(".scorecard").offset().top},1000);
+				}
 			},
 			error: function(jqXHR, textStatus, errorThrown){ 
 				console.log('unsuccessful');

@@ -15,6 +15,199 @@
 </head>
 
 <body>
+<script src="http://192.168.1.117:1212/socket.io/socket.io.js"></script> 
+<script>
+	var socket = io.connect('http://192.168.1.117:1212');
+	socket.on('news', function (data) {
+		console.log(data);
+	});
+	socket.on('bat_score', function(data){
+			var clientkey = $('.scorecard_clientkey').html();
+			var matchkey = $('.scorecard_matchkey').html();
+			if (clientkey == data['clientkey'] && matchkey==data['matchkey']){
+				if (data['inning']== '1'){
+					
+					var strikerate = (parseFloat(data['strikerate'])*100).toFixed(1)
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['batsmankey']+'"]').html('<td class="p_Batting_summary_1" style="width:100px;">'+data['batsman']+'</td><td class="p_Batting_summary_1">'+data['outtype']+'</td><td class="p_Batting_summary_1">'+data['fielder']+'</td><td class="p_Batting_summary_1">'+data['bowler']+'</td><td class="p_Batting_summary_1">'+data['runs']+'</td><td class="p_Batting_summary_1">'+data['ballsfaced']+'</td><td class="p_Batting_summary_1">'+data['zeros']+'</td><td class="p_Batting_summary_1">'+strikerate+'%</td><td class="p_Batting_summary_1">'+data['fours']+'</td><td class="p_Batting_summary_1">'+data['sixes']+'</td>');					
+					var hilite_ns = '';
+					if (data['hilite']== 'hilite')
+						hilite_ns = 'hilite-nonstriker'
+					else{
+						hilite_ns = 'hilite'
+					}
+					
+					$('.tbl_firstInning_'+data['matchkey']).children('tbody').children('tr').removeAttr('class');
+					
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['batsmankey']+'"]').removeAttr('class');
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['nonstrikerkey']+'"]').removeAttr('class');
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['batsmankey']+'"]').addClass(data['hilite']);
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['nonstrikerkey']+'"]').addClass(hilite_ns);
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['batsmankey']+'"]').fadeTo("slow", 0.33);
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['batsmankey']+'"]').fadeTo("slow", 1.0);
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['batsmankey']+'"]').attr('data-pos',data['position']);
+					
+					
+					$('.tbl_bat_firstInning_'+data['matchkey']).append($('.tbl_bat_firstInning_'+data['matchkey']).children('tbody').children('tr').get().sort(function(a, b) {
+						return parseInt($(a).attr("data-pos")) - parseInt($(b).attr("data-pos"));
+					}));
+					
+				}
+				else{
+					var strikerate = (parseFloat(data['strikerate'])*100).toFixed(1)
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['batsmankey']+'"]').html('<td class="p_Batting_summary_2" style="width:100px;">'+data['batsman']+'</td><td class="p_Batting_summary_2">'+data['outtype']+'</td><td class="p_Batting_summary_2">'+data['fielder']+'</td><td class="p_Batting_summary_2">'+data['bowler']+'</td><td class="p_Batting_summary_2">'+data['runs']+'</td><td class="p_Batting_summary_2">'+data['ballsfaced']+'</td><td class="p_Batting_summary_2">'+data['zeros']+'</td><td class="p_Batting_summary_2">'+strikerate+'%</td><td class="p_Batting_summary_2">'+data['fours']+'</td><td class="p_Batting_summary_2">'+data['sixes']+'</td>');					
+					var hilite_ns = '';
+					if (data['hilite']== 'hilite')
+						hilite_ns = 'hilite-nonstriker'
+					else{
+						hilite_ns = 'hilite'
+					}
+					
+					$('.tbl_secondInning_'+data['matchkey']).children('tbody').children('tr').removeAttr('class');
+					
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['batsmankey']+'"]').removeAttr('class');
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['nonstrikerkey']+'"]').removeAttr('class');
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['batsmankey']+'"]').addClass(data['hilite']);
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['nonstrikerkey']+'"]').addClass(hilite_ns);
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['batsmankey']+'"]').fadeTo("slow", 0.33);
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['batsmankey']+'"]').fadeTo("slow", 1.0);
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['batsmankey']+'"]').attr('data-pos',data['position']);
+					
+					
+					$('.tbl_bat_secondInning_'+data['matchkey']).append($('.tbl_bat_secondInning_'+data['matchkey']).children('tbody').children('tr').get().sort(function(a, b) {
+						return parseInt($(a).attr("data-pos")) - parseInt($(b).attr("data-pos"));
+					}));
+				
+				}
+			}
+	});
+	
+	socket.on('bowl_score', function(data){
+			var clientkey = $('.scorecard_clientkey').html();
+			var matchkey = $('.scorecard_matchkey').html();
+			if (clientkey == data['clientkey'] && matchkey==data['matchkey']){
+				if (data['inning']== '1'){
+					var economy = (parseFloat(data['economy'])).toFixed(1)
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['bowlerkey']+'"]').html('<td class="p_Bowling_summary_1">'+data['bowler']+'</td><td class="p_Bowling_summary_1">'+data['overs']+'</td><td class="p_Bowling_summary_1">'+data['runs']+'</td><td class="p_Bowling_summary_1">'+data['maidens']+'</td><td class="p_Bowling_summary_1">'+data['wickets']+'</td><td class="p_Bowling_summary_1">'+economy+'</td><td class="p_Bowling_summary_1">'+data['fours']+'</td><td class="p_Bowling_summary_1">'+data['sixes']+'</td><td class="p_Bowling_summary_1">'+data['wides']+'</td><td class="p_Bowling_summary_1">'+data['noballs']+'</td>');					
+					
+					$('.tbl_bowl_firstInning_'+data['matchkey']).children('tbody').children('tr').removeAttr('class');					
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['bowlerkey']+'"]').addClass(data['hilite']);
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['bowlerkey']+'"]').fadeTo("slow", 0.33);
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['bowlerkey']+'"]').fadeTo("slow", 1.0);
+					
+					$('[data-key="'+data['matchkey']+'_inning1_'+data['bowlerkey']+'"]').attr('data-pos',data['position']);
+					
+					$('.tbl_bowl_firstInning_'+data['matchkey']).append($('.tbl_bowl_firstInning_'+data['matchkey']).children('tbody').children('tr').get().sort(function(a, b) {
+						return parseInt($(a).attr("data-pos")) - parseInt($(b).attr("data-pos"));
+					}));
+					
+					
+					//get the counter number from td data-counter.
+					//if counter is undefined set it as 1
+					//while counter < 18, keep adding 1 for the prepended td
+					//once counter>=18, remove the first element and prepend one in the front so that there is always a stack of 18
+					
+					var counter = $('#last18balls_1 table tr td:first').attr('data-counter');
+					console.log(counter);
+					if (counter == undefined){
+						$('#last18balls_1 table tr').prepend('<td class="last_18_cell_1" data-counter=1>'+data['last_run']+'</td>');
+					}
+					else{
+						if (parseInt(counter)<18){
+							if (parseInt(counter)%6==1){
+								$('#last18balls_1 table tr').prepend('<td class="last_18_cell_1" style="border-right:1px solid black" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
+							}
+							else{
+								$('#last18balls_1 table tr').prepend('<td class="last_18_cell_1" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
+							}
+						}
+						
+						if (parseInt(counter)>=18){
+							$('#last18balls_1 table tr td:last').remove();
+							if (parseInt(counter)%6==1){
+								$('#last18balls_1 table tr').prepend('<td class="last_18_cell_1" style="border-right:1px solid black" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
+							}
+							else{
+								$('#last18balls_1 table tr').prepend('<td class="last_18_cell_1" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
+							}	
+						}	
+					}
+				}
+				else{
+					var economy = (parseFloat(data['economy'])).toFixed(1)
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['bowlerkey']+'"]').html('<td class="p_Bowling_summary_2">'+data['bowler']+'</td><td class="p_Bowling_summary_2">'+data['overs']+'</td><td class="p_Bowling_summary_2">'+data['runs']+'</td><td class="p_Bowling_summary_2">'+data['maidens']+'</td><td class="p_Bowling_summary_2">'+data['wickets']+'</td><td class="p_Bowling_summary_2">'+economy+'</td><td class="p_Bowling_summary_2">'+data['fours']+'</td><td class="p_Bowling_summary_2">'+data['sixes']+'</td><td class="p_Bowling_summary_2">'+data['wides']+'</td><td class="p_Bowling_summary_2">'+data['noballs']+'</td>');					
+					
+					$('.tbl_bowl_secondInning_'+data['matchkey']).children('tbody').children('tr').removeAttr('class');					
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['bowlerkey']+'"]').addClass(data['hilite']);
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['bowlerkey']+'"]').fadeTo("slow", 0.33);
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['bowlerkey']+'"]').fadeTo("slow", 1.0);
+					
+					$('[data-key="'+data['matchkey']+'_inning2_'+data['bowlerkey']+'"]').attr('data-pos',data['position']);
+					
+					$('.tbl_bowl_secondInning_'+data['matchkey']).append($('.tbl_bowl_secondInning_'+data['matchkey']).children('tbody').children('tr').get().sort(function(a, b) {
+						return parseInt($(a).attr("data-pos")) - parseInt($(b).attr("data-pos"));
+					}));
+					
+					
+					//get the counter number from td data-counter.
+					//if counter is undefined set it as 1
+					//while counter < 18, keep adding 1 for the prepended td
+					//once counter>=18, remove the first element and prepend one in the front so that there is always a stack of 18
+					
+					var counter = $('#last18balls_2 table tr td:first').attr('data-counter');
+					console.log(counter);
+					if (counter == undefined){
+						$('#last18balls_2 table tr').prepend('<td class="last_18_cell_2" data-counter=1>'+data['last_run']+'</td>');
+					}
+					else{
+						if (parseInt(counter)<18){
+							if (parseInt(counter)%6==1){
+								$('#last18balls_2 table tr').prepend('<td class="last_18_cell_2" style="border-right:1px solid black" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
+							}
+							else{
+								$('#last18balls_2 table tr').prepend('<td class="last_18_cell_2" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
+							}
+						}
+						
+						if (parseInt(counter)>=18){
+							$('#last18balls_2 table tr td:last').remove();
+							if (parseInt(counter)%6==1){
+								$('#last18balls_2 table tr').prepend('<td class="last_18_cell_2" style="border-right:1px solid black" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
+							}
+							else{
+								$('#last18balls_2 table tr').prepend('<td class="last_18_cell_2" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
+							}	
+						}	
+					}
+				}
+			}
+	});
+	
+	socket.on('score', function(data){
+		var clientkey = $('.scorecard_clientkey').html();
+		var matchkey = $('.scorecard_matchkey').html();
+		if (clientkey == data['clientkey'] && matchkey == data['matchkey']){
+			if(data['inning']=='1'){
+				$('[data-score="'+clientkey+'_'+matchkey+'_1"]').html('Score:'+data['score']+'/'+data['wg']+'<br/>Overs:'+data['to']+'</div>');
+				var cmi = $('.cmi').html();
+				if (cmi != undefined){
+					socket.emit('cmi', cmi);
+				}
+			}
+			else{
+				$('[data-score="'+clientkey+'_'+matchkey+'_2"]').html('Score:'+data['score']+'/'+data['wg']+'<br/>Overs:'+data['to']+'</div>');
+				var cmi = $('.cmi').html();
+				if (cmi != undefined){
+					socket.emit('cmi', cmi);
+				}
+			}
+		}
+
+	});
+</script>
+
+
+
+
 
 <div id="logo"><%= link_to image_tag('/assets/logo.png'), home_path %></div>
 
@@ -76,6 +269,14 @@
 </div>
 
 <%= yield %>
+
+<script>
+	var cmi = $('.cmi').html();
+	if (cmi != undefined){
+		socket.emit('cmi', cmi);
+	}
+</script>
+
 
 </body>
 </html>
