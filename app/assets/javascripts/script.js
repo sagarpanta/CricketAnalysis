@@ -186,7 +186,7 @@ $(document).ready(function(){
 		 
 		
 		var _options={};
-		if navigator.webkitGetUserMedia != null {
+		if (navigator.webkitGetUserMedia != undefined || navigator.webkitGetUserMedia != null) {
 			_options = 	{video:true};
 			$('.scrollproperty').html('enabled');
 		}
