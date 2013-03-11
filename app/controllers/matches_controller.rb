@@ -394,6 +394,7 @@ class MatchesController < ApplicationController
   
   
   def firstinning
+	params[:id] = 5
 	maxentry = Scorecard.find(:all, :conditions=>["clientkey=? and inning=?",params[:clientkey],1]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@clientkey = params[:clientkey]
@@ -445,15 +446,11 @@ class MatchesController < ApplicationController
 	@counts = Rails.cache.fetch("last18ballscount_#{params[:id]}_#{maxid}_inning1" , :expires_in=>45.seconds) do
 		@last18balls.count
 	end
-	
-
 	@inning = 1
-	
-	
-
   end
   
   def secondinning
+
 	maxentry = Scorecard.find(:all, :conditions=>["clientkey=? and inning=?",params[:clientkey],2]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@maxdate = maxentry.nil? ? '1/1/2999':maxentry.updated_at
