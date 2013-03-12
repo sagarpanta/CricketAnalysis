@@ -24,6 +24,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+gem 'newrelic_rpm'
 gem 'nokogiri'
 gem 'roo'
 gem 'jquery-rails'
