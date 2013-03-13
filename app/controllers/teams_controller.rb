@@ -198,8 +198,8 @@ class TeamsController < ApplicationController
 				 @lineup = [];
 				 
 				 @teams.each do |t|
-					@player_name = Player.where('wh_current = ?', 1).find_by_id(t.playerkey).fullname
-					@player_type = Player.where('wh_current = ?', 1).find_by_id(t.playerkey).playertype
+					@player_name = Player.where('wh_current = ? and formatkey=?', 1, t.formatkey).find_by_playerid(t.playerid).fullname
+					@player_type = Player.where('wh_current = ? and formatkey=?', 1, t.formatkey).find_by_playerid(t.playerid).playertype
 					@country = Country.find_by_id(t.countrykey).country
 					t['player_name'] = @player_name
 					t['player_type'] = @player_type
@@ -213,8 +213,8 @@ class TeamsController < ApplicationController
 				 @current_userkey = current_user.id
 				 
 				 @teams.each do |t|
-					@player_name = Player.where('wh_current = ? and clientkey=?', 1,@current_userkey).find_by_id(t.playerkey).fullname
-					@player_type = Player.where('wh_current = ? and clientkey=?', 1,@current_userkey).find_by_id(t.playerkey).playertype
+					@player_name = Player.where('wh_current = ? and clientkey=? and formatkey=?', 1,@current_userkey, t.formatkey).find_by_playerid(t.playerid).fullname
+					@player_type = Player.where('wh_current = ? and clientkey=? and formatkey=?', 1,@current_userkey, t.formatkey).find_by_playerid(t.playerid).playertype
 					@country = Country.find_by_id_and_clientkey(t.countrykey, @current_userkey).country
 					t['player_name'] = @player_name
 					t['player_type'] = @player_type

@@ -81,6 +81,16 @@ background-color:#778899;
 
 }
 
+#players_table tr td{
+	width:150px;
+	height:25px;
+}
+
+#removable_players_table tr td{
+	width:150px;
+	height:25px;
+}
+
 ::-webkit-scrollbar {
     width: 12px;
 }

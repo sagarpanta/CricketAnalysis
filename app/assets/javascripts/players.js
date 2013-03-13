@@ -42,9 +42,6 @@ $(document).ready(function(){
 		}
 	});
 	
-	$(document).on('click', '#player_fname', function(){
-		$('#player_playerid').val('');
-	});
 	
 	$(document).on('click', '#player_playerid', function(){		
 		var fname = $('#player_fname').val();

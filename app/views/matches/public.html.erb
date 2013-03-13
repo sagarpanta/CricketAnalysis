@@ -1,7 +1,7 @@
 <div class="x" style="display:none">1</div>
 <h2>Choose One From The List</h2>
 
-<div id="public_clients"><%= select 'public_client', 'clientkey', @clients.collect {|c| [c.country, c.id]}, {}, {:class=>'chzn-select', 'data-placeholder'=>'Analysis of ...', 'single style'=>'width:250px' , :tabindex=>"4"} %></div>
+<div id="public_clients"><%= select 'public_client', 'clientkey', @clients.collect {|c| [c['country'], c['id']]}, {}, {:class=>'chzn-select', 'data-placeholder'=>'Choose one...', 'single style'=>'width:250px' , :tabindex=>"4"} %></div>
 
 <table id="public_match_table" cellspacing="0" cellpadding="0" >
   <tr>

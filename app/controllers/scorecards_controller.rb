@@ -180,7 +180,7 @@ class ScorecardsController < ApplicationController
 				bwicketsgone = bwicketsgone+1
 			end
 			Bowlingscorecard.where('matchkey = ? and inning=?', @scorecard.matchkey, @scorecard.inning).update_all(:hilite=>'')
-			Bowlingscorecard.where('matchkey = ? and bowlerkey =? and inning=?', @scorecard.matchkey, @scorecard.currentbowlerkey,@scorecard.inning).update_all(:position=>@scorecard.bowlingposition, :overs=>newcurrentbowlerovers,:runs=>@scorecard.runs+@scorecard.wides+@scorecard.noballs+bruns, :maidens=>bmaidens+@scorecard.maiden, :wickets=>@scorecard.wicket+bwickets, :economy=>newcurrentbowlerovers_decimal==0? 0:(@scorecard.runs+@scorecard.wides+@scorecard.noballs+bruns)/newcurrentbowlerovers_decimal, :zeros=>@scorecard.zeros+bzeros,  :zeros=>bzeros+@scorecard.zeros,:fours=>bfours+@scorecard.fours, :sixes=>bsixes+@scorecard.sixes, :wides=>bwides+@scorecard.wides,:noballs=>bnoballs+@scorecard.noballs, :totalovers=>totalovers, :wicketsgone=>bwicketsgone,:last_run=>blast_run, :bowled=>1, :hilite=>'hilite', :updated_at=>Time.now)	
+			Bowlingscorecard.where('matchkey = ? and bowlerkey =? and inning=?', @scorecard.matchkey, @scorecard.currentbowlerkey,@scorecard.inning).update_all(:position=>@scorecard.bowlingposition, :overs=>newcurrentbowlerovers,:runs=>@scorecard.runs+@scorecard.wides+@scorecard.noballs+bruns,:byes=>bbyes+@scorecard.byes, :legbyes=>blegbyes+@scorecard.legbyes, :maidens=>bmaidens+@scorecard.maiden, :wickets=>@scorecard.wicket+bwickets, :economy=>newcurrentbowlerovers_decimal==0? 0:(@scorecard.runs+@scorecard.wides+@scorecard.noballs+bruns)/newcurrentbowlerovers_decimal, :zeros=>@scorecard.zeros+bzeros,  :zeros=>bzeros+@scorecard.zeros,:fours=>bfours+@scorecard.fours, :sixes=>bsixes+@scorecard.sixes, :wides=>bwides+@scorecard.wides,:noballs=>bnoballs+@scorecard.noballs, :totalovers=>totalovers, :wicketsgone=>bwicketsgone,:last_run=>blast_run, :bowled=>1, :hilite=>'hilite', :updated_at=>Time.now)	
 		
 			format.json { render json: @scorecard, status: :created, location: @scorecard }
 		  else
@@ -532,12 +532,10 @@ class ScorecardsController < ApplicationController
 		else 
 			redirect_to signin_path
 		end	
-
   end
   
-  
+
    def match_scorecard_two
-	
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
@@ -613,8 +611,6 @@ class ScorecardsController < ApplicationController
 			@runsthisover = @runsthisover.nil? ? 0:@runsthisover
 			#batting side players
 			@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerid}
-			
-
 			
 			#beginning of calculation of current bowler or batsman or non striker or fielder in action
 			#maxid is the last entry id of Scorecard
@@ -851,9 +847,6 @@ class ScorecardsController < ApplicationController
   end
 
 
-  
-  
-  
    def scorecard
 	begin
 		if signed_in?

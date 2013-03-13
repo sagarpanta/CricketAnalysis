@@ -380,12 +380,17 @@ class MatchesController < ApplicationController
   end 
   
   def public
+	
 	@clients = Rails.cache.fetch("clients", :expires_in=>1.day) do
-		Client.where("username != 'admin'")
+		(Client.where("username != 'admin'").select('id, country') << {'id'=> -2 , 'country'=>'Select One'}).sort_by{|k|k['id']}
 	end
+	
+
+	
 	@matches = Rails.cache.fetch("matches", :expires_in=>5.minutes) do
 		Match.find_by_sql('select * from (select dense_rank() over (partition by clientkey order by matchdate desc) _rank, * from matches)m where _rank<=10')
 	end
+	
 	respond_to do |format|
 	  format.html # index.html.erb
 	  format.json { render json: @matches }
@@ -394,8 +399,7 @@ class MatchesController < ApplicationController
   
   
   def firstinning
-	params[:id] = 5
-	maxentry = Scorecard.find(:all, :conditions=>["clientkey=? and inning=?",params[:clientkey],1]).last
+	maxentry = Scorecard.find(:all, :order=>"id", :conditions=>["clientkey=? and inning=?",params[:clientkey],1]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@clientkey = params[:clientkey]
 
@@ -423,17 +427,17 @@ class MatchesController < ApplicationController
 	end
 	
 	@runs = Rails.cache.fetch("runs_#{params[:id]}_#{maxid}_inning1" , :expires_in=>45.seconds) do
-		Bowlingscorecard.where('matchkey=? and inning=?', params[:id], 1).sum('runs+wides+byes+legbyes+noballs')
+		Bowlingscorecard.where('matchkey=? and inning=?', params[:id], 1).sum('coalesce(runs,0)+coalesce(byes,0)+coalesce(legbyes,0)')
 	end
 	
 	@wickets = Rails.cache.fetch("wickets_#{params[:id]}_#{maxid}_inning1" , :expires_in=>45.seconds) do
-		Battingscorecard.where('matchkey=? and inning=?', params[:id], 1).sum('case when outtypekey=-2 then 0 else outtypekey end')
+		Battingscorecard.where('matchkey=? and inning=?', params[:id], 1).sum('case when outtypekey=-2 then 0 else 1 end')
 	end
 	
 	@overs = Rails.cache.fetch("overs_#{params[:id]}_#{maxid}_inning1" , :expires_in=>45.seconds) do
 		maxentry.nil? ? 0.0:maxentry.ballnum/6+maxentry.ballnum%6/10.0
 	end
-	
+		
 	@teams = Rails.cache.fetch("teams_#{params[:id]}" , :expires_in=>24.hours) do
 		Battingscorecard.where('matchkey=?', params[:id]).select('distinct teamname')
 	end
@@ -451,7 +455,7 @@ class MatchesController < ApplicationController
   
   def secondinning
 
-	maxentry = Scorecard.find(:all, :conditions=>["clientkey=? and inning=?",params[:clientkey],2]).last
+	maxentry = Scorecard.find(:all, :order=>"id", :conditions=>["clientkey=? and inning=?",params[:clientkey],2]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@maxdate = maxentry.nil? ? '1/1/2999':maxentry.updated_at
 	@clientkey = params[:clientkey]
@@ -477,12 +481,12 @@ class MatchesController < ApplicationController
 	end
 	
 	@runs = Rails.cache.fetch("runs_#{params[:id]}_#{maxid}_inning2", :expires_in=>45.seconds) do
-		Bowlingscorecard.where('matchkey=? and inning=?', params[:id], 2).sum('runs+byes+legbyes+wides+noballs')
+		Bowlingscorecard.where('matchkey=? and inning=?', params[:id], 2).sum('coalesce(runs,0)+coalesce(byes,0)+coalesce(legbyes,0)')
 	end
 	
 
 	@wickets = Rails.cache.fetch("wickets_#{params[:id]}_#{maxid}_inning2", :expires_in=>45.seconds) do
-		Battingscorecard.where('matchkey=? and inning=?', params[:id], 2).sum('case when outtypekey=-2 then 0 else outtypekey end')
+		Battingscorecard.where('matchkey=? and inning=?', params[:id], 2).sum('case when outtypekey=-2 then 0 else 1 end')
 	end
 	
 	@overs = Rails.cache.fetch("overs_#{params[:id]}_#{maxid}_inning2", :expires_in=>45.seconds) do
@@ -501,7 +505,7 @@ class MatchesController < ApplicationController
 		Scorecard.where('matchkey=? and inning=?',params[:id], 1).order("id desc").limit(18).count
 	end
 	@target = Rails.cache.fetch("target_#{params[:id]}_inning2", :expires_in=>5.minutes) do
-		Bowlingscorecard.where('matchkey=? and inning=?',params[:id], 1).sum('runs+wides+noballs+legbyes+byes')
+		Bowlingscorecard.where('matchkey=? and inning=?',params[:id], 1).sum('coalesce(runs,0)+coalesce(byes,0)+coalesce(legbyes,0)')
 	end
 	
 	@inning = 2
