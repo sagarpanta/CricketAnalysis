@@ -15,6 +15,17 @@ $(document).ready(function(){
 		$(this).attr('src', '/assets/back.png');
 	});
 	
+	$('.tag_clicked').on('click', function(){
+		tag = $(this).html();
+		$('[data-tag="All"]').parent().hide();
+		console.log(tag);
+		$('[data-tag1="'+tag+'"]').parent().show();
+		$('[data-tag2="'+tag+'"]').parent().show();
+		$('[data-tag3="'+tag+'"]').parent().show();
+		$('[data-tag="'+tag+'"]').parent().show();
+	
+	});
+	
 	
 	
 	var google_table_function =  function drawVisualization(chartdata) {
@@ -44,9 +55,9 @@ $(document).ready(function(){
 		
         var options = {
           title : _title,
-		  titleTextStyle:  {color: 'darkgray', fontName: 'verdana', fontSize: 8},
-          vAxis: {title: metric, titleTextStyle: {fontSize: 8}},
-          hAxis: {title: group1, textStyle: {fontSize: 8}, titleTextStyle: {fontSize: 8}},
+		  titleTextStyle:  {color: 'darkgray', fontName: 'verdana', fontSize: 9},
+          vAxis: {title: metric, titleTextStyle: {fontSize: 9}},
+          hAxis: {title: group1, textStyle: {fontSize: 9}, titleTextStyle: {fontSize: 9}},
 		  legend: {position: 'right', textStyle: {fontSize: 10}},
 		  height: 375,
           seriesType: charttype,
@@ -160,6 +171,11 @@ $(document).ready(function(){
 				obj['fxb'] = data['report']['fxb'];
 				obj['fq'] = data['report']['fq'];
 				obj['vid'] = data['report']['vid'];
+				
+				obj['tag1'] = data['report']['tag1'];
+				obj['tag2'] = data['report']['tag2'];
+				obj['tag3'] = data['report']['tag3'];
+				
 				
 				var charttype = data['report']['charttype'];
 

@@ -93,6 +93,7 @@ class ExternalsController < ApplicationController
   
   
   def upload 
+	begin
 		External.import(params[:file])
 		
 		externals = External.find(:all, :order=>'"OverNo", "BallNo"')
@@ -237,34 +238,34 @@ class ExternalsController < ApplicationController
 			externals.each do |e|
 				ballsdelivered = e.IsWide+e.IsNoBall == 0? 1:0
 				ballsfaced = e.IsWide ==0? 1:0
-				batsmankey = Player.where('clientkey=? and lower(fullname)=? and formatkey=?', clientkey, e.StrikerName.downcase, formatkey).select('distinct playerid')[0].playerid
+				batsmankey = Player.where('clientkey=? and ltrim(rtrim(lower(fullname)))=? and formatkey=?', clientkey, e.StrikerName.downcase, formatkey).select('distinct playerid')[0].playerid
 				battingendkey = -2
 				battingposition = e.PlayingOrder
-				currentbowlerkey = Player.where('clientkey=? and lower(fullname)=? and formatkey=?', clientkey, e.BowlerName.downcase, formatkey).select('distinct playerid')[0].playerid
+				currentbowlerkey = Player.where('clientkey=? and ltrim(rtrim(lower(fullname)))=? and formatkey=?', clientkey, e.BowlerName.downcase, formatkey).select('distinct playerid')[0].playerid
 				bowlerkey = e.IsWicket == 1? currentbowlerkey:-2
 				bowlingendkey = -2
 				bowlingposition = bowlers_n_positions[e.BowlerName]
-				byes = e.IsBye
+				byes = e.IsBye*e.Extras
 				currentstrikerkey = batsmankey				
 				if dismissedbatsmanlist.include? e.NonStrikerName
 					dismissedBatsman_pos = batsmen_n_positions[e.NonStrikerName]
 					newBatsman = positions_n_batsmen[dismissedBatsman_pos+1]
-					currentnonstrikerkey = Player.where('clientkey=? and lower(fullname)=? and formatkey=?', clientkey, newBatsman.downcase, formatkey).select('distinct playerid')[0].playerid
+					currentnonstrikerkey = Player.where('clientkey=? and ltrim(rtrim(lower(fullname)))=? and formatkey=?', clientkey, newBatsman.downcase, formatkey).select('distinct playerid')[0].playerid
 				else
-					currentnonstrikerkey = Player.where('clientkey=? and lower(fullname)=? and formatkey=?', clientkey, e.NonStrikerName.downcase, formatkey).select('distinct playerid')[0].playerid
+					currentnonstrikerkey = Player.where('clientkey=? and ltrim(rtrim(lower(fullname)))=? and formatkey=?', clientkey, e.NonStrikerName.downcase, formatkey).select('distinct playerid')[0].playerid
 				end
 				eights = e.Runs == 8? 1:0
 				
-				fielder = Player.where('clientkey=? and lower(fullname)=? and formatkey=?', clientkey, e.FielderName.downcase, formatkey).select('distinct playerid')
+				fielder = Player.where('clientkey=? and ltrim(rtrim(lower(fullname)))=? and formatkey=?', clientkey, e.FielderName.downcase, formatkey).select('distinct playerid')
 				fielderkey = e.IsWicket == 1? (fielder.length==0? -2:fielder[0].playerid):-2
 				fives = e.Runs == 5? 1:0
 				formatkey = formatkey
 				fours = e.IsFour
 				inning = e.InningsNo
-				legbyes = e.IsLegBye
+				legbyes = e.IsLegBye*e.Extras
 				maiden = 0
 				matchkey = params[:matchkey]
-				noballs = e.IsNoBall
+				noballs = e.IsNoBall*e.Extras
 				ones = e.Runs == 1? 1:0
 				others = e.Runs > 8? 1:0
 				outtypekey = e.WicketType== 'NULL'? -2:wickettypes[e.WicketType]
@@ -279,10 +280,10 @@ class ExternalsController < ApplicationController
 				twos = e.Runs == 2? 1:0
 				venuekey = params[:venuekey]
 				wicket = e.IsWicket
-				wides = e.IsWide
+				wides = e.IsWide*e.Extras
 				zeros = e.Runs == 0? 1:0
 				
-				dismissedbatsman = Player.where('clientkey=? and lower(fullname)=? and formatkey=?', clientkey, e.OutBatsmanName.downcase, formatkey).select('distinct playerid')
+				dismissedbatsman = Player.where('clientkey=? and ltrim(rtrim(lower(fullname)))=? and formatkey=?', clientkey, e.OutBatsmanName.downcase, formatkey).select('distinct playerid')
 				dismissedbatsmankey = dismissedbatsman.length==0? -2:dismissedbatsman[0].playerid  #findout from raman
 				if e.WicketType != 'NULL'
 					dismissedbatsmanlist << e.OutBatsmanName
@@ -373,8 +374,7 @@ class ExternalsController < ApplicationController
 						hilite[@scorecard.currentnonstrikerkey] = 'hilite'
 						hilite[@scorecard.batsmankey] = 'hilite-nonstriker'
 					end
-					
-
+										
 					ballsfaced = batting_stats.ballsfaced.nil? ? 0:batting_stats.ballsfaced
 					zeros = batting_stats.zeros.nil? ? 0:batting_stats.zeros
 					runs = batting_stats.runs.nil? ? 0:batting_stats.runs
@@ -406,13 +406,17 @@ class ExternalsController < ApplicationController
 					Bowlingscorecard.where('matchkey = ? and inning=?', @scorecard.matchkey, @scorecard.inning).update_all(:hilite=>'')
 					Bowlingscorecard.where('matchkey = ? and bowlerkey =? and inning=?', @scorecard.matchkey, @scorecard.currentbowlerkey,@scorecard.inning).update_all(:position=>@scorecard.bowlingposition, :overs=>newcurrentbowlerovers,:runs=>@scorecard.runs+@scorecard.wides+@scorecard.noballs+bruns, :byes=>bbyes+@scorecard.byes, :legbyes=>blegbyes+@scorecard.legbyes, :maidens=>bmaidens+@scorecard.maiden, :wickets=>@scorecard.wicket+bwickets, :economy=>newcurrentbowlerovers_decimal==0? 0:(@scorecard.runs+@scorecard.wides+@scorecard.noballs+bruns)/newcurrentbowlerovers_decimal, :zeros=>@scorecard.zeros+bzeros,  :zeros=>bzeros+@scorecard.zeros,:fours=>bfours+@scorecard.fours, :sixes=>bsixes+@scorecard.sixes, :wides=>bwides+@scorecard.wides,:noballs=>bnoballs+@scorecard.noballs, :totalovers=>totalovers, :wicketsgone=>bwicketsgone,:last_run=>blast_run, :bowled=>1, :hilite=>'hilite', :updated_at=>Time.now)				
 				end
-				
-			
 			end
 
-		External.destroy_all
+		External.find_by_sql('truncate table externals; alter sequence externals_id_seq restart with 1;')
 		
 		redirect_to matches_url  
+	rescue
+		External.find_by_sql('truncate table externals; alter sequence externals_id_seq restart with 1;')
+		Battingscorecard.where('clientkey=? and matchkey=?',current_user.id, params[:matchkey]).update_all(:position=>11, :fielder=>'', :fielderkey=>-2,:outtype=>'', :outtypekey=>-2, :bowler=>'', :bowlerkey=>-2, :runs=>nil, :ballsfaced=>nil, :strikerate=>nil, :zeros=>nil, :ones=>nil, :twos=>nil, :threes=>nil, :fours=>nil, :fives=>nil, :sixes=>nil, :hilite=>'', :nonstrikerkey=>'', :played=>0)
+		Bowlingscorecard.where('clientkey=? and matchkey=?',current_user.id, params[:matchkey]).update_all(:position=>11, :overs=>nil, :runs=>nil, :maidens=>nil, :wickets=>nil, :economy=>nil, :zeros=>nil, :ones=>nil, :twos=>nil, :threes=>nil, :fours=>nil, :fives=>nil, :sixes=>nil, :wides=>nil, :noballs=>nil, :byes=>nil, :legbyes=>nil, :last_run=>nil, :bowled=>0, :hilite=>'',:totalovers=>0.0, :wicketsgone=>0)
+		Scorecard.find_by_sql('delete from scorecards where matchkey='+params[:matchkey].to_s)
+	end
   end
   
 end

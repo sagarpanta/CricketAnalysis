@@ -173,8 +173,8 @@ class MatchesController < ApplicationController
 		respond_to do |format|
 		  if @match.save
 			expire_action(:controller => 'matches', :action => 'public') 
-			@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone, 1)
-			@teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
+			@teamone = Team.find_by_teamid_and_teamfor(@match.teamidone, @match.matchdate)
+			@teamtwo = Team.find_by_teamid_and_teamfor(@match.teamidtwo,@match.matchdate)
 			@inning = 0
 			if @match.tosswon == @match.teamidone
 				if @match.electedto == 'Bat'
@@ -190,14 +190,14 @@ class MatchesController < ApplicationController
 				end
 			end
 			
-			@teamone_players = Team.where('teamid= ?', @teamone.teamid ).collect {|b|  [b.playerid,b.teamname]}
-			@teamtwo_players = Team.where('teamid= ?', @teamtwo.teamid ).collect {|b| [b.playerid,b.teamname]}
+			@teamone_players = Team.where('teamid= ? and teamfor=?', @teamone.teamid, @teamone.teamfor ).collect {|b|  [b.playerid,b.teamname]}
+			@teamtwo_players = Team.where('teamid= ? and teamfor=?', @teamtwo.teamid, @teamtwo.teamfor ).collect {|b| [b.playerid,b.teamname]}
 			
 			@counter = 1
 			@format = Format.find_by_id(@match.formatkey).name
 			@tournament = Tournament.find_by_id(@match.tournamentkey).name
 			@teamone_players.each do |b|
-				break if @counter >11
+				#break if @counter >11
 				@player = Player.find_by_formatkey_and_playerid(@match.formatkey, b[0])
 				@playername = @player.fname[0]+' '+@player.lname
 				Battingscorecard.create!(:clientkey=>@match.clientkey, :teamname=>b[1], :batsman=>@playername, :batsmankey=>b[0], :position=>11, :fielder=>'', :fielderkey=>-2,:outtype=>'', :outtypekey=>-2, :bowler=>'', :bowlerkey=>-2, :played=>0, :matchkey=>@match.id, :tournamentkey=>@match.tournamentkey, :tournament=>@tournament, :inning=>@inning, :formatkey=>@match.formatkey, :format=>@format)
@@ -208,7 +208,7 @@ class MatchesController < ApplicationController
 			@inning = @inning==1? 2:1
 			@counter = 1
 			@teamtwo_players.each do |b|	
-				break if @counter >11
+				#break if @counter >11
 				@player = Player.find_by_formatkey_and_playerid(@match.formatkey, b[0])
 				@playername = @player.fname[0]+' '+@player.lname
 				

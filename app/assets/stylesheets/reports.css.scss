@@ -2,7 +2,19 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+table#tags{
+	position:relative;
+	margin-left:10px;
+}
 
+table#tags .tags_row td{
+	width:100px;
+	height:25;
+	border:1px solid black;
+	border-radius:15px;
+	background: -webkit-radial-gradient(circle, green, black);
+	color:white;
+}
 
 table#reports{
 	position:relative;
@@ -35,6 +47,7 @@ table#reports tr th{
 	font-weight:bold;
 	font-family:"verdana";
 	text-align:center;
+	height:20px;
 }
 
 #reports tr td a{

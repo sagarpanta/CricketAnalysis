@@ -2,14 +2,31 @@ class ReportsController < ApplicationController
   # GET /reports
   # GET /reports.json  
   def index
-	begin
+
 		if signed_in?
 			@current_client = current_user.username
 			if current_user.username == 'admin'
 				@reports = Report.order(:reportname)
 			else
-				@reports = Report.where('clnkey=?', current_user.id.to_s ).order(:reportname)
+				@reports = Report.where('clnkey=?', current_user.id.to_s).order(:created_at)
+				
+				@tags=[]
+				@reports.each do |r|
+					if !@tags.include? r.tag1 and !r.tag1.nil?
+						@tags<<r.tag1
+					end
+					if !@tags.include? r.tag2 and !r.tag2.nil?
+						@tags<<r.tag2
+					end
+					if !@tags.include? r.tag3 and !r.tag3.nil?
+						@tags<<r.tag3
+					end
+				end
+				
+				@tags = @tags.sort_by{|k| k}
 			end
+			
+			
 			
 			@countryorder = 'links'
 			@tournamentorder = 'links'
@@ -27,12 +44,6 @@ class ReportsController < ApplicationController
 		  format.html # index.html.erb
 		  format.json { render json: @reports }
 		end
-	rescue => e
-		 @message = e.message
-		 @client = current_user
-		 @caught_at = 'reports#index'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
   end
 
   # GET /reports/1
@@ -282,4 +293,5 @@ class ReportsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
 end

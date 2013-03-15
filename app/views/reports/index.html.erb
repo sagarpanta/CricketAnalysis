@@ -19,19 +19,43 @@
 </h2>
 <h3></h3>
 
+<table id="tags">
+<% counter = 2 %>
+<tr class="tags_row">
+	<td class="tag_clicked">All</td>
+<% @tags.each do |tag| %>
+	<% if counter%4 !=0 %>
+		<td class="tag_clicked"><%= tag %></td>
+		<% counter = counter +1 %>
+	<% else %>
+		<td class="tag_clicked"><%= tag %></td>
+		<% counter = counter +1 %>
+		</tr>
+		<tr class="tags_row">
+		
+	<% end %>
+<% end %>
+<% if @tags.count%5 != 0 %>
+	</tr>
+<%end%>
+</table>
+
+
+</div>
+
 <div id="clientid" style="display:none"><%= current_user.id %></div>
 <div id="filters"></div>
-<table id="reports" cellspacing="0" cellpadding="0" >
+<table id="reports" cellspacing="0" cellpadding="0">
   <tr>
 	<th width="400px">Report Name</th>
 	<th width="80px"></th>
 	<th width="80px"></th>
   </tr>
 
-  
+
 <% @reports.each do |report| %>
   <tr class="playerdata">
-	<td width="400px"><%= report.reportname %></td>
+	<td width="400px" data-tag="All" data-tag1="<%= report.tag1 %>" data-tag2="<%= report.tag2 %>" data-tag3="<%= report.tag3 %>"><%= report.reportname %></td>
 	<td width="80px" class="view_report" data-id=<%= report.id %>>Show</td>
 	<td width="80px"><%= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>

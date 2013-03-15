@@ -18,7 +18,7 @@
 	</ul>
 	Editing Team
 </h2>
-<div id="date_drafted"><%= @date_drafted %></div>
+<div id="teamfor"><%= @teamfor %></div>
 <div id='modify_team_form' data-role="page"> 
   
   <div class="field" id="clientfield">
@@ -29,8 +29,6 @@
 	<tr>
 		<td class="caption1">Country</td>
 		<td class="fields1"><%= select 'countrykey' ,'team' ,@countries , :selected=>@country_selected %></td>
-	</tr>
-	<tr>
 		<td class="caption1">Format</td>
 		<td class="fields1"><%= select 'team', 'formatkey', @formats, :selected=>@format_selected %></td>
 	</tr>
@@ -78,19 +76,18 @@
 	<tr>
 		<td class="caption1">Coach</td>
 		<td class="fields1"><%= select 'team', 'coachkey', @coaches, :selected=> @coach_selected %></td>
-	</tr>
-	<tr>
 		<td class="caption1">Manager</td>
 		<td class="fields1"><%= select 'team', 'managerkey', @managers, :selected=>@manager_selected %></td>
-	</tr>
-	
+	</tr>	
 	<tr>
 		<td class="caption1">Team ID</td>
 		<td class="fields1"><%= text_field 'team', 'teamid', :disabled=>"disabled" %></td>
-	</tr>
-	<tr>
 		<td class="caption1">Team Type</td>
 		<td class="fields1"><%= select  'team', 'teamtypekey', @teamtypes, :selected=>@teamtype %></td>
+	</tr>
+	<tr>
+		<td class="caption1">Team For</td>
+		<td class="fields1"><%= text_field 'teamfor', 'teamfordate', {:size=>"20", :id=>"datepicker", :value=> @teamfor} %></td>
 	</tr>
 	
 

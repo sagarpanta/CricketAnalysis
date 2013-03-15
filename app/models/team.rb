@@ -1,6 +1,6 @@
 
 class Team < ActiveRecord::Base
-  attr_accessible :clientkey, :coachkey, :managerkey, :playerid, :playerkey, :playertypekey, :teamname, :teamid, :teamtypekey,:winloss, :formatkey, :countrykey
+  attr_accessible :clientkey, :coachkey, :managerkey, :playerid, :playerkey, :playertypekey, :teamname, :teamid, :teamtypekey,:winloss, :formatkey, :countrykey, :teamfor
 
   def playerkey=(playerkey)
 	write_attribute(:playerkey, playerkey)

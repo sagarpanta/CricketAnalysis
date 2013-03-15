@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130303191737) do
+ActiveRecord::Schema.define(:version => 20130315144446) do
 
   create_table "attachments", :force => true do |t|
     t.string "filename"
@@ -469,6 +469,9 @@ ActiveRecord::Schema.define(:version => 20130303191737) do
     t.string   "charttype"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "tag1"
+    t.string   "tag2"
+    t.string   "tag3"
   end
 
   create_table "right_lefts", :force => true do |t|
@@ -568,6 +571,7 @@ ActiveRecord::Schema.define(:version => 20130303191737) do
     t.integer  "countrykey"
     t.integer  "playerid"
     t.integer  "wh_current"
+    t.date     "teamfor"
   end
 
   add_index "teams", ["id", "teamid", "clientkey", "playerkey", "coachkey", "managerkey"], :name => "UIX_Teams", :unique => true

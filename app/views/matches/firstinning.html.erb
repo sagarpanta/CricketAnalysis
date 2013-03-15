@@ -9,6 +9,7 @@
 <div id="venue"><%= @format.name %> @ <%= @venue.venuename %></div>
 <div id="inning"><%= @inning==1? 'First ':'Second ' %>Inning</div>
 <div id="scores" data-score="<%= @clientkey %>_<%= @match.id %>_1">Score:<%= @runs %>/<%= @wickets %><br/>Overs:<%= @overs %></div>
+<div class="back"><%= link_to 'Back', public_url %></div>
 
 <div id="last18balls_1">
 	<table>

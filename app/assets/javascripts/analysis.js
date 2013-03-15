@@ -958,13 +958,20 @@ $(document).ready(function(){
 	
 	$('#submit_report img').on('click', function(){
 		if (jsonObj_store['report']['akey'] == 'Batting' || jsonObj_store['report']['akey'] == 'Bowling') {	
-			jsonObj_store['report']['reportname'] = $('#save').val();
+			jsonObj_store['report']['reportname'] = $('#save1').val();
+			var tags = $('#save2').val();
+			var tags_arr = tags.split(';');
+			
+			for(var i=0;i<tags_arr.length; i++){
+				jsonObj_store['report']['tag'+i] = $.trim(tags[i]);
+			}
+			
 			$.ajax({
 				url: '/reports',
 				type: 'post',
 				data: jsonObj_store,
 				cache: false,
-				success: function(data, textStatus, jqXHR ) { 
+				success: function(data, textStatus, jqXHR) { 
 					console.log('successful');
 				},
 				error: function(jqXHR, textStatus, errorThrown){ 

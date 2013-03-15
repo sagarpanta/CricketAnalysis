@@ -33,9 +33,9 @@
     <td><%= team.country %></td>
     <td><%= team.teamname %></td>
 	<td><%= team.formatname %></td>
-	<td><%= team.date_drafted %></td>
-    <td><%= link_to 'Show', {:controller=>"teams", :action=>"team", :teamid=>team.teamid, :date_drafted=>team.date_drafted} %></td>
-    <td><%= link_to 'Edit', {:controller=>"teams", :action=>"modify_team", :teamid=>team.teamid,  :date_drafted=>team.date_drafted} %></td>
+	<td><%= team.teamfor %></td>
+    <td><%= link_to 'Show', {:controller=>"teams", :action=>"team", :teamid=>team.teamid, :teamfor=>team.teamfor} %></td>
+    <td><%= link_to 'Edit', {:controller=>"teams", :action=>"modify_team", :teamid=>team.teamid,  :teamfor=>team.teamfor} %></td>
   </tr>
 <% end %>
 </table>

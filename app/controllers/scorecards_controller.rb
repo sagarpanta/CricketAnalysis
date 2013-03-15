@@ -258,8 +258,8 @@ class ScorecardsController < ApplicationController
 			@batting_side = 0
 			@fielding_side = 0
 			
-			@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone, 1)
-			@teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
+			@teamone = Team.find_by_teamid_and_teamfor(@match.teamidone, @match.matchdate)
+			@teamtwo = Team.find_by_teamid_and_teamfor(@match.teamidtwo,@match.matchdate)
 			
 			if @match.tosswon == @match.teamidone
 				if @match.electedto == 'Bat'
@@ -299,7 +299,7 @@ class ScorecardsController < ApplicationController
 			@next_id = id.nil? ? 1:(id+1)
 
 			#batting side players
-			@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerid}
+			@batsmankeys = Team.where('teamid= ? and teamfor=?', @batting_side, @match.matchdate ).collect {|b| b.playerid}
 						
 			
 			#beginning of calculation of current bowler or batsman or non striker or fielder in action
@@ -462,7 +462,7 @@ class ScorecardsController < ApplicationController
 			@dismissals << ['', -2]
 			
 			@fielders = [['', -2]]
-			@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
+			@fieldingkeys = Team.where('teamid= ? and teamfor=?', @fielding_side, @match.matchdate ).collect {|b| b.playerid}
 			
 			@fieldingside = []
 			pos = 0
@@ -557,8 +557,8 @@ class ScorecardsController < ApplicationController
 			@batting_side = 0
 			@fielding_side = 0
 			
-			@teamone = Team.find_by_teamid_and_wh_current(@match.teamidone,1)
-			@teamtwo = Team.find_by_teamid_and_wh_current(@match.teamidtwo,1)
+			@teamone = Team.find_by_teamid_and_teamfor(@match.teamidone, @match.matchdate)
+			@teamtwo = Team.find_by_teamid_and_teamfor(@match.teamidtwo,@match.matchdate)
 			
 			if @match.tosswon == @match.teamidone
 				if @match.electedto == 'Bat'
@@ -610,7 +610,7 @@ class ScorecardsController < ApplicationController
 			@runsthisover = Scorecard.where('matchkey=? and inning = ? and ballnum between ? and ?', params[:id], @inning, @lastball==0? 0:@lastball-@overballnum+1, @lastball).select('sum(runs+noballs+byes+legbyes+wides) as runs')[0].runs
 			@runsthisover = @runsthisover.nil? ? 0:@runsthisover
 			#batting side players
-			@batsmankeys = Team.where('teamid= ?', @batting_side ).collect {|b| b.playerid}
+			@batsmankeys = Team.where('teamid= ? and teamfor=?', @batting_side, @match.matchdate ).collect {|b| b.playerid}
 			
 			#beginning of calculation of current bowler or batsman or non striker or fielder in action
 			#maxid is the last entry id of Scorecard
@@ -771,7 +771,7 @@ class ScorecardsController < ApplicationController
 			@dismissals << ['', -2]
 			
 			@fielders = [['', -2]]
-			@fieldingkeys = Team.where('teamid= ?', @fielding_side ).collect {|b| b.playerid}
+			@fieldingkeys = Team.where('teamid= ? and teamfor=?', @fielding_side, @match.matchdate ).collect {|b| b.playerid}
 			
 			@fieldingside = []
 			pos = 0

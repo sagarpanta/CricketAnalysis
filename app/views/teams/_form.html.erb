@@ -8,8 +8,6 @@
 	<tr>
 		<td class="caption">Country</td>
 		<td class="fields"><%= select('countrykey' ,'team' ,@countries ,{}, {:id =>'country_select'}) %></td>
-	</tr>
-	<tr>
 		<td class="caption">Format</td>
 		<td class="fields"><%= select('team', 'formatkey', @formats, {},{:id =>'format_select'}) %></td>
 	</tr>
@@ -60,22 +58,21 @@
 	<tr>
 		<td class="caption">Coach</td>
 		<td class="fields"><%= select 'team', 'coachkey', Coach.all.collect {|t| [ t.name, t.id]}%></td>
-	</tr>
-	<tr>
 		<td class="caption">Manager</td>
 		<td class="fields"><%= select 'team', 'managerkey', Manager.all.collect {|t| [ t.name,t.id]} %></td>
-	</tr>
-	
+	</tr>	
 	<tr>
 		<td class="caption" id="maximumteamid" colspan="2">Enter <%= Team.maxteamid(current_user.id) %> or more</td>
 	</tr>
 	<tr>
 		<td class="caption">Team ID</td>
 		<td class="fields"><%= text_field 'team', 'teamid', :size=>20 %></td>
-	</tr>
-	<tr>
 		<td class="caption">Team Type</td>
 		<td class="fields"><%= select  'team', 'teamtypekey', @teamtypes %></td>
+	</tr>
+	<tr>
+		<td class="caption">Team For</td>
+		<td class="fields"><%= text_field 'teamfor', 'teamfordate' , {:size=>"20", :id=>"datepicker"}%></td>
 	</tr>
 	
   </table> 

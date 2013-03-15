@@ -124,6 +124,7 @@ td{
 .Batsman{
 	width:200px;
 	text-align:left;
+	height:25px;
 }
 
 .Bowler{
@@ -219,26 +220,26 @@ td{
 
 
 .area_of{
-	width:150px;
+	width:170px;
 }
 
 .area_st{
-	width:90px;
+	width:100px;
 }
 
 .area_pd{
-	width:20px;
+	width:35px;
 }
 
 
 .area_ol{
-	width:150px;
+	width:170px;
 }
 
 #stumps img{
 	position:absolute;
 	left:50%;
-	margin-left:-26px;
+	margin-left:-8px;
 	margin-top:-50px;
 }
 

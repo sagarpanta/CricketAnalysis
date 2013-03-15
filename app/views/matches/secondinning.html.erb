@@ -10,7 +10,7 @@
 <div id="inning"><%= @inning==1? 'First ':'Second ' %>Inning</div>
 <div id="scores" data-score="<%= @clientkey %>_<%= @match.id %>_2">Score:<%= @runs %>/<%= @wickets %><br/>Overs:<%= @overs %></div>
 <div id="target" data-target="<%= @clientkey %>_<%= @match.id %>_2">Target: <%= @target %></div>
-
+<div class="back"><%= link_to 'Back', public_url %></div>
 
 <div id="last18balls_2">
 	<table>

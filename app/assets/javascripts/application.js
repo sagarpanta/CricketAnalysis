@@ -123,9 +123,13 @@ $(document).ready(function(){
 	var removable_playername = new Array();
 	var removable_playerid = new Array();
 	
-	if($('#country_select option:selected').val() == -2) {
+	if($('#countrykey_team option:selected').val() == -2) {
 		$('.player').hide();
 	}
+	
+	var countrykey = $('#countrykey_team option:selected').val();
+	var	formatkey = $('#countrykey_team option:selected').val();
+		
 	
 	$('#country_select').change(function(){
 		countrykey = $('#country_select option:selected').val();
@@ -180,8 +184,8 @@ $(document).ready(function(){
 	
 	$(document).on("click" ,'#intheteam', function(){
 		$.each(player, function(index, player){
-			$('#removable_players_table').append('<tr><td class="removable_playerid">'+player[2]+'</td><td class="removable_playername" data-pid="'+player[2]+'">'+player[1]+'</td></tr>');
-			$('[data-id="'+player[2]+'"]').parent().hide();
+			$('#removable_players_table').append('<tr><td class="removable_playerid">'+player[2]+'</td><td class="removable_playername" data-pid="'+player[2]+'"  data-country="'+countrykey+'" data-format="'+formatkey+'">'+player[1]+'</td></tr>');
+			$('[data-id="'+player[2]+'"][data-country="'+countrykey+'"][data-format="'+formatkey+'"]').parent().hide();
 		});
 		player = new Array();
 	});
@@ -221,7 +225,8 @@ $(document).ready(function(){
 	$(document).on("click" , '#outoftheteam',function(){
 		$.each(player, function(index, player){
 			$('[data-pid="'+player[2]+'"]').parent().remove();
-			$('[data-id="'+player[2]+'"]').parent().show();
+			$('[data-id="'+player[2]+'"][data-country="'+countrykey+'"][data-format="'+formatkey+'"]').parent().show();
+			
 		});
 		player = new Array();
 	});
@@ -255,6 +260,8 @@ $(document).ready(function(){
 		var formatkey = $("#format_select option:selected").val();
 		var countrykey = $("#country_select option:selected").val();
 		var countryname = $("#country_select option:selected").html();
+		var teamfor = $('[name="teamfor[teamfordate]"]').val();
+		console.log(teamfor);
 		var count_players = $(selected_players).length;
 		
 		var counter = 1;
@@ -262,7 +269,7 @@ $(document).ready(function(){
 		$(selected_players).each(function(){
 			var pkey = $(this).find('[data-pid]').attr('data-pid');
 			var pid = $(this).find('.removable_playerid').html();
-			jsonObj = {clientkey:clkey, playerkey:pkey, playerid:pid, managerkey:mkey,coachkey:ckey,teamname:tname,teamid:teamid,teamtypekey:teamtypekey, formatkey:formatkey, countrykey:countrykey};
+			jsonObj = {clientkey:clkey, playerkey:pkey, playerid:pid, managerkey:mkey,coachkey:ckey,teamname:tname,teamid:teamid,teamtypekey:teamtypekey, formatkey:formatkey, countrykey:countrykey, teamfor:teamfor};
 			$.ajax({
 				url: '/teams',
 				type: 'post',
@@ -377,7 +384,7 @@ $(document).ready(function(){
 
 	if ($('body,html').find('#modify_team_form').length != 0){
 		var teamid = $('#team_teamid').val();
-		var date_drafted = $('#date_drafted').html();
+		var teamfor = $('#teamfor').html();
 		$('.player').hide();
 		countrykey = $('#countrykey_team option:selected').val();
 		formatkey =  $('#team_formatkey option:selected').val();
@@ -388,7 +395,7 @@ $(document).ready(function(){
 			}
 		});	
 		$.ajax({
-			url: '/team.json?date_drafted='+date_drafted+'&teamid='+teamid,
+			url: '/team.json?teamfor='+teamfor+'&teamid='+teamid,
 			type: 'get',
 			cache: false,
 			success: function(data, textStatus, jqXHR ) { 	
@@ -396,7 +403,7 @@ $(document).ready(function(){
 				console.log(object_count);
 				var i;
 				for(i=0; i<object_count; i++){
-					$('#removable_players_table').append('<tr><td class="removable_playerid">'+data[i]['playerid']+'</td><td class="removable_playername" data-teamkey="'+data[i]['id']+'" data-pid="'+data[i]['playerid']+'">'+data[i]['player_name']+'</td></tr>');
+					$('#removable_players_table').append('<tr><td class="removable_playerid">'+data[i]['playerid']+'</td><td class="removable_playername" data-teamkey="'+data[i]['id']+'" data-pid="'+data[i]['playerid']+'" data-country="'+countrykey+'" data-format="'+formatkey+'">'+data[i]['player_name']+'</td></tr>');
 					$('[data-id="'+data[i]['playerid']+'"]').parent().hide();			
 				}
 				
@@ -424,16 +431,17 @@ $(document).ready(function(){
 		var mkey = $("#team_managerkey option:selected").val();
 		var tname = $('#team_teamname').val();
 		var teamid = $('#team_teamid').val();
-		var date_drafted = $('#date_drafted').html();
+		var date_drafted = $('#teamfor').html();
 		var teamtypekey = $("#team_teamtypekey option:selected").val();
 		var formatkey = $("#team_formatkey option:selected").val();
 		var countrykey = $("#countrykey_team option:selected").val();
+		var teamfor = $('[name="teamfor[teamfordate]"]').val();
 		var count_players = $(selected_players).length;
 		
 
 		var team_players = [];
 		$.ajax({
-			url: '/team.json?date_drafted='+date_drafted+'&teamid='+teamid,
+			url: '/team.json?teamfor='+teamfor+'&teamid='+teamid,
 			type: 'get',
 			cache: false,
 			success: function(data, textStatus, jqXHR ) { 	
@@ -463,7 +471,7 @@ $(document).ready(function(){
 				$(selected_players).each(function(){
 					var pkey = $(this).find('[data-pid]').attr('data-pid');
 					var pid = $(this).find('.removable_playerid').html();
-					jsonObj = {clientkey:clkey, playerkey:pkey, playerid:pid, managerkey:mkey,coachkey:ckey,teamname:tname,teamid:teamid,teamtypekey:teamtypekey, formatkey:formatkey, countrykey:countrykey};
+					jsonObj = {clientkey:clkey, playerkey:pkey, playerid:pid, managerkey:mkey,coachkey:ckey,teamname:tname,teamid:teamid,teamtypekey:teamtypekey, formatkey:formatkey, countrykey:countrykey, teamfor:teamfor};
 					$.ajax({
 						url: '/teams',
 						type: 'post',

@@ -182,7 +182,7 @@ class PlayersController < ApplicationController
   # POST /players
   # POST /players.json
   def create
-	
+	begin
 		referrer_path = request.env['HTTP_REFERER'].nil? ? '': request.env['HTTP_REFERER']
 		origin_path = request.env['HTTP_ORIGIN'].nil? ? '': request.env['HTTP_ORIGIN']
 		path = referrer_path[origin_path.length..referrer_path.length]  
@@ -193,6 +193,7 @@ class PlayersController < ApplicationController
 		success='passed'
 		for formatkey in params[:player][:formatkey]
 			if formatkey != '' 
+
 				Player.create!({'clientkey'=>params[:player][:clientkey].to_i,
 				                      'playerid'=>params[:player][:playerid].to_i,
 									  'fname'=>params[:player][:fname],
@@ -220,7 +221,12 @@ class PlayersController < ApplicationController
 			#format.json { render json: @player.errors, status: :unprocessable_entity }
 		  end
 		end
-
+	rescue
+		respond_to do |format|
+			format.js {render 'fail_create.js.erb'}
+		 end	
+	
+	end
   end
 
   # PUT /players/1

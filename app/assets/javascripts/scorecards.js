@@ -16,7 +16,7 @@ $(document).ready(function(){
 		$('#myModal table tr').each(function(index, el){
 			$(this).children('td').reverseOrder();
 		});
-		$('#stumps img').css('margin-left', '-46px');
+		$('#stumps img').css('margin-left', '-51px');
 		
 		$('#direction').html(left_handed_direction);
 	}
@@ -35,14 +35,14 @@ $(document).ready(function(){
 				$('#myModal table tr').each(function(index, el){
 					$(this).children('td').reverseOrder();
 				});	
-				$('#stumps img').css('margin-left', '-26px');
+				$('#stumps img').css('margin-left', '-8px');
 				$('#direction').html(right_handed_direction);
 			}
 			else if (bts=='Left Handed' && (laststriker_bts=='Right Handed' || laststriker_bts==undefined)){
 				$('#myModal table tr').each(function(index, el){
 					$(this).children('td').reverseOrder();
 				});
-				$('#stumps img').css('margin-left', '-46px');	
+				$('#stumps img').css('margin-left', '-51px');	
 				$('#direction').html(left_handed_direction);
 			}
 			laststriker_bts = bts;

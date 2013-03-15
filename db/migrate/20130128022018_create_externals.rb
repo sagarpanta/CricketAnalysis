@@ -22,6 +22,7 @@ class CreateExternals < ActiveRecord::Migration
 	  t.integer :IsWicket
       t.integer :IsBeaten
       t.integer :IsReleaseshot
+	  t.integer :Extras
 	  t.integer :IsWide
 	  t.integer :IsNoBall
 	  t.integer :IsBye

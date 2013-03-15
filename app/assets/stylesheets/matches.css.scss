@@ -254,3 +254,23 @@ table#public_match_table tr th{
 	text-align:center
 }
 
+.back{
+	position:absolute;
+	top:1%;
+	left:48%;
+	font-size:20px;
+	font-weight:bold;
+}
+div.back a{
+	text-decoration:none;
+	color:white;
+	background-color:black;
+}
+
+div.back a:hover{
+	text-decoration:none;
+	background-color:green;
+	color:white;
+}
+
+

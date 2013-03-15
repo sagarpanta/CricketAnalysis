@@ -8,8 +8,8 @@ class TeamsController < ApplicationController
 			if current_user.username == 'admin'
 				@teams = Team.select("distinct teamname, countrykey, teamid, wh_current, cast(date(created_at) as varchar(10)) as date_drafted")
 			else
-				sql = 'select distinct teamname, c.country as country, f.name as _format, teamid, wh_current, cast(date(t.created_at) as varchar(10)) as date_drafted from teams t inner join countries c on c.id = t.countrykey inner join formats f on t.formatkey= f.id'
-				@teams = Team.find_by_sql('select distinct teamname, c.country as country, f.name as formatname, teamid, wh_current, cast(date(t.created_at) as varchar(10)) as date_drafted from teams t inner join countries c on c.id = t.countrykey inner join formats f on t.formatkey= f.id where t.clientkey='+current_user.id.to_s)
+				sql = 'select distinct teamname, c.country as country, f.name as _format, teamid, wh_current, cast(date(t.teamfor) as varchar(10)) as teamfor from teams t inner join countries c on c.id = t.countrykey inner join formats f on t.formatkey= f.id'
+				@teams = Team.find_by_sql('select distinct teamname, c.country as country, f.name as formatname, teamid, wh_current, cast(date(t.teamfor) as varchar(10)) as teamfor from teams t inner join countries c on c.id = t.countrykey inner join formats f on t.formatkey= f.id where t.clientkey='+current_user.id.to_s)
 			end
 			@countryorder = 'links'
 			@tournamentorder = 'links'
@@ -51,7 +51,7 @@ class TeamsController < ApplicationController
   # GET /teams/new
   # GET /teams/new.json
   def new
-    begin
+    
 		if signed_in?
 			@current_client = current_user.username
 			@team = Team.new
@@ -84,12 +84,7 @@ class TeamsController < ApplicationController
 		else 
 			redirect_to signin_path
 		end	
-	rescue => e
-		 @message = e.message 
-		 @client = current_user
-		 @caught_at = 'teams#new'
-		 ClientMailer.Error_Delivery(@message, @client, @caught_at).deliver
-	end
+
   end
 
   # GET /teams/1/edit
@@ -208,7 +203,7 @@ class TeamsController < ApplicationController
 				 end
 				 
 			else
-				 @teams = Team.where('clientkey=? and teamid=? and date(created_at)=?',current_user.id, params[:teamid], params[:date_drafted])
+				 @teams = Team.where('clientkey=? and teamid=? and date(teamfor)=?',current_user.id, params[:teamid], params[:teamfor])
 				 @lineup = [];
 				 @current_userkey = current_user.id
 				 
@@ -261,12 +256,13 @@ class TeamsController < ApplicationController
 				@players = Player.where('wh_current = ?', 1)
 				@selected_players = Team.find_all_by_teamid(params[:teamid])	
 			else
-				@team = Team.find_by_teamid_and_clientkey(params[:teamid],@current_userkey) 
+				@team = Team.find_by_teamid_and_clientkey_and_teamfor(params[:teamid],@current_userkey, params[:teamfor]) 
 				@countries = Country.where('clientkey=?', @current_userkey).collect {|t| [ t.country, t.id]}
 				@country_selected = @team.countrykey
 				@teamtypes = TeamType.all.collect{|t| [t.teamtype, t.id]}
 				@teamname = @team.teamname
 				@teamtype = @team.teamtypekey
+				@teamfor = @team.teamfor
 				@formats = Format.all.collect {|t| [ t.name,t.id]}
 				@format_selected = @team.formatkey
 				@coaches = Coach.where('clientkey=?', @current_userkey).collect {|t| [ t.name, t.id]}
@@ -274,9 +270,9 @@ class TeamsController < ApplicationController
 				@managers = Manager.where('clientkey=?', @current_userkey).collect {|t| [ t.name,t.id]}
 				@manager_selected = @team.managerkey
 				@players = Player.where('wh_current = ? and clientkey=?', 1, @current_userkey)
-				@selected_players = Team.where('clientkey=? and teamid=? and date(created_at)=?',@current_userkey, params[:teamid], params[:date_drafted])		
+				@selected_players = Team.where('clientkey=? and teamid=? and date(teamfor)=?',@current_userkey, params[:teamid], params[:teamfor])		
 			end
-			@date_drafted = params[:date_drafted]
+			@teamfor = params[:teamfor]
 			
 			@countryorder = 'links'
 			@tournamentorder = 'links'
