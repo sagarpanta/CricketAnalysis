@@ -963,7 +963,7 @@ $(document).ready(function(){
 			var tags_arr = tags.split(';');
 			
 			for(var i=0;i<tags_arr.length; i++){
-				jsonObj_store['report']['tag'+i] = $.trim(tags[i]);
+				jsonObj_store['report']['tag'+(i+1)] = $.trim(tags_arr[i]);
 			}
 			
 			$.ajax({

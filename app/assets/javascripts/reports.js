@@ -77,6 +77,7 @@ $(document).ready(function(){
 	
 	$(document).on('click', '.view_report', function(){
 		var id = $(this).attr('data-id');
+		$('#tags').hide();
 		$.ajax({
 			url: '/reports/'+id+'.json',
 			type: 'get',
@@ -222,6 +223,7 @@ $(document).ready(function(){
 		$('#charttable').hide();
 		$('h3').html('');
 		$('#filters').html('');
+		$('#tags').show();
 		
 	});
 	

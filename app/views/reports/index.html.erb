@@ -24,7 +24,7 @@
 <tr class="tags_row">
 	<td class="tag_clicked">All</td>
 <% @tags.each do |tag| %>
-	<% if counter%4 !=0 %>
+	<% if counter%3 !=0 %>
 		<td class="tag_clicked"><%= tag %></td>
 		<% counter = counter +1 %>
 	<% else %>

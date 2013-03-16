@@ -212,7 +212,7 @@ class ReportsController < ApplicationController
 	
 	@selected_filters = {}
 	@report.attributes.each do |key, value| 
-		if !['', -2, 0, '0'].include? value and !['id', 'clnkey', 'group1', 'group2', 'metric', 'reportname', 'created_at', 'updated_at', 'charttype'].include? key
+		if !['', -2, 0, '0'].include? value and !['id', 'clnkey', 'group1', 'group2', 'metric', 'reportname', 'created_at', 'updated_at', 'charttype', 'tag1', 'tag2', 'tag3'].include? key
 			temp = ''
 			for v in value.to_s.split(',')
 				if ['spkey1','bskey1','bp', 'bp1','pckey','pckey1','bts','bts1', 'btn1', 'blp1','bls1','inn', 'inn1','sdkey', 'ptname', 'ptname1', 'lxm', 'lxb', 'fxb', 'akey', 'fq' ,'vid', 'sd'].include? key 
