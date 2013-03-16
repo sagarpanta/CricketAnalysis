@@ -164,6 +164,8 @@ class ScorecardsController < ApplicationController
 			bfours = bowling_stats.fours.nil? ? 0:bowling_stats.fours
 			bsixes = bowling_stats.sixes.nil? ? 0:bowling_stats.sixes
 			bwides = bowling_stats.wides.nil? ? 0:bowling_stats.wides
+			bbyes = bowling_stats.byes.nil? ? 0:bowling_stats.byes
+			blegbyes = bowling_stats.legbyes.nil? ? 0:bowling_stats.legbyes
 			bnoballs = bowling_stats.noballs.nil? ? 0:bowling_stats.noballs
 			bwickets = bowling_stats.wickets.nil? ? 0:bowling_stats.wickets
 			bmaidens = bowling_stats.maidens.nil? ? 0:bowling_stats.maidens
