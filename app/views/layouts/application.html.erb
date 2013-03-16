@@ -15,9 +15,9 @@
 </head>
 
 <body>
-<script src="http://192.168.1.117:1212/socket.io/socket.io.js"></script> 
+<script src="https://evening-beach-3495.herokuapp.com/socket.io/socket.io.js"></script> 
 <script>
-	var socket = io.connect('192.168.1.117:1212');
+	var socket = io.connect('https://evening-beach-3495.herokuapp.com');
 	socket.on('news', function (data) {
 		console.log(data);
 	});
