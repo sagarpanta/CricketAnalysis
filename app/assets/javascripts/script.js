@@ -185,14 +185,10 @@ $(document).ready(function(){
 		});
 		 
 		
-		navigator.getUserMedia_ = navigator.webkitGetUserMedia;
-		var _options={};
-		if (navigator.getUserMeidia_ !=null) {
-			alert(navigator.webkitGetUserMedia);
-			_options = 	{video:true};
-			$('.scrollproperty').html('enabled');
+
+		$('.scrollproperty').html('enabled');
 			
-			navigator.webkitGetUserMedia(_options, function(stream) {
+		navigator.webkitGetUserMedia({video:true}, function(stream) {
 			console.log('after');
 			video.src = window.webkitURL.createObjectURL(stream);
 			video.controls = true;
@@ -200,9 +196,10 @@ $(document).ready(function(){
 			video.pause();
 		
 			}, function(){
-				alert('no support for webkitGetUserMedia()');
+				console.log('no support for webkitGetUserMedia()');
+				$('.scrollproperty').html('disabled');
 		});
-		}
+
 		
 		
 		//Finds y value of given object

@@ -284,6 +284,10 @@ class MatchesController < ApplicationController
 	begin
 		if signed_in?
 			@match = Match.find(params[:id])
+			
+			Battingscorecard.where('clientkey=? and matchkey=?',current_user.id, @match.id).destroy_all
+			Bowlingscorecard.where('clientkey=? and matchkey=?',current_user.id, @match.id).destroy_all
+			Scorecard.where('clientkey=? and matchkey=?',current_user.id, @match.id).destroy_all
 			@match.destroy
 			respond_to do |format|
 			  format.html { redirect_to matches_url }
@@ -399,7 +403,7 @@ class MatchesController < ApplicationController
   
   
   def firstinning
-	maxentry = Scorecard.find(:all, :order=>"id", :conditions=>["clientkey=? and inning=?",params[:clientkey],1]).last
+	maxentry = Scorecard.find(:all, :order=>"id", :conditions=>["clientkey=? and matchkey=? and inning=?",params[:clientkey],params[:id],1]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@clientkey = params[:clientkey]
 
@@ -455,7 +459,7 @@ class MatchesController < ApplicationController
   
   def secondinning
 
-	maxentry = Scorecard.find(:all, :order=>"id", :conditions=>["clientkey=? and inning=?",params[:clientkey],2]).last
+	maxentry = Scorecard.find(:all, :order=>"id", :conditions=>["clientkey=? and matchkey=? and inning=?",params[:clientkey],params[:id],2]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@maxdate = maxentry.nil? ? '1/1/2999':maxentry.updated_at
 	@clientkey = params[:clientkey]

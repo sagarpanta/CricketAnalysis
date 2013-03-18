@@ -216,6 +216,8 @@ class TeamsController < ApplicationController
 					t['country'] = @country
 					@lineup<<t
 				 end	
+				 
+
 			
 			end		
 

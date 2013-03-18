@@ -1789,10 +1789,10 @@ class AnalysisController < ApplicationController
 							select matchkey,grp1, "over", sum(ballsfaced) as ballsfaced, sum(frequency_grp2) as grp2, sum(val) as val
 							from
 							(select s.matchkey,s.grp1,s."over", s.ballsfaced,case when s.grp2<>s1.grp2 then 1 else 0 end as frequency_grp2'+ (metrics[metric].nil? ? '':metrics[metric])+'
-							 from (select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
+							 from (select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum, wides, noballs) as ballnum_including_wd_nb, dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
 								LEFT JOIN 
-								(select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over",  dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum,'+_metrics + ' from ' + scorecards +' s) s1
-								ON s.grp1 = s1.grp1 and s."over" = s1."over" and s.ballnum = s1.ballnum-1 and s.matchkey = s1.matchkey
+								(select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum, wides, noballs) as ballnum_including_wd_nb, dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum,'+_metrics + ' from ' + scorecards +' s) s1
+								ON s.grp1 = s1.grp1 and s."over" = s1."over" and s.ballnum_including_wd_nb = s1.ballnum_including_wd_nb-1 and s.matchkey = s1.matchkey
 							)A
 							group by matchkey,grp1, "over"
 							)B
