@@ -87,6 +87,7 @@ class AnalysisController < ApplicationController
   
   def matchwins
 	begin
+=begin
 		query = '	Select c1.country as grp2, count(distinct mat.id) as won , count(distinct mat1.id) as lost 
 					from scorecards s 
 					inner join players p on p.clientkey = s.clientkey and p.playerid = s.batsmankey 
@@ -103,6 +104,17 @@ class AnalysisController < ApplicationController
 					where s.clientkey = '+params[:clientkey]+'
 					group by c1.country
 				'
+=end
+
+		query = ' 
+				select c.country as grp2,sum(case when winnerkey=teamidone then 1 else 0 end) as won, sum(case when winnerkey<>teamidone then 1 else 0 end) as lost
+				from matches m
+				INNER JOIN (select distinct teamid, clientkey, countrykey from teams) t
+				ON m.teamidtwo = t.teamid and m.clientkey= t.clientkey
+				INNER JOIN countries c on c.id = t.countrykey
+				group by c.country
+				'
+
 		@chartdata = Scorecard.find_by_sql(query)
 		
 		@chartdata = @chartdata == []? nil:@chartdata
