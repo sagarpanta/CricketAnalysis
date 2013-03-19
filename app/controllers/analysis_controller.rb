@@ -446,6 +446,7 @@ class AnalysisController < ApplicationController
 			tournament_part = ' inner join tournaments t on s.clientkey = t.clientkey and s.tournamentkey = t.id '
 			venue_part =' inner join venues v on s.clientkey = v.clientkey and s.venuekey = v.id '
 			team_part = ' inner join teams tm on s.clientkey = tm.clientkey and tm.playerid = s.batsmankey and s.formatkey = tm.formatkey '
+			matchteam_part = ' inner join teams tm on s.clientkey = tm.clientkey and tm.playerid = s.batsmankey and s.formatkey = tm.formatkey and mat.matchdate = tm.teamfor'
 			teamtype_part = ' inner join team_types tt on tm.teamtypekey = tt.id '
 			coach_part= ' inner join coaches c on tm.coachkey = c.id and tm.clientkey = c.clientkey '
 			manager_part= ' inner join managers m on tm.managerkey = m.id and tm.clientkey = m.clientkey '
@@ -460,6 +461,7 @@ class AnalysisController < ApplicationController
 			bowler_part = ' inner join players p1 on s.currentbowlerkey = p1.playerid and s.clientkey = p1.clientkey and s.formatkey = p1.formatkey '
 			countryagainst_part = ' inner join countries cn1 on p1.countrykey = cn1.id and p1.clientkey = cn1.clientkey '
 			teamagainst_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerid = s.currentbowlerkey and s.formatkey = tm1.formatkey ' 
+			matchteamagainst_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerid = s.currentbowlerkey and s.formatkey = tm1.formatkey and mat.matchdate = tm1.teamfor ' 
 			teamtypeagainst_part = ' inner join team_types tt1 on tm1.teamtypekey = tt1.id '
 			coachagainst_part= ' inner join coaches c1 on tm1.coachkey = c1.id	and tm1.clientkey = c1.clientkey '
 			manageragainst_part= ' inner join managers m1 on tm1.managerkey = m1.id and tm1.clientkey = m1.clientkey '
@@ -529,11 +531,13 @@ class AnalysisController < ApplicationController
 			build_query_match = ''
 			where_clause = ''
 
-
+			
 			against_group = ['bowler' , 'bls' , 'bowlingposition' , 'bowlingtype' , 'teamagainst' , 'countryagainst']
 			
 			#followings are the groups/filters...when applied, players p table need to be joined with scorecards s  so that team, country and so on can then join
 			batsman_group = ['batsman', 'bts', 'team', 'venue', 'matchtype', 'country','teamtype' , 'coach', 'manager', 'cr', 'pship']
+			
+			team_group = ['team', 'teamagainst', 'match']
 			
 			#follwings are the pure bowler group which are used to monitor filters in the bowling side. 
 			#such as when country is selected on the right hand side and one of the groups is in the group, then the filter will apply to the bowling group rather than the batting group
@@ -578,46 +582,6 @@ class AnalysisController < ApplicationController
 				sc_varA += rest_group_json[group1]+','
 			end
 			
-			################################################
-=begin		
-			
-			###########################################
-			#It is related with build bbh, bbr
-			#bat_group = ['batsman', 'bts', 'team', 'teamtype' , 'coach','manager', 'country']
-			bat_group = ['batsman', 'bts', 'team','teamtype' , 'coach','manager', 'country', 'pship' , 'shottype' , 'line', 'length', 'angle', 'side']
-			bowl_group = ['bowler' , 'bls' , 'bowlingtype' , 'teamagainst' , 'countryagainst', 'match', 'bowlingposition']
-			rest_group = ['venue', 'dismissal','matchtype', 'tournament', 'battingposition', 'direction', 'year', 'inning', 'format','cr', 'condition']
-			rest_group_json = {'venue'=>'venuekey', 'dismissal'=>'outtypekey', 'matchtype'=>'matchkey', 'tournament'=>'tournamentkey', 'battingposition'=>'battingposition', 'year'=>'created_at', 'inning'=>'inning', 'format'=>'formatkey', 'cr'=>'cr', 'condition'=>'condition'}
-			
-			varA=','
-			sc_varA = ','
-			
-			if bat_group.include? group1 or bat_group.include? group2
-				varA += 'batsmankey,'
-			end
-			if bowl_group.include? group1 or bowl_group.include? group2
-				varA += 'currentbowlerkey,'
-				sc_varA += 'currentbowlerkey,'
-			end
-			if (bat_group.include? group1  or bowl_group.include? group1 ) and (rest_group.include? group2)
-				varA += rest_group_json[group2]+','
-				sc_varA += rest_group_json[group2]+','
-			end
-			if (bat_group.include? group2 or bowl_group.include? group2) and (rest_group.include? group1)
-				varA += rest_group_json[group1]+','
-				sc_varA += rest_group_json[group1]+','
-			end
-			if (rest_group.include? group1 and rest_group.include? group2)
-				varA += 'batsmankey,'+rest_group_json[group1]+','+rest_group_json[group2]+','
-				sc_varA += rest_group_json[group1]+','+rest_group_json[group2]+','
-			end
-			if (rest_group.include? group1 and group2 =='')
-				varA += 'batsmankey,'+rest_group_json[group1]+','
-				sc_varA += rest_group_json[group1]+','
-			end
-			
-			################################################		
-=end
 			
 			#the match won and match lost queries require players and teams table no matter what
 			#the teams table come with coaches managers and teamtypes table
@@ -629,22 +593,28 @@ class AnalysisController < ApplicationController
 			#also if the second group contains team or coach or manager or teamtype, then add their part
 			#we dont need to worry about format or venue or tournament or so on as their part will be added in the latter checks
 			
-			build_query_match = batsman_part + team_part
+			build_query_match = match_part+ matchtype_part + batsman_part + matchteam_part
 			if ['coach', 'manager', 'teamtype'].include? group1 or ['coach', 'manager', 'teamtype'].include? group2 or teamtypekey[0] != '' or coachkey[0] != '' or managerkey[0] != ''
 				build_query_match += teamtype_part + coach_part + manager_part
 			end
-						
-			checked = 0
-			batsman_group.each do |g|
-				if checked == 0
-					#if any of the right side batting filters present, and group1 is not teamagainst or coutryagainst
-					#if (!group1[g].nil? or !group2[g].nil? or batsmankey[0] != '' or countrykey[0] != '' or countrykey1[0] != '' or playertypename[0] != '' or battingstylename[0] != '') 
-					if (batsman_group.include? group1 or batsman_group.include? group2 or batsmankey[0] != '' or countrykey[0] != '' or playertypename[0] != '' or battingstylename[0] != '') 						
-						build_query += batsman_part
-						checked = 1
-					end
-				end
+
+			#to add the match part either group1 or group2 should be match or pitch condition or the 
+			#left hand pitch condition filter should be present to add the match part
+			#but the metric should not be match won or lost because there is a separate query
+			#down the line, which has hardcoded match match and match type part.
+			#for query related with match won or match lost, the match part and the match type part 
+			#is most required, so it  must be hardcoded in the query.
+			#if  (metric!='mtchwon' and metric!='mtchlost') and (!group1['match'].nil? or !group2['match'].nil? or !group1['condition'].nil? or !group2['condition'].nil? or pitchconditionkey[0]!= '' or pitchconditionkey1[0]!= '' or !group1['matchtype'].nil? or !group2['matchtype'].nil? or !group2['countryagainst'].nil?  or matchtypekey[0] != '' or matchtypekey1[0] != '' )
+			if  (!group1['match'].nil? or !group2['match'].nil? or !group1['condition'].nil? or !group2['condition'].nil? or pitchconditionkey[0]!= '' or pitchconditionkey1[0]!= '' or !group1['matchtype'].nil? or !group2['matchtype'].nil?  or matchtypekey[0] != '' or matchtypekey1[0] != '' or team_group.include? group1 or team_group.include? group2 or teamkey[0] != '' or teamkey1[0] != '' or teamtypekey[0] != '' or coachkey[0] != '' or managerkey[0] != '' or managerkey1[0] != '' or coachkey1[0] != '' or teamtypekey1[0] != '')
+				build_query += match_part + matchtype_part
 			end
+									
+			#if any of the right side batting filters present, and group1 is not teamagainst or coutryagainst
+			#if (!group1[g].nil? or !group2[g].nil? or batsmankey[0] != '' or countrykey[0] != '' or countrykey1[0] != '' or playertypename[0] != '' or battingstylename[0] != '') 
+			if (batsman_group.include? group1 or batsman_group.include? group2 or batsmankey[0] != '' or countrykey[0] != '' or playertypename[0] != '' or battingstylename[0] != '') 						
+				build_query += batsman_part
+			end
+
 			
 			if !group1['pship'].nil? or !group2['pship'].nil? 
 				build_query += pship_part
@@ -682,47 +652,33 @@ class AnalysisController < ApplicationController
 				build_query_match += length_part
 			end
 			
-			#to add the match part either group1 or group2 should be match or pitch condition or the 
-			#left hand pitch condition filter should be present to add the match part
-			#but the metric should not be match won or lost because there is a separate query
-			#down the line, which has hardcoded match match and match type part.
-			#for query related with match won or match lost, the match part and the match type part 
-			#is most required, so it  must be hardcoded in the query.
-			#if  (metric!='mtchwon' and metric!='mtchlost') and (!group1['match'].nil? or !group2['match'].nil? or !group1['condition'].nil? or !group2['condition'].nil? or pitchconditionkey[0]!= '' or pitchconditionkey1[0]!= '' or !group1['matchtype'].nil? or !group2['matchtype'].nil? or !group2['countryagainst'].nil?  or matchtypekey[0] != '' or matchtypekey1[0] != '' )
-			if  (metric!='mtchwon' and metric!='mtchlost') and (!group1['match'].nil? or !group2['match'].nil? or !group1['condition'].nil? or !group2['condition'].nil? or pitchconditionkey[0]!= '' or pitchconditionkey1[0]!= '' or !group1['matchtype'].nil? or !group2['matchtype'].nil?  or matchtypekey[0] != '' or matchtypekey1[0] != '' )
-				build_query += match_part + matchtype_part
-			end
+
 			if !group1['dismissal'].nil? or !group2['dismissal'].nil?
 				build_query += dismissal_part
 				build_query_match += dismissal_part
 			end
-			build_query_match += bowler_part + teamagainst_part
-			checked = 0
-			bowler_group.each do |g|
-				if checked == 0
-					#the following if statement checks that if there is bowling group either in group1 or group2, then it will add bowler part
-					#also if there are filters in the bowling filter section, then it will casue to add bowler part to the query
-					#tournament, venue and format on the rigth hand side are not checked  because batting side and bowling side will have this common.
-					if !group1['teamagainst'].nil? or !group2['teamagainst'].nil? or !group1['countryagainst'].nil? or !group2['countryagainst'].nil? or !group1[g].nil? or !group2[g].nil? or bowlerkey1[0] != '' or bowlingstylename1[0] != '' or bowlingtypename1[0] != '' or playertypename1[0] != ''  or countrykey1[0] != '' or teamkey1[0] != '' or managerkey1[0] != '' or coachkey1[0] != '' or teamtypekey1[0] != ''
-						build_query += bowler_part
-						checked = 1
-					end
-				end
+			build_query_match += bowler_part + matchteamagainst_part
+			#the following if statement checks that if there is bowling group either in group1 or group2, then it will add bowler part
+			#also if there are filters in the bowling filter section, then it will casue to add bowler part to the query
+			#tournament, venue and format on the rigth hand side are not checked  because batting side and bowling side will have this common.
+			if bowler_group.include? group1 or bowler_group.include? group2 or  !group1['teamagainst'].nil? or !group2['teamagainst'].nil? or !group1['countryagainst'].nil? or !group2['countryagainst'].nil?  or bowlerkey1[0] != '' or bowlingstylename1[0] != '' or bowlingtypename1[0] != '' or playertypename1[0] != ''  or countrykey1[0] != '' or teamkey1[0] != '' or managerkey1[0] != '' or coachkey1[0] != '' or teamtypekey1[0] != ''
+				build_query += bowler_part
 			end
+			
 			#team against , match groups take teamagainst part and if the metric is matchwon or lost, the teamagainst part is there
 			#but since there is already a check for team against, this is only a check for match
 			#it means , add teamagainst_part if group is match, but the other group shoud not be teamagainst and metic should not be
 			#match lost or won, otherwise the query part will be duplicated
-			if (group1['teamagainst'].nil? or group2['teamagainst'].nil?) and ((!group1['match'].nil? or !group2['match'].nil?) and (metric!='mtchwon' and metric!='mtchlost'))
-				build_query+= teamagainst_part 
+			if (group1['teamagainst'].nil? and group2['teamagainst'].nil?) and ((!group1['match'].nil? or !group2['match'].nil?) and (metric!='mtchwon' and metric!='mtchlost'))
+				build_query+= matchteamagainst_part 
 			end
 			if ((!group1['team'].nil? and group1['teamagainst'].nil?) or (!group2['team'].nil? and group2['teamagainst'].nil?) or !group1['teamtype'].nil? or !group2['teamtype'].nil? or !group1['coach'].nil? or !group2['coach'].nil? or !group1['manager'].nil? or !group2['manager'].nil? or  teamkey[0] != '' or teamtypekey[0] != '' or coachkey[0] != '' or managerkey[0] != '')
-				build_query += team_part + teamtype_part + coach_part + manager_part
+				build_query += matchteam_part + teamtype_part + coach_part + manager_part
 			end
 			
 			#check only for teams, coaches, managers and teamtypes from the right hand side, because the bowler filter has added the necessary joins before the current filter adds the team against joins
 			if (group1['match'].nil? and group2['match'].nil?)and (!group1['teamagainst'].nil? or !group2['teamagainst'].nil? or teamkey1[0] != '' or managerkey1[0] != '' or coachkey1[0] != '' or teamtypekey1[0] != '')
-				build_query += teamagainst_part + teamtypeagainst_part + coachagainst_part + manageragainst_part
+				build_query += matchteamagainst_part + teamtypeagainst_part + coachagainst_part + manageragainst_part
 			end
 
 			#check only for country from the right hand side, because the bowler filter has added the necessary joins before the current filter adds the country against joins
@@ -749,15 +705,10 @@ class AnalysisController < ApplicationController
 			build_query_match_lost = ''
 			
 			build_query_match_lost = ''
-			if  pure_batting_group.include? group1
-				build_query_match_lost = build_query_match + ' LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid <> mat.winnerkey ' +matchtype_part+ where_always	+ where_matchkeys			
-				build_query_match += ' LEFT join (select * from matches where winnerkey<>-2) mat on tm.clientkey = mat.clientkey and tm.teamid = mat.winnerkey  ' + matchtype_part+ where_always + where_matchkeys	
-			else
-				#build query match lost is before than build query match because bqml uses bqm without where clause
-				build_query_match_lost = build_query_match + ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid <> mat.winnerkey ' + matchtype_part+where_always + where_matchkeys	
-				build_query_match += ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid = mat.winnerkey  ' + matchtype_part+where_always + where_matchkeys	
-			end
-			
+
+			build_query_match_lost = build_query_match + where_always	+ where_matchkeys + ' and tm.teamid <> mat.winnerkey and tm.teamfor = mat.matchdate'		
+			build_query_match += where_always + where_matchkeys	+ ' and tm.teamid = mat.winnerkey and tm.teamfor = mat.matchdate'
+				
 			if batsmankey[0] != ''
 				where_clause += where_batsmankeys
 			end
@@ -875,7 +826,7 @@ class AnalysisController < ApplicationController
 			build_query_match_lost += where_clause
 						
 			_join = build_query
-			
+		
 		
 		else
 			_group1['bts'] = 'p.battingstyle'
@@ -960,7 +911,8 @@ class AnalysisController < ApplicationController
 			country_part = ' inner join countries cn1	on p1.countrykey = cn1.id	and p1.clientkey = cn1.clientkey '
 			tournament_part = ' inner join tournaments t1	on s.clientkey = t1.clientkey and s.tournamentkey = t1.id '
 			venue_part =' inner join venues v1 on s.clientkey = v1.clientkey and s.venuekey = v1.id '
-			team_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerid = s.currentbowlerkey and s.formatkey = tm1.formatkey ' 
+			team_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerid = s.currentbowlerkey and s.formatkey = tm1.formatkey '
+			matchteam_part = ' inner join teams tm1 on s.clientkey = tm1.clientkey and tm1.playerid = s.currentbowlerkey and s.formatkey = tm1.formatkey and tm1.teamfor = mat.matchdate ' 			
 			teamtype_part = ' inner join team_types tt1 on tm1.teamtypekey = tt1.id '
 			coach_part= ' inner join coaches c1 on tm1.coachkey = c1.id	and tm1.clientkey = c1.clientkey '
 			manager_part= ' inner join managers m1 on tm1.managerkey = m1.id and tm1.clientkey = m1.clientkey '
@@ -971,6 +923,7 @@ class AnalysisController < ApplicationController
 			bowler_part = ' inner join players p1 on s.currentbowlerkey = p1.playerid and s.clientkey = p1.clientkey and s.formatkey = p1.formatkey '
 			countryagainst_part = ' inner join countries cn on p.countrykey = cn.id and p.clientkey = cn.clientkey '
 			teamagainst_part = ' inner join teams tm on s.clientkey = tm.clientkey and tm.playerid = s.batsmankey and s.formatkey = tm.formatkey '
+			matchteamagainst_part = ' inner join teams tm on s.clientkey = tm.clientkey and tm.playerid = s.batsmankey and s.formatkey = tm.formatkey and tm.teamfor = mat.matchdate '
 			teamtypeagainst_part = ' inner join team_types tt on tm.teamtypekey = tt.id '
 			coachagainst_part= ' inner join coaches c on tm.coachkey = c.id	and tm.clientkey = c.clientkey '
 			manageragainst_part= ' inner join managers m on tm.managerkey = m.id and tm.clientkey = m.clientkey '
@@ -1045,7 +998,8 @@ class AnalysisController < ApplicationController
 			against_group = ['batsman', 'bts', 'battingposition' ,'cr', 'pship' , 'battingstyle', 'teamagainst', 'countryagainst']
 			batsman_group = ['batsman', 'bts', 'battingposition' ,'cr', 'pship' , 'battingstyle']
 			bowler_group = ['bowler' , 'bls'  , 'bowlingtype', 'team', 'venue', 'matchtype', 'match', 'teamtype' , 'coach','manager', 'country']						
-
+			team_group = ['team', 'teamagainst', 'match']
+			
 			pure_bowling_group = ['bowler' , 'bls'  , 'bowlingtype', 'team', 'venue', 'dismissal','matchtype', 'match','teamtype' , 'tournament', 'coach', 'bowlingposition', 'manager', 'year', 'inning', 'format', 'country' ,'cr', 'pship' , 'shottype' , 'line', 'length','side', 'direction', 'spell', 'condition']
 			#the followings are the part of bowling group, but they are not required for adding bowling_part...ie if they belong to group2
 			not_required = ['matchtype',  'condition', 'venue', 'tournament', 'format', 'bowlingposition', 'year', 'shottype' , 'line', 'length' ,'side','direction', 'spell']
@@ -1089,22 +1043,28 @@ class AnalysisController < ApplicationController
 			################################################	
 					
 			
-			build_query_match = bowler_part + team_part
+			build_query_match = match_part + matchtype_part + bowler_part + matchteam_part
 			if ['coach', 'manager', 'teamtype'].include? group1 or ['coach', 'manager', 'teamtype'].include? group2 or teamtypekey1[0] != '' or coachkey1[0] != '' or managerkey1[0] != ''
 				build_query_match += teamtype_part + coach_part + manager_part
 			end			
 			
-			checked = 0
-			bowler_group.each do |g|
-				if checked == 0
-					#if any of the left side bowling filters present, and group1 is not teamagainst or coutryagainst
-					if(bowler_group.include? group1 or bowler_group.include? group2 or !group1[g].nil? or !group2[g].nil? or bowlerkey1[0] != '' or bowlingstylename1[0] != '' or bowlingtypename1[0] != '' or  countrykey1[0] != '' or playertypename[0] != '')
-						build_query += bowler_part
-						checked = 1
-					end
-				end
+
+			#if any of the left side bowling filters present, and group1 is not teamagainst or coutryagainst
+			if(bowler_group.include? group1 or bowler_group.include? group2 or bowlerkey1[0] != '' or bowlingstylename1[0] != '' or bowlingtypename1[0] != '' or  countrykey1[0] != '' or playertypename[0] != '')
+				build_query += bowler_part
 			end
-		
+			
+			#to add the match part either group1 or group2 should be match or pitch condition or the 
+			#left hand pitch condition filter should be present to add the match part
+			#but the metric should not be match won or lost because there is a separate query
+			#down the line, which has hardcoded match match and match type part.
+			#for query related with match won or match lost, the match part and the match type part 
+			#is most required, so it  must be hardcoded in the query.
+			#if  (metric!='mtchwon' and metric!='mtchlost') and (!group1['match'].nil? or !group2['match'].nil? or !group1['condition'].nil? or !group2['condition'].nil? or pitchconditionkey[0]!= '' or pitchconditionkey1[0]!= '' or !group1['matchtype'].nil? or !group2['matchtype'].nil? or !group2['countryagainst'].nil?  or matchtypekey[0] != '' or matchtypekey1[0] != '' )
+			if  (!group1['match'].nil? or !group2['match'].nil? or !group1['condition'].nil? or !group2['condition'].nil? or pitchconditionkey[0]!= '' or pitchconditionkey1[0]!= '' or !group1['matchtype'].nil? or !group2['matchtype'].nil?  or matchtypekey[0] != '' or matchtypekey1[0] != '' or team_group.include? group1 or team_group.include? group2 or teamkey[0] != '' or teamkey1[0] != '' or teamtypekey[0] != '' or coachkey[0] != '' or managerkey[0] != '' or managerkey1[0] != '' or coachkey1[0] != '' or teamtypekey1[0] != '')
+				build_query += match_part + matchtype_part
+			end
+
 			if (group1['countryagainst'].nil? and group2['countryagainst'].nil?) and (!group1['country'].nil? or !group2['country'].nil? or countrykey1[0] != '')
 				build_query += country_part
 				build_query_match+= country_part
@@ -1135,17 +1095,16 @@ class AnalysisController < ApplicationController
 				build_query+= length_part
 				build_query_match+= length_part
 			end
-			if  (metric!='mtchwon' and metric!='mtchlost') and (!group1['match'].nil? or !group2['match'].nil? or !group1['condition'].nil? or !group2['condition'].nil? or pitchconditionkey[0]!= '' or pitchconditionkey1[0]!= '' or !group1['matchtype'].nil? or !group2['matchtype'].nil?  or matchtypekey[0] != '' or matchtypekey1[0] != '' )
-				build_query += match_part + matchtype_part
-			end
+
+			
 			if (group1['teamagainst'].nil? and group2['teamagainst'].nil?) and (!group1['team'].nil? or !group2['team'].nil? or !group1['teamtype'].nil? or !group2['teamtype'].nil? or !group1['coach'].nil? or !group2['coach'].nil? or !group1['manager'].nil? or !group2['manager'].nil? or  teamkey1[0] != '' or teamtypekey1[0] != '' or coachkey1[0] != '' or managerkey1[0] != '')
-				build_query += team_part + teamtype_part + coach_part + manager_part
+				build_query += matchteam_part + teamtype_part + coach_part + manager_part
 			end
 			if !group1['dismissal'].nil? or !group2['dismissal'].nil?
 				build_query += dismissal_part
 				build_query_match+= dismissal_part
 			end
-			build_query_match += batsman_part + teamagainst_part
+			build_query_match += batsman_part + matchteamagainst_part
 			checked = 0
 			batsman_group.each do |g|
 				if checked == 0
@@ -1160,7 +1119,7 @@ class AnalysisController < ApplicationController
 			#this is for match group only, but teamagainst and metric match won or lost should not be there
 			#otherwise query part would get duplicated
 			if (group1['teamagainst'].nil? or group2['teamagainst'].nil?) and ((!group1['match'].nil? or !group2['match'].nil?) and (metric!='mtchwon' and metric!='mtchlost'))
-				build_query+= teamagainst_part 
+				build_query+= matchteamagainst_part 
 			end
 			if !group1['pship'].nil? or !group2['pship'].nil? 
 				build_query += pship_part
@@ -1168,7 +1127,7 @@ class AnalysisController < ApplicationController
 			end	
 			#now in this check, match should not be there 
 			if (group1['match'].nil? and group2['match'].nil?)and (!group1['teamagainst'].nil? or !group2['teamagainst'].nil? or teamkey[0] != '' or managerkey[0] != '' or coachkey[0] != '' or teamtypekey[0] != '')
-				build_query += teamagainst_part + teamtypeagainst_part + coachagainst_part + manageragainst_part
+				build_query += matchteamagainst_part + teamtypeagainst_part + coachagainst_part + manageragainst_part
 			end
 			if  !group1['countryagainst'].nil? or !group2['countryagainst'].nil?  or countrykey[0]!=''
 				build_query += countryagainst_part
@@ -1191,15 +1150,10 @@ class AnalysisController < ApplicationController
 			build_query_match_lost = ''
 			
 			build_query_match_lost = ''
-			if  pure_bowling_group.include? group1
-				build_query_match_lost = build_query_match + ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid <> mat.winnerkey ' + matchtype_part+where_always	+ where_matchkeys			
-				build_query_match += ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid = mat.winnerkey ' +matchtype_part+ where_always+ where_matchkeys
-			else
-				#build query match lost is before than build query match because bqml uses bqm without where clause
-				build_query_match_lost = build_query_match + ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid <> mat.winnerkey ' +matchtype_part+ where_always+ where_matchkeys	
-				build_query_match += ' LEFT join (select * from matches where winnerkey<>-2) mat on tm1.clientkey = mat.clientkey and tm1.teamid = mat.winnerkey ' +matchtype_part+ where_always+ where_matchkeys
-			end			
-			
+
+			build_query_match_lost = build_query_match + where_always	+ where_matchkeys + ' and tm1.teamid = mat.winnerkey and tm1.teamfor = mat.matchdate '			
+			build_query_match += where_always+ where_matchkeys + ' and tm1.teamid = mat.winnerkey and tm1.teamfor = mat.matchdate '
+				
 			
 			if batsmankey[0] != ''
 				where_clause += where_batsmankeys
@@ -1367,7 +1321,6 @@ class AnalysisController < ApplicationController
 			end
 			
 			
-			
 			if lastXballs == -2 and firstXballs==-2
 				scorecards = '(select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join +')'
 				varB=','
@@ -1382,26 +1335,26 @@ class AnalysisController < ApplicationController
 			
 			if  metric == 'mtchwon'
 				if lastXballs == -2 and firstXballs==-2
-					scorecards = '(select s.id as pkey, '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match +')'
+					scorecards = '(select mat.id as _matchkey,s.id as pkey, '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match +')'
 					varB=','
 				elsif lastXballs>0
-					scorecards = ' (select s.id as pkey, '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match+') '
+					scorecards = ' (select mat.id as _matchkey,s.id as pkey, '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match+') '
 					varB = varA
 				elsif firstXballs>0
-					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match+') '
+					scorecards = ' (select mat.id as _matchkey,s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match+') '
 					varB = varA
 				end
 			end
 			
 			if  metric == 'mtchlost'
 				if lastXballs == -2 and firstXballs==-2
-					scorecards = '(select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost +')'
+					scorecards = '(select mat.id as _matchkey, s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost +')'
 					varB=','
 				elsif lastXballs>0
-					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost+') '
+					scorecards = ' (select mat.id as _matchkey,s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost+') '
 					varB = varA
 				elsif firstXballs>0
-					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost+') '
+					scorecards = ' (select mat.id as _matchkey,s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost+') '
 					varB = varA
 				end
 			end
@@ -1859,7 +1812,6 @@ class AnalysisController < ApplicationController
 		############################################### end of variable definitions #####################################################3	
 		if fq ==0 
 			if vid == 0
-			
 				if metric == 'runs'
 					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+', sum(runs) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 				elsif metric == 'avg'
@@ -1924,10 +1876,13 @@ class AnalysisController < ApplicationController
 					end
 				elsif metric == 'mtchwon'
 					#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
-					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+					#sql = 'Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct _matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':'')
+					#@client = current_user
+					#ClientMailer.Error_Delivery(sql, @client, 'cnonstrike').deliver
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct _matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 				elsif metric == 'mtchlost'
 					#@chartdata = Scorecard.find_by_sql('Select '+_group1[group1]+' as grp1 '+ (!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', count(distinct mat.id) as val from '+scorecards+' s '+ build_query_match_lost+ '  group by '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+ ' order by '+ _group1[group1] + (group2 != ''? _group2[group2]:''))	
-					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct id) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
+					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  count(distinct _matchkey) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 				elsif metric == 'noofdels'
 					@chartdata = Scorecard.find_by_sql('Select  grp1 '+ (!_group2[group2].nil? ? ',grp2':'')+',  sum(ballsdelivered) as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' group by grp1'+(!_group2[group2].nil? ? ',grp2':'')+ ' order by grp1'+(group2 != ''? ',grp2':''))	
 				elsif metric == 'noofshots'
