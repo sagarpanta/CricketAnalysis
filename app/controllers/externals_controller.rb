@@ -144,11 +144,16 @@ class ExternalsController < ApplicationController
 			lines['OutsideLegStump'] = 4
 			
 			lengths = {}
-			lengths['YorkerLength'] = 1
-			lengths['FullLength'] = 2
+			lengths['Full-tossed'] = 6
+			lengths['Fulltossed'] = 6
+			lengths['FullTossed'] = 6
+			lengths['Full-Toss'] = 6
+			lengths['FullToss'] = 6
+			lengths['YorkerLength'] = 5
+			lengths['FullLength'] = 4
 			lengths['GoodLength'] = 3
-			lengths['ShortOfGoodLength'] = 4
-			lengths['ShortLength'] = 5
+			lengths['ShortOfGoodLength'] = 2
+			lengths['ShortLength'] = 1
 			
 			shottypes = {}
 			
