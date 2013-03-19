@@ -142,10 +142,10 @@ class AnalysisController < ApplicationController
 			scorecards = ' scorecards '
 			ballnumber_betn = '0 and 300'
 		elsif lastXballs>0
-			scorecards = ' (select (dense_rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle, videoloc from scorecards) '
+			scorecards = ' (select (dense_rank() over (partition by matchkey, batsmankey order by ballnum desc)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle, videoloc from scorecards) '
 			ballnumber_betn = '0 and '+lastXballs.to_s
 		elsif firstXballs > 0
-			scorecards = ' (select (dense_rank() over (partition by matchkey, batsmankey order by matchkey, batsmankey, ballnum)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle, videoloc from scorecards) '
+			scorecards = ' (select (dense_rank() over (partition by matchkey, batsmankey order by ballnum)) as ballnum, ballnum as ballrank, clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, teamidone, teamtwoid, threes, tournamentkey, twos, venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle, videoloc from scorecards) '
 			ballnumber_betn = '0 and '+firstXballs.to_s
 		end
 	
@@ -1019,11 +1019,13 @@ class AnalysisController < ApplicationController
 		   where_shotdirectionkeys = ' and s.direction '+shotdirectionkeys
 		   where_pitchconditionkeys = ' and mat1.pitchcondition '+pitchconditionkeys
 		   
+			
 			if group1 == 'match'
-				 where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn				
+				where_always =' where s.clientkey = '+current_user.id.to_s 
 			else 
-				where_always =' where s.clientkey = '+current_user.id.to_s + ' and ballnum between ' + ballnumber_betn + ' and ('+_group1[group1] + ') is not null '				
+				where_always =' where s.clientkey = '+current_user.id.to_s + ' and ('+_group1[group1] + ') is not null '	
 			end
+			
 			build_query = ''
 			build_query_match = ''
 			where_clause = ''
@@ -1319,17 +1321,51 @@ class AnalysisController < ApplicationController
 		
 		###################################   bbr  bbb   dbx dbr dbb sql string variable definitions #############################################	
 			
+			# when one of the groups is line, length, angle, direction, shottype or empty, do not include in the 
+			# partition for dense_rank because the last x or first x balls for each of these groups will not give
+			# a valuable result. For eg,  in the analysis of Runs by Batsmen by Line for the first 10 balls, it will
+			# make sense it the first 10 balls is for each line. But, if the analysis is  Runs by Batsmen by Bowler for the
+			# first 10 balls, then the first 10 balls for each bowler makes sense and this is how this should be.
+			
+			fill_in_grp1 = ''
+			fill_in_grp2 = ''
+			if !['line', 'length', 'angle', 'direction', 'shottype', ''].include? group1
+				fill_in_grp1 = _group1[group1]
+			end
+			if !['line', 'length', 'angle', 'direction', 'shottype', ''].include? group2
+				if fill_in_grp1 == ''
+					fill_in_grp2 = _group2[group2][1..-1]
+				else
+					fill_in_grp2 = _group2[group2]
+				end
+			end
+			
+			
+			bb_fill_in_grp1 = ''
+			bb_fill_in_grp2 = ''
+			if !['line', 'length', 'angle', 'direction', 'shottype', ''].include? group1
+				bb_fill_in_grp1 = 'grp1'
+			end
+			if !['line', 'length', 'angle', 'direction', 'shottype', ''].include? group2
+				if bb_fill_in_grp1 == ''
+					bb_fill_in_grp2 = 'grp2'
+				else
+					bb_fill_in_grp2 = ',grp2'
+				end
+			end
+			
+			
+			
 			if lastXballs == -2 and firstXballs==-2
 				scorecards = '(select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join +')'
 				varB=','
 			elsif lastXballs>0
-				scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join+') '
+				scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by ballnum desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join+') '
 				varB = varA
 			elsif firstXballs>0
-				scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join+') '
+				scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by ballnum)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle, videoloc from scorecards s '+_join+') '
 				varB = varA
 			end
-			
 			
 			
 			if  metric == 'mtchwon'
@@ -1337,10 +1373,10 @@ class AnalysisController < ApplicationController
 					scorecards = '(select s.id as pkey, '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match +')'
 					varB=','
 				elsif lastXballs>0
-					scorecards = ' (select s.id as pkey, '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match+') '
+					scorecards = ' (select s.id as pkey, '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match+') '
 					varB = varA
 				elsif firstXballs>0
-					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match+') '
+					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match+') '
 					varB = varA
 				end
 			end
@@ -1350,10 +1386,10 @@ class AnalysisController < ApplicationController
 					scorecards = '(select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost +')'
 					varB=','
 				elsif lastXballs>0
-					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost+') '
+					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by s.id desc)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost+') '
 					varB = varA
 				elsif firstXballs>0
-					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost+') '
+					scorecards = ' (select s.id as pkey,'+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey, '+fill_in_grp1+fill_in_grp2+' order by matchkey, '+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', s.id)) as ballnum, ballnum as ballrank,  s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+build_query_match_lost+') '
 					varB = varA
 				end
 			end
@@ -1366,7 +1402,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select dense_rank() over (order by  s.matchkey, inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum, noballs) as _rank, 
+					select dense_rank() over (partition by s.matchkey, '+bb_fill_in_grp1+bb_fill_in_grp2+' order by ballnum, noballs) as _rank, 
 						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where runs = 0
@@ -1392,7 +1428,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select dense_rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum, noballs) as _rank, 
+					select dense_rank() over (partition by s.matchkey, '+bb_fill_in_grp1+bb_fill_in_grp2+' order by ballnum, noballs) as _rank, 
 						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where runs > 0
@@ -1453,7 +1489,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select dense_rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum, noballs) as _rank, 
+					select dense_rank() over (partition by s.matchkey, '+bb_fill_in_grp1+bb_fill_in_grp2+' order by ballnum, noballs) as _rank, 
 						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', fours, sixes, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where fours +sixes = 0
@@ -1478,7 +1514,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select dense_rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', ballnum, noballs) as _rank, 
+					select dense_rank() over (partition by s.matchkey, '+bb_fill_in_grp1+bb_fill_in_grp2+' order by ballnum, noballs) as _rank, 
 						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', fours, sixes, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where fours > 0 or sixes >0 
@@ -1538,7 +1574,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select dense_rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', pkey) as _rank, 
+					select dense_rank() over (partition by s.matchkey, '+bb_fill_in_grp1+bb_fill_in_grp2+' order by ballnum) as _rank, 
 						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' 
 					)A
 					where extras = 0
@@ -1564,7 +1600,7 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val
 					from
 					(
-					select dense_rank() over (order by  s.matchkey,inning, grp1'+(!_group2[group2].nil? ? ',grp2':'')+', pkey) as _rank, 
+					select dense_rank() over (partition by s.matchkey, '+bb_fill_in_grp1+bb_fill_in_grp2+' order by ballnum) as _rank, 
 						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' 
 					)A
 					where extras >0
@@ -1617,31 +1653,39 @@ class AnalysisController < ApplicationController
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
 				order by X.grp1' + (group2!=''? ',X.grp2':'')
 			
+			
 			sc = ''
 			if lastXballs == -2 and firstXballs==-2
 				sc = '(select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 			elsif lastXballs>0
 				if metric == 'c_strike'
-					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum desc)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
+					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+fill_in_grp1+fill_in_grp2+' order by ballnum desc)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				elsif metric == 'c_nonstrike' 
-					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum desc)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
+					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey,'+fill_in_grp1+fill_in_grp2+' order by  ballnum desc)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				end
 			elsif firstXballs>0
 				if metric == 'c_strike'
-					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
+					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+fill_in_grp1+fill_in_grp2+' order by ballnum)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				elsif metric == 'c_nonstrike' 
-					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
+					sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',(dense_rank() over (partition by matchkey,'+fill_in_grp1+fill_in_grp2+' order by matchkey, ballnum)) as ballnum, ballnum as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				end
 			end
 			
 			
+			# consistency is especially calculated bowler's line, length and angle. 
+			# so, the second group is removed from the dense_rank so that the partition is by group 1 i.e. bowler or team etc
+			# only and we will have a order of lines or length or angles by matchkey, batsman and ballnum
+			
 			_sc = ''
 			if lastXballs == -2 and firstXballs==-2
+				#_sc = '(select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, dense_rank() over (partition by matchkey, '+_group1[group1]+' order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 				_sc = '(select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+',ballnum, dense_rank() over (partition by matchkey, '+_group1[group1]+' order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, s.batsmankey, battingposition, s.bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, s.matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 			elsif lastXballs>0
-				_sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum desc)) as ballnum, rank() over (partition by matchkey, grp1 order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
+				#_sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum desc)) as ballnum, rank() over (partition by matchkey, '+_group1[group1]+' order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
+				_sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+_group1[group1]+' order by ballnum desc)) as ballnum, dense_rank() over (partition by matchkey, '+_group1[group1]+' order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 			elsif firstXballs>0
-				_sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, dense_rank() over (partition by matchkey, grp1 order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", line, length, shottype, side, spell, direction, angle from scorecards s '+_join +')'
+				#_sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+' order by matchkey,'+_group1[group1]+(!_group2[group2].nil? ? _group2[group2]:'')+', ballnum)) as ballnum, dense_rank() over (partition by matchkey, '+_group1[group1]+' order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
+				_sc = ' (select '+_group1[group1]+' as grp1'+(!_group2[group2].nil? ? _group2[group2]+' as grp2':'')+', (dense_rank() over (partition by matchkey,'+_group1[group1]+' order by ballnum)) as ballnum, dense_rank() over (partition by matchkey, '+_group1[group1]+' order by s.ballnum) as ballrank, s.clientkey, ballsdelivered, ballsfaced, batsmankey, battingposition, bowlerkey, bowlingendkey, bowlingposition, byes, currentbowlerkey, currentnonstrikerkey, currentstrikerkey, dismissedbatsmankey, eights, fielderkey, fives, s.formatkey, fours, inning, legbyes, maiden, matchkey, noballs, ones, others, outbywk, outtypekey, runs, sevens, sixes, s.teamidone, s.teamtwoid, threes, s.tournamentkey, twos, s.venuekey, wicket, wides, zeros, "over", s.line, s.length, s.shottype, side, spell, direction, angle from scorecards s '+_join +')'
 			end
 			
 			
