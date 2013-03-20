@@ -172,6 +172,8 @@ class ExternalsController < ApplicationController
 			shottypes['Hook'] = 15
 			shottypes['Late Cut'] = 16
 			shottypes['Pull Shot'] = 47
+			#Lofted shottype is just a mentioning here, but the actual lofted shot is
+			#determined by the direction
 			shottypes['Lofted'] = 27
 			shottypes['Left Alone'] = 17
 			shottypes['Sweep Shot'] = 55
@@ -300,9 +302,22 @@ class ExternalsController < ApplicationController
 					shottype = shottypes['Beaten']
 				elsif e.IsUncomfortable == 1 and e.IsBeaten == 0
 					shottype = shottypes['Uncomfortable']
+				elsif e.ShotName == 'Lofted'
+					if ['1Fine Leg', '2Square Leg', '3Mid Wicket'].include? directions[e.Region]
+						shottype = 20
+					elsif ['4Long On', '5Long Off'].include? directions[e.Region]
+						shottype = 27
+					elsif ['6Covers'].include? directions[e.Region]
+						shottype = 18
+					elsif ['7Point'].include? directions[e.Region]
+						shottype = 25
+					elsif ['8ThirdMan'].include? directions[e.Region]
+						shottype = 23
+					end
 				else
 					shottype = shottypes[e.ShotName]
 				end
+							
 				side = e.BowlingDirection == 'O' ? 1:2
 				over = e.OverNo
 				ballnum = e.IsWide+e.IsNoBall != 0? (e.OverNo-1) * 6 + (e.BallNo-1):(e.OverNo-1) * 6 + e.BallNo
