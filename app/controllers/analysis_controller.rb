@@ -1367,14 +1367,14 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select dense_rank() over (order by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+', ballnum, noballs) as _rank, matchkey,
+					select dense_rank() over (partition by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' order by ballnum, noballs) as _rank, matchkey,
 						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where runs = 0
 				),
 				CTE1 AS
 				(
-					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A._rank = B._rank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
@@ -1383,7 +1383,7 @@ class AnalysisController < ApplicationController
 				,
 				CTE2 AS
 				(
-					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER()  OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A._rank+1 = B._rank and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
@@ -1393,14 +1393,14 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select dense_rank() over (order by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+', ballnum, noballs) as _rank, matchkey,
+					select dense_rank() over (partition by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' order by ballnum, noballs) as _rank, matchkey,
 						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where runs > 0
 				),
 				_CTE1 AS
 				(
-					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER()  OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM _CTE A LEFT OUTER JOIN _CTE B
 					  ON A._rank = B._rank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
@@ -1409,18 +1409,18 @@ class AnalysisController < ApplicationController
 				,
 				_CTE2 AS
 				(
-					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER()  OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM _CTE A LEFT OUTER JOIN _CTE B
 					  ON A._rank+1 = B._rank and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
 				)
 			
-				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+coalesce(_adds,0))) as val
+				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', case when(1.0*(cnt+coalesce(_adds,0)))=0 then 0 else tot/(1.0*(cnt+coalesce(_adds,0))) end as val
 				from
 				(
 				select  t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+', SUM(t2._rank - t1._rank+1) tot,(1.0*count(t2._rank - t1._rank+1)) cnt
 				from CTE2 t2
-				inner join CTE1 t1 on t2._order = t1._order  and t2.matchkey = t1.matchkey
+				inner join CTE1 t1 on t2._order = t1._order  and t2.matchkey = t1.matchkey and t2.grp1=t1.grp1 '+(!_group2[group2].nil? ? ' and t2.grp2 = t1.grp2':'')+'
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
 				LEFT join 
@@ -1431,16 +1431,16 @@ class AnalysisController < ApplicationController
 					select SUM(A._rank - B._rank) as _adds,A.grp1 '+(!_group2[group2].nil? ? ' ,A.grp2':'')+'
 					from
 					(
-						select c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER( ORDER BY c1._rank)_order 
+						select c1.matchkey, c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER(partition by c1.matchkey, c1.grp1 '+(!_group2[group2].nil? ? ',c1.grp2':'')+' ORDER BY c1._rank)_order 
 						 from _CTE2 c1
-						left outer join _CTE2 c2 on c1._rank = c2._rank+1 and c1.matchkey = c2.matchkey
+						left outer join _CTE2 c2 on c1._rank = c2._rank+1 and c1.matchkey = c2.matchkey and c2.grp1=c1.grp1 '+(!_group2[group2].nil? ? ' and c2.grp2 = c1.grp2':'')+'
 					)A
 					INNER JOIN 
 					(
-						select c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER( ORDER BY c1._rank)_order
+						select c1.matchkey, c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER(partition by c1.matchkey, c1.grp1 '+(!_group2[group2].nil? ? ',c1.grp2':'')+' ORDER BY c1._rank)_order 
 						from _CTE1 c1
-						left outer join _CTE1 c2 on c1._rank+1 = c2._rank and c1.matchkey = c2.matchkey
-					)B ON A._order = B._order
+						left outer join _CTE1 c2 on c1._rank+1 = c2._rank and c1.matchkey = c2.matchkey and c2.grp1=c1.grp1 '+(!_group2[group2].nil? ? ' and c2.grp2 = c1.grp2':'')+'
+					)B ON A._order = B._order and A.matchkey = B.matchkey and A.grp1 = B.grp1 '+(!_group2[group2].nil? ? ' and A.grp2 = B.grp2':'')+'  
 					group by a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+'
 				)y 
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
@@ -1454,14 +1454,14 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select dense_rank() over (order by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+', ballnum, noballs) as _rank, matchkey,
+					select dense_rank() over (partition by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' order by ballnum, noballs) as _rank, matchkey,
 						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
 					where fours+sixes = 0
 				),
 				CTE1 AS
 				(
-					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A._rank = B._rank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
@@ -1470,7 +1470,7 @@ class AnalysisController < ApplicationController
 				,
 				CTE2 AS
 				(
-					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER()  OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A._rank+1 = B._rank and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
@@ -1480,14 +1480,14 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select dense_rank() over (order by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+', ballnum, noballs) as _rank, matchkey,
+					select dense_rank() over (partition by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' order by ballnum, noballs) as _rank, matchkey,
 						   ballnum, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A
-					where where fours>0 or sixes >0
+					where fours > 0 or sixes>0
 				),
 				_CTE1 AS
 				(
-					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER()  OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM _CTE A LEFT OUTER JOIN _CTE B
 					  ON A._rank = B._rank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
@@ -1496,18 +1496,18 @@ class AnalysisController < ApplicationController
 				,
 				_CTE2 AS
 				(
-					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER()  OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM _CTE A LEFT OUTER JOIN _CTE B
 					  ON A._rank+1 = B._rank and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
 				)
 			
-				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+coalesce(_adds,0))) as val
+				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', case when(1.0*(cnt+coalesce(_adds,0)))=0 then 0 else tot/(1.0*(cnt+coalesce(_adds,0))) end as val
 				from
 				(
 				select  t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+', SUM(t2._rank - t1._rank+1) tot,(1.0*count(t2._rank - t1._rank+1)) cnt
 				from CTE2 t2
-				inner join CTE1 t1 on t2._order = t1._order  and t2.matchkey = t1.matchkey
+				inner join CTE1 t1 on t2._order = t1._order  and t2.matchkey = t1.matchkey and t2.grp1=t1.grp1 '+(!_group2[group2].nil? ? ' and t2.grp2 = t1.grp2':'')+'
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
 				LEFT join 
@@ -1518,16 +1518,16 @@ class AnalysisController < ApplicationController
 					select SUM(A._rank - B._rank) as _adds,A.grp1 '+(!_group2[group2].nil? ? ' ,A.grp2':'')+'
 					from
 					(
-						select c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER( ORDER BY c1._rank)_order 
+						select c1.matchkey, c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER(partition by c1.matchkey, c1.grp1 '+(!_group2[group2].nil? ? ',c1.grp2':'')+' ORDER BY c1._rank)_order 
 						 from _CTE2 c1
-						left outer join _CTE2 c2 on c1._rank = c2._rank+1 and c1.matchkey = c2.matchkey
+						left outer join _CTE2 c2 on c1._rank = c2._rank+1 and c1.matchkey = c2.matchkey and c2.grp1=c1.grp1 '+(!_group2[group2].nil? ? ' and c2.grp2 = c1.grp2':'')+'
 					)A
 					INNER JOIN 
 					(
-						select c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER( ORDER BY c1._rank)_order
+						select c1.matchkey, c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER(partition by c1.matchkey, c1.grp1 '+(!_group2[group2].nil? ? ',c1.grp2':'')+' ORDER BY c1._rank)_order 
 						from _CTE1 c1
-						left outer join _CTE1 c2 on c1._rank+1 = c2._rank and c1.matchkey = c2.matchkey
-					)B ON A._order = B._order
+						left outer join _CTE1 c2 on c1._rank+1 = c2._rank and c1.matchkey = c2.matchkey and c2.grp1=c1.grp1 '+(!_group2[group2].nil? ? ' and c2.grp2 = c1.grp2':'')+'
+					)B ON A._order = B._order and A.matchkey = B.matchkey and A.grp1 = B.grp1 '+(!_group2[group2].nil? ? ' and A.grp2 = B.grp2':'')+'  
 					group by a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+'
 				)y 
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
@@ -1541,23 +1541,22 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select dense_rank() over (order by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+', ballnum, wides, noballs) as _rank, matchkey,
+					select dense_rank() over (partition by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' order by ballnum, wides, noballs) as _rank, matchkey,
 						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' 
 					)A
 					where extras = 0
 				),
 				CTE1 AS
 				(
-					SELECT  a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT  a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A._rank = B._rank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
 				)
-
 				,
 				CTE2 AS
 				(
-					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT a.matchkey, a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM CTE A LEFT OUTER JOIN CTE B
 					  ON A._rank+1 = B._rank and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
@@ -1567,14 +1566,14 @@ class AnalysisController < ApplicationController
 					select _rank, ballnum, grp1 '+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select dense_rank() over (order by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+', ballnum, wides, noballs) as _rank, matchkey,
+					select dense_rank() over (partition by s.matchkey, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' order by ballnum, wides, noballs) as _rank, matchkey,
 						   ballnum,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', wides+noballs as extras, runs from '+scorecards+' s where ballnum between '+ballnumber_betn+' 
 					)A
 					where extras >0
 				),
 				_CTE1 AS
 				(
-					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM _CTE A LEFT OUTER JOIN _CTE B
 					  ON A._rank = B._rank+1 and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
@@ -1583,18 +1582,18 @@ class AnalysisController < ApplicationController
 				,
 				_CTE2 AS
 				(
-					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( ORDER BY a._rank) _order
+					SELECT  a.matchkey,a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+',A._rank, ROW_NUMBER() OVER( partition by a.matchkey, a.grp1'+(!_group2[group2].nil? ? ' ,a.grp2':'')+' ORDER BY a._rank) _order
 					FROM _CTE A LEFT OUTER JOIN _CTE B
 					  ON A._rank+1 = B._rank and  a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+' and a.matchkey = b.matchkey
 					WHERE B._rank IS NULL
 				)
 			
-				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*(cnt+coalesce(_adds,0))) as val
+				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', case when(1.0*(cnt+coalesce(_adds,0)))=0 then 0 else tot/(1.0*(cnt+coalesce(_adds,0))) end as val
 				from
 				(
 				select  t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+', SUM(t2._rank - t1._rank+1) tot,(1.0*count(t2._rank - t1._rank+1)) cnt
 				from CTE2 t2
-				inner join CTE1 t1 on t2._order = t1._order and t1.matchkey = t2.matchkey
+				inner join CTE1 t1 on t2._order = t1._order  and t2.matchkey = t1.matchkey and t2.grp1=t1.grp1 '+(!_group2[group2].nil? ? ' and t2.grp2 = t1.grp2':'')+'
 				group by t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+'
 				)X
 				LEFT join 
@@ -1605,16 +1604,16 @@ class AnalysisController < ApplicationController
 					select SUM(A._rank - B._rank) as _adds,A.grp1 '+(!_group2[group2].nil? ? ' ,A.grp2':'')+'
 					from
 					(
-						select c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER( ORDER BY c1._rank)_order 
+						select c1.matchkey, c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER(partition by c1.matchkey, c1.grp1 '+(!_group2[group2].nil? ? ',c1.grp2':'')+' ORDER BY c1._rank)_order 
 						 from _CTE2 c1
-						left outer join _CTE2 c2 on c1._rank = c2._rank+1 and c1.matchkey = c2.matchkey
+						left outer join _CTE2 c2 on c1._rank = c2._rank+1 and c1.matchkey = c2.matchkey and c2.grp1=c1.grp1 '+(!_group2[group2].nil? ? ' and c2.grp2 = c1.grp2':'')+'
 					)A
 					INNER JOIN 
 					(
-						select c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER( ORDER BY c1._rank)_order
+						select c1.matchkey, c1._rank, c1.grp1 '+(!_group2[group2].nil? ? ' ,c1.grp2':'')+',ROW_NUMBER() OVER(partition by c1.matchkey, c1.grp1 '+(!_group2[group2].nil? ? ',c1.grp2':'')+' ORDER BY c1._rank)_order 
 						from _CTE1 c1
-						left outer join _CTE1 c2 on c1._rank+1 = c2._rank and c1.matchkey = c2.matchkey
-					)B ON A._order = B._order
+						left outer join _CTE1 c2 on c1._rank+1 = c2._rank and c1.matchkey = c2.matchkey and c2.grp1=c1.grp1 '+(!_group2[group2].nil? ? ' and c2.grp2 = c1.grp2':'')+'
+					)B ON A._order = B._order and A.matchkey = B.matchkey and A.grp1 = B.grp1 '+(!_group2[group2].nil? ? ' and A.grp2 = B.grp2':'')+'  
 					group by a.grp1 '+(!_group2[group2].nil? ? ' ,a.grp2':'')+'
 				)y 
 				)z ON X.grp1 = z.grp1 '+(!_group2[group2].nil? ? ' and x.grp2 = Z.grp2':'')+' 
