@@ -45,7 +45,7 @@ class Scorecard < ActiveRecord::Base
   def self.getData(chartdata, group, columns)
 	_data = [group]
 	for l in (1..columns.length)
-		_data << 0
+		_data << nil
 	end
 	filteredData = []
 	chartdata.each do |d|

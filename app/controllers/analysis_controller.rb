@@ -1659,10 +1659,10 @@ class AnalysisController < ApplicationController
 				WITH 
 				CTE AS 
 				(
-					select ballrank, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
+					select ballrank,noballs, grp1'+(!_group2[group2].nil? ? ' ,grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select matchkey, ballrank, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where ballnum between '+ballnumber_betn+' and wides=0
+					select matchkey, ballrank,noballs, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A order by grp1, ballrank
 				),
 				CTE1 AS
@@ -1680,7 +1680,7 @@ class AnalysisController < ApplicationController
 					  ON A.ballrank+1 = B.ballrank and a.matchkey=b.matchkey and a.grp1 = b.grp1 '+(!_group2[group2].nil? ? ' and a.grp2 = b.grp2':'')+'
 					WHERE B.ballrank IS NULL
 				)
-				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*cnt) as val
+				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', (tot+(select sum(noballs) from cte c where c.grp1 = X.grp1 '+(!_group2[group2].nil? ? ' and c.grp2 = X.grp2':'')+'))/(1.0*cnt) as val
 				from
 				(
 				select  t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+', SUM(t2.ballrank - t1.ballrank+1) tot,(1.0*count(t2.ballrank - t1.ballrank+1)) cnt
@@ -1695,10 +1695,10 @@ class AnalysisController < ApplicationController
 				WITH 
 				CTE AS 
 				(
-					select ballrank, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+' , runs as val, matchkey
+					select ballrank, noballs, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+' , runs as val, matchkey
 					from
 					(
-					select matchkey, ballrank,grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where ballnum between '+ballnumber_betn+' and wides=0
+					select matchkey, ballrank, noballs, grp1 '+(!_group2[group2].nil? ? ',grp2':'')+', runs from '+sc+' s where ballnum between '+ballnumber_betn+' and wides=0
 					)A order by matchkey,grp1, ballrank
 				),
 				CTE1 AS
@@ -1717,7 +1717,7 @@ class AnalysisController < ApplicationController
 					WHERE B.ballrank IS NULL
 				)
 			
-				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', tot/(1.0*cnt) as val
+				SELECT X.grp1 '+(!_group2[group2].nil? ? ' ,X.grp2':'')+', (tot+(select sum(noballs) from cte c where c.grp1 = X.grp1 '+(!_group2[group2].nil? ? ' and c.grp2 = X.grp2':'')+'))/(1.0*cnt) as val
 				from
 				(
 				select  t2.grp1 '+(!_group2[group2].nil? ? ' ,t2.grp2':'')+', SUM(t2.ballrank - t1.ballrank+1) tot,(1.0*count(t2.ballrank - t1.ballrank+1)) cnt
@@ -1804,7 +1804,7 @@ class AnalysisController < ApplicationController
 							 from (select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum, wides, noballs) as ballnum_including_wd_nb, dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum, '+_metrics + ' from ' + scorecards +' s) s
 								LEFT JOIN 
 								(select s.matchkey, grp1'+(!_group2[group2].nil? ? ',grp2':'')+',"over", dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum, wides, noballs) as ballnum_including_wd_nb, dense_rank() over (partition by s.matchkey, grp1, "over" order by ballnum) as ballnum,'+_metrics + ' from ' + scorecards +' s) s1
-								ON s.grp1 = s1.grp1 and s."over" = s1."over" and s.ballnum_including_wd_nb = s1.ballnum_including_wd_nb-1 and s.matchkey = s1.matchkey
+								ON s.grp1 = s1.grp1 and s."over" = s1."over" and s.ballnum_including_wd_nb = s1.ballnum_including_wd_nb+1 and s.matchkey = s1.matchkey
 							)A
 							group by matchkey,grp1, "over"
 							)B
@@ -1834,8 +1834,6 @@ class AnalysisController < ApplicationController
 				#does not work with batting position because batting pos is only for current striker.
 				#The current scorecard id has batting position which is only for current strikerkey
 				elsif metric == 'c_nonstrike'
-					#@client = current_user
-					#ClientMailer.Error_Delivery(cnonstrike, @client, 'cnonstrike').deliver
 					@chartdata = Scorecard.find_by_sql(cnonstrike)
 				elsif metric == 'consistency'
 					@chartdata = Scorecard.find_by_sql(consistency)
@@ -1933,6 +1931,8 @@ class AnalysisController < ApplicationController
 			
 			end
 		else
+			#@client = current_user
+			#ClientMailer.Error_Delivery(frequency_sc, @client, 'frequency').deliver
 			@chartdata = Scorecard.find_by_sql(frequency_sc)
 		end
 		
