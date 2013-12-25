@@ -33,7 +33,7 @@ gem 'pdfkit'
 gem 'dalli'
 gem 'memcachier'
 
-gem 'pry'
+#gem 'pry'
 
 #platforms :ruby do # linux
 #  gem 'unicorn'
