@@ -615,12 +615,19 @@ $(document).ready(function(){
 		
 		//negative 1 because in Script.js, the value is incremented for the next videoloc file before 
 		//the scorecard record is entered
-		var id = parseInt($('#id').html()) - 1;
-
-		var videoloc = pad(clientkey.toString(),4)+'_'+pad(id.toString(),6)+'_';
+		//var id = parseInt($('#id').html()) - 1;
+		
+		//var videoloc = pad(clientkey.toString(),4)+'_'+pad(id.toString(),6)+'_';
+		
+		var rowCount = parseInt($('#rowCount').html())+1;
+		var match = $('#team').html().toUpperCase();
+		var matchdate = $('#matchdate').html();
+		
+		var videoloc = match+'-'+matchdate+'_'+rowCount+'.mp4';
+		videoloc = videoloc.replace(/\s+/g, '');
 		
 		console.log('this is the videoloc *******' + videoloc);
-		
+
 		//***********************************************************
 		
 		
@@ -832,6 +839,9 @@ $(document).ready(function(){
 				if (scrollproperty == 'enabled'){
 					$('html, body').animate({scrollTop:  $(".scorecard").offset().top},1000);
 				}
+				
+				
+				$('#rowCount').html(rowCount);
 			},
 			error: function(jqXHR, textStatus, errorThrown){ 
 				console.log('unsuccessful');

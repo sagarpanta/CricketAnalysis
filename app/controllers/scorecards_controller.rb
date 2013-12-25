@@ -245,8 +245,9 @@ class ScorecardsController < ApplicationController
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.find_by_id_and_clientkey(params[:id], current_user.id)
-
+			
 			#####common entry for all records
+			@rowCount = Scorecard.where('matchkey=?', params[:id]).count
 			@tournament = Tournament.find_by_id(@match.tournamentkey)
 			@venue = Venue.find_by_id(@match.venuekey)
 			@format = Format.find_by_id(@match.formatkey)
@@ -546,6 +547,7 @@ class ScorecardsController < ApplicationController
 			@target = Scorecard.where('matchkey = ? and inning = ? ', params[:id], 1).select('sum(runs+wides+noballs+byes+legbyes) as runs, sum(ballsdelivered) as ballsdelivered, sum(wicket) as wickets')
 			#redirect_to scorecard_first_inning_path({:id=>@match.id})
 			#####common entry for all records
+			@rowCount = Scorecard.where('matchkey=?', params[:id]).count
 			@tournament = Tournament.find_by_id(@match.tournamentkey)
 			@venue = Venue.find_by_id(@match.venuekey)
 			@format = Format.find_by_id(@match.formatkey)

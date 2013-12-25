@@ -109,6 +109,7 @@ $(document).ready(function(){
 			}, errorHandler);
 		}
 		 
+		
 		 
 		var initFs = function(filesys) {
 			fs = filesys;
@@ -221,7 +222,7 @@ $(document).ready(function(){
 				var back = document.getElementById('canvas');
 				var backcontext = back.getContext('2d');
 
-				cw = 240;
+				cw = 600;
 				ch = 400;
 				back.width = cw;
 				back.height = ch;

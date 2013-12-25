@@ -11,6 +11,4 @@ $(document).ready(function(){
 	$('.fields').on('click', function(){
 		$('#success_message').html('');	
 	});
-
-
 });

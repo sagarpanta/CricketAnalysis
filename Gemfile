@@ -31,6 +31,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'pdfkit'
 gem 'dalli'
+gem 'memcachier'
 
 gem 'pry'
 

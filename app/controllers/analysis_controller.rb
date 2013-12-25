@@ -1928,7 +1928,7 @@ class AnalysisController < ApplicationController
 					@chartdata = Scorecard.find_by_sql('Select videoloc as val from '+scorecards+' s where ballnum between '+ballnumber_betn+' and s.shottype in (49,50,51,56)')
 				end			
 			
-			
+
 			end
 		else
 			#@client = current_user

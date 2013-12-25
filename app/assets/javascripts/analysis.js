@@ -147,7 +147,7 @@ $(document).ready(function(){
 		options['dataMode'] = 'regions';
 		options['magnifyingGlass'] = {enable:true, zoomFactor:7.5};
 		options['height'] = 375;
-
+		$('#container').css('width', '100%');
         var chart = new google.visualization.GeoChart(document.getElementById('container'));
         chart.draw(data, options);
 		google.visualization.events.addListener(chart, 'regionClick', function(e) {
@@ -206,7 +206,6 @@ $(document).ready(function(){
 				mapdata = data;
 				google_map_function(data);
 				$('#container').show();
-
 			},
 			error: function(jqXHR, textStatus, errorThrown){ 
 				console.log('unsuccessful');
@@ -1012,10 +1011,10 @@ $(document).ready(function(){
 				sources.push(fileURL);
 				sources_names.push(file.name);
 			}
-			
-			//console.log(sources_names);
-			//console.log(sources);
-							
+			console.log('************');
+			console.log(sources_names);
+			console.log(sources);
+			console.log('************');S				
 		};
 		
 	var playExternalVideos = function(vid_array){
@@ -1023,16 +1022,15 @@ $(document).ready(function(){
 		var playlist = [];
 		
 		$('#container').remove('#t20provideo');
-		$('#container').html('<video id="t20provideo" autoplay></video>');
+		$('#container').html('<video id="t20provideo" controls></video>');
 		var videoNode = document.querySelector('video');
 		var counter = 0;
 		for (var i=0;i<vid_array.length; i++){
-
+			console.log(vid_array[i]);
 			if ($.inArray(vid_array[i], sources_names) > -1){
 				playlist.push(sources[$.inArray(vid_array[i], sources_names)]);
 			}
 		}	
-		
 		videoNode.src = playlist[0];
 		videoNode.load();
 		videoNode.play();
@@ -1124,7 +1122,7 @@ $(document).ready(function(){
 						playable = [];
 						imageplayable = [];
 						for(var i=0; i<data.length; i++){
-							var _length = data[i]['val'].length;
+							var _length = data[i]['val'].length;							
 							if (data[i]['val'].substring(_length-3, _length) == 'mp4') {
 								playable.push(data[i]['val']);
 							}
