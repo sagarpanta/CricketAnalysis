@@ -447,10 +447,10 @@ class MatchesController < ApplicationController
 	end
 	
 	@last18balls = Rails.cache.fetch("last18balls_#{params[:id]}_#{maxid}_inning1" , :expires_in=>45.seconds) do
-		Scorecard.where('matchkey=? and inning=?',params[:id], 1).order("id desc").limit(18).select('runs+wides+byes+legbyes+noballs as runs, ballnum')
+		#Scorecard.where('matchkey=? and inning=?',params[:id], 1).order("id desc").limit(18).select('runs+wides+byes+legbyes+noballs as runs, ballnum')
+		Scorecard.where('matchkey=? and inning=?',params[:id], 1).order("id desc").select('runs+wides+byes+legbyes+noballs as runs, ballnum')
 	end
-	
-	
+
 	@counts = Rails.cache.fetch("last18ballscount_#{params[:id]}_#{maxid}_inning1" , :expires_in=>45.seconds) do
 		@last18balls.count
 	end
@@ -502,7 +502,8 @@ class MatchesController < ApplicationController
 	end
 	
 	@last18balls = Rails.cache.fetch("last18balls_#{params[:id]}_#{maxid}_inning2", :expires_in=>45.seconds) do
-		Scorecard.where('matchkey=? and inning=?',params[:id], 2).order("id desc").limit(18).select('runs+wides+byes+legbyes+noballs as runs, ballnum')
+		#Scorecard.where('matchkey=? and inning=?',params[:id], 2).order("id desc").limit(18).select('runs+wides+byes+legbyes+noballs as runs, ballnum')
+		Scorecard.where('matchkey=? and inning=?',params[:id], 2).order("id desc").select('runs+wides+byes+legbyes+noballs as runs, ballnum')
 	end
 	
 	@counts = Rails.cache.fetch("counts_#{params[:id]}_#{maxid}_inning2", :expires_in=>45.seconds) do

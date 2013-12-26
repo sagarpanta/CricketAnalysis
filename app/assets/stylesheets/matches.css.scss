@@ -204,6 +204,7 @@ table#public_match_table tr th{
 	color:black;
 	margin:20px auto;
 	width:500px;
+	overflow:auto;
 }
 
 #last18balls_2{
@@ -211,6 +212,23 @@ table#public_match_table tr th{
 	color:black;
 	margin:20px auto;
 	width:500px;
+	overflow:auto;
+}
+
+.over_cell_1{
+	width:15px;
+	height:15px;
+	background-color:blue;
+	color:white;
+	opacity:0.7;
+}
+
+.over_cell_2{
+	width:15px;
+	height:15px;
+	background-color:blue;
+	color:white;
+	opacity:0.7;
 }
 
 .last_18_cell_1{

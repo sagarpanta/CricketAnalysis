@@ -122,13 +122,14 @@
 						}
 						
 						if (parseInt(counter)>=18){
-							$('#last18balls_1 table tr td:last').remove();
+							//$('#last18balls_1 table tr td:last').remove();
 							if (parseInt(counter)%6==1){
 								$('#last18balls_1 table tr').prepend('<td class="last_18_cell_1" style="border-right:1px solid black" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
 							}
 							else{
 								$('#last18balls_1 table tr').prepend('<td class="last_18_cell_1" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
 							}	
+							$('#last18balls_1').scrollLeft(0);
 						}	
 					}
 				}
@@ -169,13 +170,14 @@
 						}
 						
 						if (parseInt(counter)>=18){
-							$('#last18balls_2 table tr td:last').remove();
+							//$('#last18balls_2 table tr td:last').remove();
 							if (parseInt(counter)%6==1){
 								$('#last18balls_2 table tr').prepend('<td class="last_18_cell_2" style="border-right:1px solid black" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
 							}
 							else{
 								$('#last18balls_2 table tr').prepend('<td class="last_18_cell_2" data-counter='+parseInt(parseInt(counter)+1)+'>'+data['last_run']+'</td>');
 							}	
+							$('#last18balls_2').scrollLeft(0);
 						}	
 					}
 				}

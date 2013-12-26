@@ -17,8 +17,8 @@
 		<% counter = @counts %>
 		<% @last18balls.each do |l| %>
 			<% if l.ballnum%6==1 %>
-				
 				<td class="last_18_cell_1" style="border-right:1px solid black" data-counter=<%= counter %> ><%= l.runs %></td>
+				<td class="over_cell_1"><%= l.ballnum/6 +1 %></td>
 			<% else %>
 				<td class="last_18_cell_1" data-counter=<%= counter %>><%= l.runs %></td>
 			<% end %>
