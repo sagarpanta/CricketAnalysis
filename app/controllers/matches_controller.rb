@@ -1,6 +1,6 @@
 class MatchesController < ApplicationController
-  #caches_action :firstinning, :expires_in=>10.seconds ,:cache_path => Proc.new { |c| c.params }
-  #caches_action :secondinning, :expires_in=>10.seconds, :cache_path => Proc.new { |c| c.params }
+  caches_action :firstinning, :cache_path => Proc.new { |c| c.params }
+  caches_action :secondinning, :cache_path => Proc.new { |c| c.params }
   caches_action :public
   # GET /matches
   # GET /matches.json
