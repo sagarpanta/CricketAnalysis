@@ -209,16 +209,20 @@ $(document).ready(function(){
 								data = original_data;
 							}
 							
-							google_chart_function(data, group1, group2, charttype);
-							google_table_function(data);
-							$('#container').show();
-							$('#table_div').show();
+							
 							original_data = data;
 							counter++;
 							if(counter > metrices.length){
 								original_data = [];
-								counter=0;
-							
+								counter=0;	
+								alert()
+							}
+							//show only after all metric are added
+							else if(counter == metrices.length){
+								google_chart_function(data, group1, group2, charttype);
+								google_table_function(data);
+								$('#container').show();
+								$('#table_div').show();
 							}
 						},
 						error: function(jqXHR, textStatus, errorThrown){ 
