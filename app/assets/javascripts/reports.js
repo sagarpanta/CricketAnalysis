@@ -1,4 +1,7 @@
 $(document).ready(function(){
+
+	var original_data = [];
+	
 	$('#reports tr').mouseover(function(){
 		$(this).children('td').css('background-color','#65B8C9').css('color', 'black');
 	});
@@ -166,7 +169,7 @@ $(document).ready(function(){
 				obj['ankey1'] = data['report']['ankey1'].split(',');
 				obj['group1'] = data['report']['group1'];
 				obj['group2'] = data['report']['group2'];
-				obj['metric'] = data['report']['metric'];
+				//obj['metric'] = data['report']['metric'];
 				obj['lxm'] = data['report']['lxm'];
 				obj['lxb'] = data['report']['lxb'];
 				obj['fxb'] = data['report']['fxb'];
@@ -177,35 +180,56 @@ $(document).ready(function(){
 				obj['tag2'] = data['report']['tag2'];
 				obj['tag3'] = data['report']['tag3'];
 				
-				
 				var charttype = data['report']['charttype'];
-
-				var jsonObj = {};
-				jsonObj['filters'] = obj;
-				$.ajax({
-					url: '/generate.json',
-					type: 'get',
-					data: jsonObj,
-					cache: false,
-					success: function(data, textStatus, jqXHR ) { 
-						console.log(data);
-						group1 = obj['group1'];
-						group2 = obj['group2'];
-						metric = obj['metric'];
-						console.log('successful');
-						google_chart_function(data, group1, group2, charttype);
-						google_table_function(data);
-						$('#container').show();
-						$('#table_div').show();
-					},
-					error: function(jqXHR, textStatus, errorThrown){ 
-						console.log('unsuccessful');
-						console.log(jqXHR);
-						console.log(textStatus);
-						console.log(errorThrown);
-						alert('Too many filters. Reloading page...');
-					}
-				});
+				var metrices = data['report']['metric'].split(',');
+				if(metrices.length>1){metrices.pop();}
+				var counter = 0;
+				for(var i=0;i< metrices.length;i++)
+				{
+					obj['metric'] = metrices[i];
+				
+					var jsonObj = {};
+					jsonObj['filters'] = obj;
+					$.ajax({
+						url: '/generate.json',
+						type: 'get',
+						data: jsonObj,
+						cache: false,
+						success: function(data, textStatus, jqXHR ) { 
+							//console.log(data);
+							group1 = obj['group1'];
+							group2 = obj['group2'];
+							metric = obj['metric'];
+							console.log('successful');
+							if(counter > 0){
+								console.log('**********************'+counter);
+								for(var j=0; j<data.length; j++){
+									original_data[j].push(data[j][1]);	
+								}
+								data = original_data;
+							}
+							
+							google_chart_function(data, group1, group2, charttype);
+							google_table_function(data);
+							$('#container').show();
+							$('#table_div').show();
+							original_data = data;
+							counter++;
+							if(counter > metrices.length){
+								original_data = [];
+								counter=0;
+							
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown){ 
+							console.log('unsuccessful');
+							console.log(jqXHR);
+							console.log(textStatus);
+							console.log(errorThrown);
+							alert('Too many filters. Reloading page...');
+						}
+					});
+				}
 			},
 			error: function(jqXHR, textStatus, errorThrown){ 
 				console.log('unsuccessful');

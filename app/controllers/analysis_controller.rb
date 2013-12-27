@@ -17,7 +17,7 @@ class AnalysisController < ApplicationController
 				@coaches = Coach.all
 
 				@managers = Manager.all
-				@pitchconditions = Match.where('clientkey=?', current_user.id)
+				@pitchconditions = Match.where('clientkey=?', current_user.id).select('distinct pitchcondition')
 
 			else
 				@current_client = current_user.name
@@ -37,7 +37,7 @@ class AnalysisController < ApplicationController
 				@coaches = Coach.where('clientkey=?', current_user.id )
 
 				@managers = Manager.where('clientkey=?', current_user.id )
-				@pitchconditions = Match.where('clientkey=?', current_user.id)
+				@pitchconditions = Match.where('clientkey=?', current_user.id).select('distinct pitchcondition')
 			end
 
 			@formats = Format.all
