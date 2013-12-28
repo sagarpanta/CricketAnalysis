@@ -56,6 +56,7 @@ CricketAnalysis::Application.routes.draw do
 
   resources :matches
   match 'match_status' , :to=> 'matches#match_status'
+  match 'public/status' , :to=> 'matches#status'
   match 'match_details' , :to=> 'matches#match_details'
   match 'pitchconditions' , :to=> 'matches#pitchconditions'
   match 'public' , :to=> 'matches#public'

@@ -95,7 +95,7 @@
 		</div>
 </div>
 
-<div class="scorecard"><%= link_to 'First Inning',{:controller=>'matches', :action=>'firstinning', :id=>@match.id, :clientkey=>@clientkey} %></div>
+<div class="scorecard"><%= link_to 'First Inning',{:controller=>'matches', :action=>'firstinning', :id=>@match.id, :clientkey=>@clientkey} %> | <%= link_to 'Match Status',{:controller=>'matches', :action=>'status', :id=>@match.id, :clientkey=>@clientkey} %></div>
 
 
 

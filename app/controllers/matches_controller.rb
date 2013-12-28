@@ -1,7 +1,9 @@
 class MatchesController < ApplicationController
   caches_action :firstinning, :cache_path => Proc.new { |c| c.params }
   caches_action :secondinning, :cache_path => Proc.new { |c| c.params }
-  caches_action :public
+  #caches_action :status, :cache_path => Proc.new { |c| c.params }
+
+  #caches_action :public
   # GET /matches
   # GET /matches.json
   def index
@@ -384,14 +386,14 @@ class MatchesController < ApplicationController
   end 
   
   def public
+	maxID = Match.maximum(:id)
+	maxID = maxID.nil? ? 0:maxID
 	
 	@clients = Rails.cache.fetch("clients", :expires_in=>1.day) do
 		(Client.where("username != 'admin'").select('id, country') << {'id'=> -2 , 'country'=>'Select One'}).sort_by{|k|k['id']}
 	end
 	
-
-	
-	@matches = Rails.cache.fetch("matches", :expires_in=>5.minutes) do
+	@matches = Rails.cache.fetch("matches_#{maxID}", :expires_in=>5.minutes) do
 		Match.find_by_sql('select * from (select dense_rank() over (partition by clientkey order by matchdate desc) _rank, * from matches)m where _rank<=10')
 	end
 	
@@ -406,7 +408,7 @@ class MatchesController < ApplicationController
 	maxentry = Scorecard.find(:all, :order=>"id", :conditions=>["clientkey=? and matchkey=? and inning=?",params[:clientkey],params[:id],1]).last
 	maxid = maxentry.nil? ? 0:maxentry.id
 	@clientkey = params[:clientkey]
-
+	
 	@match = Rails.cache.fetch("_match_#{params[:id]}", :expires_in=>24.hours) do
 				match = Match.find_by_id(params[:id].to_s)
 			end	
@@ -465,7 +467,7 @@ class MatchesController < ApplicationController
 	@clientkey = params[:clientkey]
 	@match = Rails.cache.fetch("_match_#{params[:id]}", :expires_in=>24.hours) do
 				match = Match.find_by_id(params[:id])
-			end	
+	end	
 	@tournament = Rails.cache.fetch("tournament_#{params[:id]}", :expires_in=>24.hours) do
 		Tournament.find_by_id(@match.tournamentkey)
 	end
@@ -515,5 +517,97 @@ class MatchesController < ApplicationController
 	
 	@inning = 2
   end
+  
+  
+  
+  def status
+	@match = Rails.cache.fetch("_match_#{params[:id]}}", :expires_in=>24.hours) do
+		match = Match.find_by_id(params[:id])
+	end	
+	@matchid = @match.id
+	maxentry = Scorecard.find(:all, :order=>"id", :conditions=>["clientkey=? and matchkey=?",params[:clientkey],params[:id]]).last
+	maxid = maxentry.nil? ? 0:maxentry.id
+	#@runsperover = Scorecard.find_by_sql('select ballnum, convert(varchar, inning) as inning,SUM(runs) as runs from scorecards s where clientkey= '+current_user.id.to_s+' and matchkey= '+params[:id].to_s+' group by inning, ballnum ')
+	
+	rpo_sql = '
+			select A."over", to_char(A.inning, '+"'9'"+') as inning , SUM(runs+wides+noballs+legbyes+byes) as runs
+			from
+			(
+			select distinct s.inning, s1."over", s.clientkey, s.matchkey
+			from scorecards s cross join scorecards s1 
+			where  s.clientkey= '+params[:clientkey].to_s+' and s.matchkey= '+params[:id].to_s+'
+			and  s1.clientkey= '+params[:clientkey].to_s+' and s1.matchkey= '+params[:id].to_s+'
+			)A
+			LEFT join scorecards s on A.inning = s.inning and A."over" = s."over" and A.clientkey = s.clientkey and A.matchkey = s.matchkey
+			group by A.inning, A."over" 
+			order by A.inning, A."over" 
+			' 
+	crpo_sql = '
+			select A."over", to_char(A.inning, '+"'9'"+') as inning , SUM(runs+wides+noballs+legbyes+byes) as runs
+			from
+			(
+			select distinct s.inning, s1."over", s.clientkey, s.matchkey
+			from scorecards s cross join scorecards s1 
+			where  s.clientkey= '+params[:clientkey].to_s+' and s.matchkey= '+params[:id].to_s+'
+			and  s1.clientkey= '+params[:clientkey].to_s+' and s1.matchkey= '+params[:id].to_s+'
+			)A
+			LEFT join scorecards s on A.inning = s.inning and A."over" >= s."over" and A.clientkey = s.clientkey and A.matchkey = s.matchkey
+			group by A.inning, A."over" 
+			order by A.inning, A."over" 
+			'
+	@runsperover = Rails.cache.fetch("runsperover_#{params[:id]}_#{maxid}") do
+		Scorecard.find_by_sql(rpo_sql)
+	end
+	@cumulativerunsperover =  Rails.cache.fetch("crunsperover_#{params[:id]}_#{maxid}") do
+		Scorecard.find_by_sql(crpo_sql)
+	end
+	@ti = Rails.cache.fetch("ti_#{params[:id]}_#{maxid}") do
+		Scorecard.where('clientkey=? and matchkey=?', params[:clientkey], @matchid).select('count(distinct inning) as c_inning')
+	end
+	@totalinnings = @ti.nil? ? 0:@ti[0].c_inning
+	@currentinning = Rails.cache.fetch("currentinning_#{params[:id]}_#{maxid}") do
+		Scorecard.where('clientkey=? and matchkey=?', params[:clientkey], @matchid).select('max(inning) as inning')
+	end
+	@current = Rails.cache.fetch("current_#{params[:id]}_#{maxid}") do
+		Scorecard.where('clientkey=? and matchkey=? and inning=?', params[:clientkey], @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(max("over"*1.0)) as runrate, max("over") as currentover, sum(runs+wides+noballs+legbyes+byes) as score, max(ballnum) as currball')
+	end
+
+	@five = @current[0].currentover.nil? ? 0:@current[0].currentover.to_i-4
+	@curr = @current[0].currentover.nil? ? 0:@current[0].currentover
+	@currRR = @current[0].runrate.nil? ? 0.0:@current[0].runrate
+	@currScore = @current[0].score.nil? ? 0:@current[0].score
+	@currBall = @current[0].currball.nil? ? 0:@current[0].currball
+	@lastfiveRR = Rails.cache.fetch("lastfiveRR_#{params[:id]}_#{maxid}") do
+		Scorecard.where('clientkey=? and matchkey=? and inning=?', params[:clientkey], @matchid, @currentinning[0].inning).select('SUM(runs+wides+noballs+legbyes+byes)/(count(distinct "over")*1.0) as runrate').where('"over" between '+(@five).to_s + ' and '+ (@curr).to_s)
+	end
+	@lfRR = @lastfiveRR[0].runrate.nil? ? 0.0:@lastfiveRR[0].runrate
+	@totalmatchballs = @match.matchovers * 6
+	
+	@currentoverindecimal = @current[0].currball.nil? ? 0:@current[0].currball.to_i/6 + @current[0].currball.to_i%6/6.0
+	@ballsremaining = @current[0].currball.nil? ? @totalmatchballs:@totalmatchballs - @current[0].currball.to_i
+	
+	@oversremaining = @ballsremaining/6+@ballsremaining%6/6.0
+	
+	@projectedwithCurrRR = @current[0].runrate.nil? ? 0:(@current[0].runrate.to_f * @oversremaining).to_i + @current[0].score.to_i
+	@projectedwithsix = (6 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score.to_i)
+	@projectedwitheight = (8 * @oversremaining).to_i + (@current[0].score.nil? ? 0:@current[0].score.to_i)
+	
+	@arrRunsPerOver = Rails.cache.fetch("arrRunsPerOver_#{params[:id]}_#{maxid}") do
+		Match.getChartData(@runsperover)
+	end
+	@dataRPO = Rails.cache.fetch("dataRPO_#{params[:id]}_#{maxid}") do
+		Match.data_stringify(@arrRunsPerOver)
+	end
+	
+	@arrCumRunsPerOver = Rails.cache.fetch("arrCumRunsPerOver_#{params[:id]}_#{maxid}") do
+		Match.getChartData(@cumulativerunsperover)
+	end
+	@dataCRPO = Rails.cache.fetch("dataCRPO_#{params[:id]}_#{maxid}") do
+		Match.data_stringify(@arrCumRunsPerOver)
+	end
+	respond_to do |format|
+		format.html	
+	end
+  end 
   
 end
