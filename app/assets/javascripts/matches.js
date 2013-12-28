@@ -125,6 +125,7 @@ $(document).ready(function(){
 	 
 	 }); 
 
+	/* 
 	var pitchcondition_array = new Array();
 	var match_form = $('.pitchcondition').html();
 	if (match_form != undefined){
@@ -141,6 +142,14 @@ $(document).ready(function(){
 			}
 		});
 	}
+	*/
+	
+	$('#pc_pckey').change(function(){
+		var pitchcondition = $(this).val();
+		$('#match_pitchcondition').val(pitchcondition);
+	});
+	
+	
 	var pitch_clicked = 0;
 	$('#match_pitchcondition').on('click', function(){
 		pitch_clicked = pitch_clicked+1;

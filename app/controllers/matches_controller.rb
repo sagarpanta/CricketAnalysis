@@ -52,9 +52,7 @@ class MatchesController < ApplicationController
 		if signed_in?
 			@current_client = current_user.username
 			@match = Match.new
-			
-			@matches = Match.all
-			
+
 			@countryorder = 'links'
 			@tournamentorder = 'links'
 			@playerorder = 'links'
@@ -85,7 +83,13 @@ class MatchesController < ApplicationController
 			@matchtypes = @matchtypes.sort_by{|k| -k[1]}
 
 			@match_result = "no_result_yet"
-
+			
+			@pcObject = Match.where('clientkey = ?', current_user.id).select(:pitchcondition).uniq
+			@pitchconditions = ['']
+			@pcObject.each do |p|
+				@pitchconditions << p.pitchcondition
+			end			
+			
 			respond_to do |format|
 			  format.html # new.html.erb
 			  format.json { render json: @match }
