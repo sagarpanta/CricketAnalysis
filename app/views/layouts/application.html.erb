@@ -5,7 +5,7 @@
   <title>CricketAnalysis</title>
   <%= stylesheet_link_tag  "application" %>
   <%= javascript_include_tag "application" %>
-  <%= javascript_include_tag('http://www.google.com/jsapi').sub('.js', '') %>
+  <%= javascript_include_tag('https://evening-beach-3495.herokuapp.com/socket.io/socket.io.js' , {:cache=> true}) %>
   <%= csrf_meta_tags %>
 
 </head>
@@ -71,7 +71,7 @@
 </div>
 
 <%= yield %>
-<%= javascript_include_tag('https://evening-beach-3495.herokuapp.com/socket.io/socket.io.js') %>
+
 <script>
 	var socket = io.connect('https://evening-beach-3495.herokuapp.com');
 	socket.on('news', function (data) {
@@ -268,6 +268,7 @@
 		socket.emit('cmi', cmi);
 	}
 </script>
+<script type="text/javascript"  src='http://www.google.com/jsapi' ></script>
 <script type="text/javascript">
 
       google.load('visualization', '1', {packages: ['corechart']});
