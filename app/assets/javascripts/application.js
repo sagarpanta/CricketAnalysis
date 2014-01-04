@@ -12,15 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.ui.core
-//= require jquery.ui.button
-//= require jquery.ui.datepicker
-//= require jquery.ui.mouse
-//= require jquery.ui.dialog
-//= require jquery.ui.effect-fade
-//= require jquery.ui.selectable
-//= require jquery.ui.sortable
-//= require jquery.ui.tooltip
+//= require jquery.ui.all
 //= require jquery.turbolinks
 //= require turbolinks
 //= require_tree .
