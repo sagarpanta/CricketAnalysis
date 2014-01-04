@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).on('ready page:load', function () {
 
 	var avg = 0, bbb= 0, bbh= 0, byes= 0, clientkey= 0, convrsnratio= 0;
 	var dsmsl= 0, extras= 0, five= 0, four=0, inns= 0, legbyes= 0, mtchlost= 0;

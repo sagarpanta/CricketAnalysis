@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).on('ready page:load', function () {
 	var pie;
 	Raphael.fn.pieChart = function (cx, cy, r, values, labels, stroke) {
 		var paper = this,

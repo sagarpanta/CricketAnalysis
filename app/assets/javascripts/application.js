@@ -21,8 +21,10 @@
 //= require jquery.ui.selectable
 //= require jquery.ui.sortable
 //= require jquery.ui.tooltip
+//= require jquery.turbolinks
+//= require turbolinks
 //= require_tree .
-$(document).ready(function(){
+$(document).on('ready page:load', function () {
 	$(".chzn-select").chosen();	
 	var pretty = $('.pretty').html();
 	

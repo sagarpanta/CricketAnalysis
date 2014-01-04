@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).on('ready page:load', function () {
 	$(".chzn-select").chosen();	
 	var analysis = $('#analysis_analysiskey').val();
 	
@@ -1018,7 +1018,7 @@ $(document).ready(function(){
 			console.log('************');
 			console.log(sources_names);
 			console.log(sources);
-			console.log('************');S				
+			console.log('************');			
 		};
 		
 	var playExternalVideos = function(vid_array){
@@ -1029,12 +1029,16 @@ $(document).ready(function(){
 		$('#container').html('<video id="t20provideo" controls></video>');
 		var videoNode = document.querySelector('video');
 		var counter = 0;
+		console.log('******************Vid Array************');
+		console.log(vid_array);
 		for (var i=0;i<vid_array.length; i++){
 			console.log(vid_array[i]);
 			if ($.inArray(vid_array[i], sources_names) > -1){
 				playlist.push(sources[$.inArray(vid_array[i], sources_names)]);
 			}
 		}	
+		console.log('******************Play List************');
+		console.log(playlist);
 		videoNode.src = playlist[0];
 		videoNode.load();
 		videoNode.play();
@@ -1130,26 +1134,16 @@ $(document).ready(function(){
 					lastMetric.push(metric);
 					if (video==1){
 						playable = [];
-						imageplayable = [];
 						for(var i=0; i<data.length; i++){
+							data[i]['val'] = data[i]['val']==undefined? '':data[i]['val'];
 							var _length = data[i]['val'].length;							
-							if (data[i]['val'].substring(_length-3, _length) == 'mp4') {
+							if ((data[i]['val'].substring(_length-4, _length) == 'webm') || (data[i]['val'].substring(_length-3, _length) == 'mp4')) {
 								playable.push(data[i]['val']);
-							}
-							else{
-								imageplayable.push(data[i]['val']);
-								//replayVideo(0, data[i]['val']);
 							}	
 						}
 						$('#container').html($('.replay').html());
-						for (var i=0; i<imageplayable.length;i++){
-							replayVideo(0, imageplayable[i], i, data.length-1);
-						}
-						//playExternalVideos(playable);
-						if (imageplayable.length == 0){
-							replayVideo(0, 'nonimage', 0,0);
-						}
-	
+						playExternalVideos(playable);
+
 					}
 					else{
 												
@@ -1242,11 +1236,8 @@ $(document).ready(function(){
 				cache: false,
 				success: function(data, textStatus, jqXHR ) { 
 					console.log('successful');	
-
-					if (video==1){
-						replayVideo(0, data[i]['val']);
-					}
-					else{
+					//video playable only when the last button pressed is a metric, but not the group.
+					if (video!=1){
 						google_chart_function(data);
 						google_table_function(data);
 						$('#container').show();
@@ -1263,104 +1254,5 @@ $(document).ready(function(){
 	});
 	
 	
-	//***************************************************
-		var fileSystem = null; // file system 
-		var error = 0; // if file system API error
-		var frames = 0; // index for the image files (files0 files1 etc)
-		var _files = []; // store the path of the images recoreded
-		
-		function errorHandler(err){
-		error =1 ;
-		 var msg = 'An error occured: ';
-			switch (err.code) {
-				case FileError.NOT_FOUND_ERR:
-					msg += 'File or directory not found';
-					break;
-		 
-				case FileError.NOT_READABLE_ERR:
-					msg += 'File or directory not readable';
-					break;
-		 
-				case FileError.PATH_EXISTS_ERR:
-					msg += 'File or directory already exists';
-					break;
-		 
-				case FileError.TYPE_MISMATCH_ERR:
-					msg += 'Invalid filetype';
-					break;
-		 
-				default:
-					msg += 'Unknown Error';
-					break;
-			};
-		 
-		 console.log(msg);
-		};
-	
-	function onInitFs(fs) {
-		fileSystem = fs;
-		fs.root.getDirectory('Video', {create: true, exclusive:false}, function(dirEntry) {
-			console.log('You have just created the ' + dirEntry.name + ' directory.');
-			
-			var page = $('#analysis_page').html();
-			if(page!= undefined){
-				//document.getElementById('_runs').addEventListener('click', replayVideo, false);
-			}
-	 
-			fs.root.getDirectory('Video', {}, function(dirEntry){
-			  var dirReader = dirEntry.createReader();
-			  dirReader.readEntries(function(entries) {
-				for(var i = 0; i < entries.length; i++) {
-				  var entry = entries[i];
-				  if (entry.isDirectory){
-					console.log('Directory: ' + entry.fullPath);
-				  }
-				  else if (entry.isFile){
-					//console.log('File: ' + entry.fullPath);
-				  // remove comment to delete all files
-					_files.push(entry.fullPath);
-					frames = parseInt(entry.fullPath[entry.fullPath.length-1]);
-				  }
-				}
-				_files = _files.sort();
-			  }, errorHandler);
-			}, errorHandler);
-		}, errorHandler);
-	}
-	
-	
-		var replayVideo = function(idx, filename_part, i, len) {
-			// reads through all the images and show them (image path stored in _files)
-			if(idx.clientX) idx = 0;
-			if(_files[idx] === undefined || (i==len && idx==_files.length)) {
-				playExternalVideos(playable);
-				//alert('nothing to play');
-				return;
-			}
-			var img = document.getElementById('replay-screen');
-			fileSystem.root.getFile(_files[idx], {}, function(fileEntry) {
-				fileEntry.file(function(file) {
-					var reader = new FileReader();
-					reader.onloadend = function(e) {
-						if(_files[idx].indexOf(filename_part) != -1){img.src = this.result; console.log(_files[idx].indexOf(filename_part));}
-						if(++idx <= _files.length)
-							{setInterval(replayVideo(idx, filename_part), 2*1000);} // y u no work !?
-						/*if(idx == _files.length){
-							playExternalVideos(playable);
-						}*/
-							
-					};
-					reader.readAsText(file);
-				}, errorHandler);
-			}, errorHandler);
-		}
-
-	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-	//window.requestFileSystem(window.TEMPORARY, 10*1024*1024, initFs, errorHandler);
-	window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024*1024, function(grantedBytes) {
-		window.requestFileSystem(PERSISTENT, grantedBytes, onInitFs, errorHandler);
-	});
-	
-		
 });
 

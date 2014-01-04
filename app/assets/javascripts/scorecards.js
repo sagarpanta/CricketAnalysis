@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).on('ready page:load', function () {
 
 	var dblclicked = 0;
 	var laststriker_bts = $('.Batsman.hilite').attr('data-bts');
@@ -623,7 +623,7 @@ $(document).ready(function(){
 		var match = $('#team').html().toUpperCase();
 		var matchdate = $('#matchdate').html();
 		
-		var videoloc = match+'-'+matchdate+'_'+rowCount+'.mp4';
+		var videoloc = match+'-'+matchdate+'_'+rowCount+'.webm';
 		videoloc = videoloc.replace(/\s+/g, '');
 		
 		console.log('this is the videoloc *******' + videoloc);

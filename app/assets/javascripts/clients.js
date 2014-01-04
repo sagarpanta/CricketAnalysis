@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).on('ready page:load', function () {
 	$('.links').on('mouseout', function(){
 		
 		var alt = $(this).children('span').children('img').attr('alt').toLowerCase();

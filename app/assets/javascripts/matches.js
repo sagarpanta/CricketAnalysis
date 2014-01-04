@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).on('ready page:load', function () {
 	$('#matches tr').mouseover(function(){
 		$(this).children('td').css('background-color','#65B8C9').css('color', 'black');
 	});
