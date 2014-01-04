@@ -4,7 +4,7 @@
 <link rel="cric.it.down" href="/favicon.ico" />
   <title>CricketAnalysis</title>
   <%= stylesheet_link_tag  "application" %>
-  <%= javascript_include_tag "application" %>
+  
   <%= csrf_meta_tags %>
 
 </head>
@@ -278,7 +278,7 @@
 	  google.load('visualization', '1', {'packages': ['geochart']});
 	  google.load('visualization', '1', {packages: ['table']});
 </script>
-
+<%= javascript_include_tag "application" %>
 </body>
 </html>
 
