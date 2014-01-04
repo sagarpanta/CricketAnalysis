@@ -70,6 +70,7 @@
 </div>
 
 <%= yield %>
+<!-- https://evening-beach-3495.herokuapp.com/socket.io/socket.io.js moved to javascript folder -->
 <script>
 	var socket = io.connect('https://evening-beach-3495.herokuapp.com');
 	socket.on('news', function (data) {
@@ -268,7 +269,6 @@
 </script>
 <script type="text/javascript"  src='http://www.google.com/jsapi' ></script>
 <script type="text/javascript">
-
       google.load('visualization', '1', {packages: ['corechart']});
 	  google.load('visualization', '1', {'packages': ['geochart']});
 	  google.load('visualization', '1', {packages: ['table']});
