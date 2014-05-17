@@ -9,6 +9,7 @@ class AnalysisController < ApplicationController
 				@players = Player.all
 
 				@tournaments = Tournament.all
+				
 
 				@venues = Venue.all
 
